@@ -4,17 +4,17 @@
 #' @param est An object obtained with est_saegamlss()
 #' @param D  Number of Areas
 #' @param Ni 1xD vector containing the number of units (in population) for each area
-#' @param loop Number of loop of boostrap. Default is 200
-#' @param l A vector, of maximum length equal to 4, in which each space is a function (the inverse of the link-function) to be applied to the corresponding paramter, i.e. mu, sigma, nu and tau
+#' @param loop Number of loop of bootstrap. Default is 200
+#' @param l A vector, of maximum length equal to 4, in which each space is a function (the inverse of the link-function) to be applied to the corresponding parameter, i.e. mu, sigma, nu and tau
 #' @param Dis Type of distribution in form of rDis where Dis is one of the distribution allowe by GAMLSS
 #' @param Iden  TRUE if the Identity link function is used for mu. Default is FALSE
 #' @param samplesize The desired sample size. If size is a value between 0 and 1 expressed as a decimal, size is set to be proportional to the number of observations per group. If size is a single positive integer, it will be assumed that you want the same number of samples from each group. If size is a named vector, the function will check to see whether the length of the vector matches the number of groups and that the names match the group names
-#' @param data A dataset. Mandatory columns: covariates and areas (named sa). Additional columns are ammitted.
+#' @param data A dataset. Mandatory columns: covariates and areas (named sa). Additional columns are admitted.
 #' @param cov1 A matrix or a data frame with covariates for the whole population used for mu. If an intercept is used the first columns have to be a vector of 1
 #' @param cov2 A matrix or a data frame with covariates for the whole population used for sigma. If an intercept is used the first columns have to be a vector of 1
 #' @param cov3 A matrix or a data frame with covariates for the whole population used for nu. If an intercept is used the first columns have to be a vector of 1
 #' @param cov4 A matrix or a data frame with covariates for the whole population used for tau. If an intercept is used the first columns have to be a vector of 1
-#' @param seed The seed to be setted
+#' @param seed The seed
 #' @return MSE_mean A vector with the MSE of the mean for each area
 #' @return MSE_HCR A vector with the MSE of the HCR for each area
 #' @return All the value returned by est_saegamlss().

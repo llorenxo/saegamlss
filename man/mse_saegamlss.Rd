@@ -28,9 +28,9 @@ mse_saegamlss(
 
 \item{Ni}{1xD vector containing the number of units (in population) for each area}
 
-\item{loop}{Number of loop of boostrap. Default is 200}
+\item{loop}{Number of loop of bootstrap. Default is 200}
 
-\item{l}{A vector, of maximum length equal to 4, in which each space is a function (the inverse of the link-function) to be applied to the corresponding paramter, i.e. mu, sigma, nu and tau}
+\item{l}{A vector, of maximum length equal to 4, in which each space is a function (the inverse of the link-function) to be applied to the corresponding parameter, i.e. mu, sigma, nu and tau}
 
 \item{Dis}{Type of distribution in form of rDis where Dis is one of the distribution allowe by GAMLSS}
 
@@ -38,7 +38,7 @@ mse_saegamlss(
 
 \item{samplesize}{The desired sample size. If size is a value between 0 and 1 expressed as a decimal, size is set to be proportional to the number of observations per group. If size is a single positive integer, it will be assumed that you want the same number of samples from each group. If size is a named vector, the function will check to see whether the length of the vector matches the number of groups and that the names match the group names}
 
-\item{data}{A dataset. Mandatory columns: covariates and areas (named sa). Additional columns are ammitted.}
+\item{data}{A dataset. Mandatory columns: covariates and areas (named sa). Additional columns are admitted.}
 
 \item{cov1}{A matrix or a data frame with covariates for the whole population used for mu. If an intercept is used the first columns have to be a vector of 1}
 
@@ -48,7 +48,7 @@ mse_saegamlss(
 
 \item{cov4}{A matrix or a data frame with covariates for the whole population used for tau. If an intercept is used the first columns have to be a vector of 1}
 
-\item{seed}{The seed to be setted}
+\item{seed}{The seed}
 }
 \value{
 MSE_mean A vector with the MSE of the mean for each area

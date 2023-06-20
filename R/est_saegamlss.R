@@ -1,6 +1,6 @@
 
 #' Monte Carlo estimation of mean and HCR based on SAE GAMLSS
-#' @description A fucntion to estimate the mean or/and the HCR     based on unit-level small area estimation based on generalized additive models for location, scale and shape
+#' @description A function to estimate the mean or/and the HCR     based on unit-level small area estimation based on generalized additive models for location, scale and shape
 #'
 #' @param sample A dataset of sampled units. With dependent variable (named y), covariates and small area (named sa)
 #' @param nonsample  A dataset of non-sampled units. With covariates and small area (named sa)
@@ -14,14 +14,14 @@
 #' @param fdis The distribution family of the GAMLSS object
 #' @param nRS Number of loop to do with the RS() algorithm
 #' @param nCG Number of loop to do with the CG() algorithm
-#' @param R 	Number of Monte-Carlo reptetition. Default is 50
+#' @param R 	Number of Monte-Carlo repetition. Default is 50
 #' @param Dis Type of distribution in form of rDis where Dis is one of the distribution allowed by GAMLSS
 #' @param np Number of parameters of the distribution. i.e. for the normal distribution np=2, for the GB2 distribution np=4
 #' @param param The parameter to estimate, "mean" or "HCR". Default is both.
-#' @param seed The seed to be setted
+#' @param seed The seed
 #' @param tau.fix A value to be fixed to 1 to obtain the Singh-Maddala distribution. Dist must be GB2 and np=4
 #' @param nu.fix 	A value to be fixed to 1 to obtain the Dagum distribution. Dist must be GB2 and np=4
-#' @param z 	The Poverty line. Defualt is equal to 0.6 of the dependent variable
+#' @param z 	The Poverty line. Default is equal to 0.6 of the dependent variable
 #' @return a list of two list. The first list, named est has:
 #' @return ME 1xD vector with the estimate of the mean and
 #' @return HCR 1xD vector with the estimate of the HCR.

@@ -52,7 +52,7 @@ est_saegamlss(
 
 \item{nCG}{Number of loop to do with the CG() algorithm}
 
-\item{R}{Number of Monte-Carlo reptetition. Default is 50}
+\item{R}{Number of Monte-Carlo repetition. Default is 50}
 
 \item{Dis}{Type of distribution in form of rDis where Dis is one of the distribution allowed by GAMLSS}
 
@@ -60,13 +60,13 @@ est_saegamlss(
 
 \item{param}{The parameter to estimate, "mean" or "HCR". Default is both.}
 
-\item{seed}{The seed to be setted}
+\item{seed}{The seed}
 
 \item{tau.fix}{A value to be fixed to 1 to obtain the Singh-Maddala distribution. Dist must be GB2 and np=4}
 
 \item{nu.fix}{A value to be fixed to 1 to obtain the Dagum distribution. Dist must be GB2 and np=4}
 
-\item{z}{The Poverty line. Defualt is equal to 0.6 of the dependent variable}
+\item{z}{The Poverty line. Default is equal to 0.6 of the dependent variable}
 }
 \value{
 a list of two list. The first list, named est has:
@@ -108,7 +108,7 @@ fids The distribution used for the estimation
 z The poverty line
 }
 \description{
-A fucntion to estimate the mean or/and the HCR     based on unit-level small area estimation based on generalized additive models for location, scale and shape
+A function to estimate the mean or/and the HCR     based on unit-level small area estimation based on generalized additive models for location, scale and shape
 }
 \note{
 With "object"$input_var$fit is possible to use all the classical function used by gamlss

@@ -8,4 +8,12 @@
 \description{
 This package provides a set of functions for Small Area Unit Level based on Generalized Additive Models for Location, Scale and Shape, including functions for mean squared error estimation.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/llorenxo/saegamlss}
+  \item Report bugs at \url{https://github.com/llorenxo/saegamlss/issues}
+}
+
+}
 \keyword{internal}
