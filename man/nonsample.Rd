@@ -20,13 +20,13 @@ A dataset of non-sample units
 Subset the non-sample part of the population
 }
 \examples{
-#sample data with a sample fraction of 0.1
+# sample data with a sample fraction of 0.1
 library(splitstackshape)
-data=data.frame("y"=runif(100, 0, 100), "id"=c(1:100), "sa"=rep(1:5, 20))
-#sample data
-sample=stratified(data, "sa", size=0.1)
-#nonsample data
-nonsample=nonsample(data=data, sample=sample, id=id)
+data <- data.frame("y" = runif(100, 0, 100), "id" = c(1:100), "sa" = rep(1:5, 20))
+# sample data
+sample <- stratified(data, "sa", size = 0.1)
+# nonsample data
+nonsample <- nonsample(data = data, sample = sample, id = id)
 
 }
 \references{

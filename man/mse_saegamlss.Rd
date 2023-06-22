@@ -32,7 +32,7 @@ mse_saegamlss(
 
 \item{l}{A vector, of maximum length equal to 4, in which each space is a function (the inverse of the link-function) to be applied to the corresponding parameter, i.e. mu, sigma, nu and tau}
 
-\item{Dis}{Type of distribution in form of rDis where Dis is one of the distribution allowe by GAMLSS}
+\item{Dis}{Type of distribution in form of rDis where Dis is one of the distribution allowed by GAMLSS}
 
 \item{Iden}{TRUE if the Identity link function is used for mu. Default is FALSE}
 
@@ -52,55 +52,58 @@ mse_saegamlss(
 }
 \value{
 MSE_mean A vector with the MSE of the mean for each area
-
-MSE_HCR A vector with the MSE of the HCR for each area
-
-All the value returned by est_saegamlss().
+ MSE_HCR A vector with the MSE of the HCR for each area
+ All the value returned by est_saegamlss().
 }
 \description{
 Compute the bootstrap MSE for the estimation of the mean and the HCR
 }
 \examples{
-dep.y=data_gen(Ni=rep(10,4), D=4, M=2 ,ty ="no", k=4, b1=100,
-               x1=rnorm(40, 0,1), b2 = NULL, x2 = NULL, b3 = NULL,
-               x3 = NULL,  b4 = NULL, x4 = NULL, xh = NULL,
-               Dis, l=c(identity), sigma = 6, sigmah = NULL,
-               sigmae = 22,  costh = NULL, seed = 1234)
-data=dep.y[[1]]
+dep.y <- data_gen(
+  Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 4, b1 = 100,
+  x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
+  x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
+  Dis, l = c(identity), sigma = 6, sigmah = NULL,
+  sigmae = 22, costh = NULL, seed = 1234
+)
+data <- dep.y[[1]]
 #
-#sample data with a sample fraction of 0.5
+# sample data with a sample fraction of 0.5
 #
 library(splitstackshape)
-#sample data
+# sample data
 #
-sample=stratified(data, "sa", size=0.5)
-#nonsample data
+sample <- stratified(data, "sa", size = 0.5)
+# nonsample data
 #
-nonsample=nonsample(data=data, sample=sample, id=id)
-#estimate
-est=est_saegamlss(sample=sample, nonsample=nonsample, D=4,
-                 Ni=rep(10,4), ni=rep(1,4), f1=y~x1+random(sa),
-                 f2=NULL, f3=NULL, f4=NULL, fdis=NO, nRS=150,
-                 nCG=150, R=2, Dis=rNO, np=2, param=NULL,
-                 seed=1234, tau.fix=NULL, nu.fix=NULL)
+nonsample <- nonsample(data = data, sample = sample, id = id)
+# estimate
+est <- est_saegamlss(
+  sample = sample, nonsample = nonsample, D = 4,
+  Ni = rep(10, 4), ni = rep(1, 4), f1 = y ~ x1 + random(sa),
+  f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO, nRS = 150,
+  nCG = 150, R = 2, Dis = rNO, np = 2, param = NULL,
+  seed = 1234, tau.fix = NULL, nu.fix = NULL
+)
 #
-#covariates
+# covariates
 #
-x=data.frame(rep(1, nrow(data)), "x1"=data$x1)
+x <- data.frame(rep(1, nrow(data)), "x1" = data$x1)
 #
-#compute the MSE
+# compute the MSE
 #
-MSE=mse_saegamlss(est=est, D=4, Ni=rep(10,4), loop=2,
-               l=c(identity), Dis=rNO, Iden = TRUE,
-               samplesize=0.1, data=data, cov1=x, cov2 = NULL, cov3 = NULL,
-               cov4 = NULL, seed=1234)
+MSE <- mse_saegamlss(
+  est = est, D = 4, Ni = rep(10, 4), loop = 2,
+  l = c(identity), Dis = rNO, Iden = TRUE,
+  samplesize = 0.1, data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
+  cov4 = NULL, seed = 1234
+)
 MSE$est_mse$MSE_mean
 MSE$est_mse$MSE_HCR
 }
 \references{
 Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.
-
-Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597.
+ Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597.
 }
 \author{
 Lorenzo Mori and Maria Rosaria Ferrante

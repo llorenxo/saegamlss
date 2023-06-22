@@ -7,7 +7,7 @@
 povinc(y, z = NULL)
 }
 \arguments{
-\item{y}{A vector with numerical valeus. Usually income or consumption data.}
+\item{y}{A vector with numerical values. Usually income or consumption data.}
 
 \item{z}{The poverty line. Default is 0.6*median(y)}
 }
@@ -18,7 +18,7 @@ The Head Count Ratio
 Compute the Head Count Ration
 }
 \examples{
-y=runif(100, 0, 1000)
+y <- runif(100, 0, 1000)
 povinc(y)
 }
 \author{

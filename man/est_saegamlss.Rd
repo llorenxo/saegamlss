@@ -70,83 +70,67 @@ est_saegamlss(
 }
 \value{
 a list of two list. The first list, named est has:
-
-ME 1xD vector with the estimate of the mean and
-
-HCR 1xD vector with the estimate of the HCR.
-
-The second, named input_var has:
-
-fit a GAMLSS object with all the components of the regression
-
-f1 a formula object used for fitting a model to the mu parameter
-
-f2 a formula object used for fitting a model to the sigma parameter
-
-f3 a  formula object used for fitting a model to the nu parameter
-
-f4 a formula object used for fitting a model to the tau parameter
-
-np the number of the parameters of the choose distribution
-
-nRS the number of loop used within the RS() algorithm. Default is 150.
-
-nCG the number of loop used within the CG() algorithm. Default is 150.
-
-R the number of loop used to obtain the monte-carlo estimation
-
-D the number of area
-
-Ni 1xD vector containing the number of units (in population) for each area
-
-ni 1xD vector containing the number of sampled-units for each area
-
-originaldata The dataset of sampled-units
-
-fids The distribution used for the estimation
-
-z The poverty line
+ ME 1xD vector with the estimate of the mean and
+ HCR 1xD vector with the estimate of the HCR.
+ The second, named input_var has:
+ fit a GAMLSS object with all the components of the regression
+ f1 a formula object used for fitting a model to the mu parameter
+ f2 a formula object used for fitting a model to the sigma parameter
+ f3 a  formula object used for fitting a model to the nu parameter
+ f4 a formula object used for fitting a model to the tau parameter
+ np the number of the parameters of the choose distribution
+ nRS the number of loop used within the RS() algorithm. Default is 150.
+ nCG the number of loop used within the CG() algorithm. Default is 150.
+ R the number of loop used to obtain the monte-carlo estimation
+ D the number of area
+ Ni 1xD vector containing the number of units (in population) for each area
+ ni 1xD vector containing the number of sampled-units for each area
+ originaldata The dataset of sampled-units
+ fids The distribution used for the estimation
+ z The poverty line
 }
 \description{
 A function to estimate the mean or/and the HCR     based on unit-level small area estimation based on generalized additive models for location, scale and shape
 }
 \note{
 With "object"$input_var$fit is possible to use all the classical function used by gamlss
-
-The Small Area have to be denoted with a number from 1 to D
+ The Small Area have to be denoted with a number from 1 to D
 }
 \examples{
-#Generate data
+# Generate data
 #
-dep.y=data_gen(Ni=rep(10,4), D=4, M=2 ,ty ="no", k=4, b1=100,
-               x1=rnorm(40, 0,1), b2 = NULL, x2 = NULL, b3 = NULL,
-               b4 = NULL, x4 = NULL, xh = NULL, Dis=NO,
-               l=c(identity), sigma = 6, sigmah = NULL,
-               sigmae = 22, costh = NULL, seed = 1234)
+dep.y <- data_gen(
+  Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 4, b1 = 100,
+  x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
+  b4 = NULL, x4 = NULL, xh = NULL, Dis = NO,
+  l = c(identity), sigma = 6, sigmah = NULL,
+  sigmae = 22, costh = NULL, seed = 1234
+)
 
-data=dep.y[[1]]
+data <- dep.y[[1]]
 #
-#sample data with a sample fraction of 0.1
+# sample data with a sample fraction of 0.1
 #
 library(splitstackshape)
-#sample data
+# sample data
 #
-sample=stratified(data, "sa", size=0.1)
-#nonsample data
+sample <- stratified(data, "sa", size = 0.1)
+# nonsample data
 #
-nonsample=nonsample(data=data, sample=sample, id=id)
-#estimate
-est_saegamlss(sample=sample, nonsample=nonsample,
-              D=4, Ni=rep(10,4), ni=rep(1,4),
-              f1=y~x1+random(sa), f2=NULL, f3=NULL,
-              f4=NULL, fdis=NO, nRS=150, nCG=150, R=200,
-              Dis=rNO, np=2, param=NULL,
-              seed=1234, tau.fix=NULL, nu.fix=NULL)
+nonsample <- nonsample(data = data, sample = sample, id = id)
+# estimate
+est_saegamlss(
+  sample = sample, nonsample = nonsample,
+  D = 4, Ni = rep(10, 4), ni = rep(1, 4),
+  f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
+  f4 = NULL, fdis = NO, nRS = 150, nCG = 150, R = 200,
+  Dis = rNO, np = 2, param = NULL,
+  seed = 1234, tau.fix = NULL, nu.fix = NULL
+)
 }
 \references{
 Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.
-
-Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597.
+ Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597.
 }
 \author{
 Lorenzo Mori and Maria Rosaria Ferrante
