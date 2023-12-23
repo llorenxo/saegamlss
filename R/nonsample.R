@@ -1,10 +1,10 @@
 #' Create the non-sample dataset
 #' @description Subset the non-sample part of the population
-#' @param data population dataset
-#' @param sample sample dataset
-#' @param id name of id, must be the same in both the datasets
+#' @param data Population dataset
+#' @param sample Sample dataset
+#' @param id id variable, must be the same in both the datasets
 #'
-#' @return A dataset of non-sample units
+#' @return A dataset of non-sampled units
 #' @export
 #'
 #' @examples # sample data with a sample fraction of 0.1

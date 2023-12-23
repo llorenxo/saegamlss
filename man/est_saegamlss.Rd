@@ -78,7 +78,7 @@ a list of two list. The first list, named est has:
  f2 a formula object used for fitting a model to the sigma parameter
  f3 a  formula object used for fitting a model to the nu parameter
  f4 a formula object used for fitting a model to the tau parameter
- np the number of the parameters of the choose distribution
+ np the number of the parameters of the chosen distribution
  nRS the number of loop used within the RS() algorithm. Default is 150.
  nCG the number of loop used within the CG() algorithm. Default is 150.
  R the number of loop used to obtain the monte-carlo estimation
@@ -90,7 +90,7 @@ a list of two list. The first list, named est has:
  z The poverty line
 }
 \description{
-A function to estimate the mean or/and the HCR     based on unit-level small area estimation based on generalized additive models for location, scale and shape
+A function to estimate the mean or/and the HCR     derived from unit-level small area estimation based on generalized additive models for location, scale and shape
 }
 \note{
 With "object"$input_var$fit is possible to use all the classical function used by gamlss
@@ -100,11 +100,11 @@ With "object"$input_var$fit is possible to use all the classical function used b
 # Generate data
 #
 dep.y <- data_gen(
-  Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 4, b1 = 100,
+  Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 1, b1 = 10,
   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
   b4 = NULL, x4 = NULL, xh = NULL, Dis = NO,
   l = c(identity), sigma = 6, sigmah = NULL,
-  sigmae = 22, costh = NULL, seed = 1234
+  sigmae = 2, costh = NULL, seed = 1234
 )
 
 data <- dep.y[[1]]

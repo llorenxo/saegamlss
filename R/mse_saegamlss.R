@@ -1,4 +1,5 @@
 #' Bootstrap Mean Square Error for SAE GAMLSS
+#'
 #' @description Compute the bootstrap MSE for the estimation of the mean and the HCR
 #' @param est An object obtained with est_saegamlss()
 #' @param D  Number of Areas
@@ -21,7 +22,8 @@
 #' @import gamlss
 #' @import dplyr
 #' @import splitstackshape
-#' @examples dep.y <- data_gen(
+#' @examples
+#' dep.y <- data_gen(
 #'   Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 4, b1 = 100,
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
@@ -308,6 +310,8 @@ mse_saegamlss <- function(est, D, Ni, loop = NULL, l, Dis, Iden = F, samplesize,
   } else {
     est_mse <- list("MSE_HCR" = mse)
   }
-
-  return(list("est_mse" = est_mse, "est" = est))
+  rm(est, envir = .GlobalEnv)
+  result <- list("est_mse" = est_mse, "est" = est)
+  attr(result, "class") <- "saegamlss_class"
+  return(result)
 }

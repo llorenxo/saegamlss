@@ -79,7 +79,7 @@ A list of data frame. Each one has: the dependent variable y, a set of fixed cov
 }
 \description{
 A tool to generate the dependent variable, with fixed covariates.
- The dependent variable could be generate for more than 100 distributions    which have at maximum 4 parameters. Each parameter could be defined in terms of covariates and random-effects.
+ The dependent variable could be generated for more than 100 distributions    which have at maximum 4 parameters. Each parameter could be defined in terms of covariates and random-effects.
  The dependent variable, when normal, could include both an additional error-term and heteroschedasticity.
 }
 \note{

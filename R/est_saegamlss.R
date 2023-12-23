@@ -1,5 +1,5 @@
 #' Monte Carlo estimation of mean and HCR based on SAE GAMLSS
-#' @description A function to estimate the mean or/and the HCR     based on unit-level small area estimation based on generalized additive models for location, scale and shape
+#' @description A function to estimate the mean or/and the HCR     derived from unit-level small area estimation based on generalized additive models for location, scale and shape
 #'
 #' @param sample A dataset of sampled units. With dependent variable (named y), covariates and small area (named sa)
 #' @param nonsample  A dataset of non-sampled units. With covariates and small area (named sa)
@@ -30,7 +30,7 @@
 #'  f2 a formula object used for fitting a model to the sigma parameter
 #'  f3 a  formula object used for fitting a model to the nu parameter
 #'  f4 a formula object used for fitting a model to the tau parameter
-#'  np the number of the parameters of the choose distribution
+#'  np the number of the parameters of the chosen distribution
 #'  nRS the number of loop used within the RS() algorithm. Default is 150.
 #'  nCG the number of loop used within the CG() algorithm. Default is 150.
 #'  R the number of loop used to obtain the monte-carlo estimation
@@ -47,11 +47,11 @@
 #' @examples # Generate data
 #' #
 #' dep.y <- data_gen(
-#'   Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 4, b1 = 100,
+#'   Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 1, b1 = 10,
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   b4 = NULL, x4 = NULL, xh = NULL, Dis = NO,
 #'   l = c(identity), sigma = 6, sigmah = NULL,
-#'   sigmae = 22, costh = NULL, seed = 1234
+#'   sigmae = 2, costh = NULL, seed = 1234
 #' )
 #'
 #' data <- dep.y[[1]]
@@ -97,10 +97,10 @@ est_saegamlss <- function(sample, nonsample, D, Ni, ni, f1, f2 = NULL, f3 = NULL
     R <- 50
   }
   if (is.null(nRS) == TRUE) {
-    R <- 150
+    nRS <- 150
   }
   if (is.null(nCG) == TRUE) {
-    R <- 150
+    nCG <- 150
   }
 
   if (is.null(f2) == TRUE) {
@@ -250,9 +250,11 @@ est_saegamlss <- function(sample, nonsample, D, Ni, ni, f1, f2 = NULL, f3 = NULL
   }
 
   input_var <- list(
-    "fit" = gam1, "f1" = f1, "f2" = f2, "f3" = f3, "f4" = f4, "fdis" = fdis,
+    "fit" = gam1, "f1" = f1, "f2" = f2, "f3" = f3, "f4" = f4, "fdis" = fdis, Dis=Dis,
     "np" = np, "nRS" = nRS, "nCG" = nCG, "R" = R, "D" = D, "Ni" = Ni, "ni" = ni,
     "nu.fix" = nu.fix, "tau.fix" = tau.fix, "param" = param, "origindata" = sample, "z" = z
   )
-  return(list("est" = estim, "input_var" = input_var))
+  result <- list("est" = estim, "input_var" = input_var)
+  attr(result, "class") <- "saegamlss_class"
+  return(result)
 }

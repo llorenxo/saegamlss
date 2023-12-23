@@ -2,7 +2,7 @@ Package: saegamlss
 Type: Package
 Title: Unit-Level small area estimation using Generalized Additive Models for Location, Scale and Shape
 Version: 0.1.1
-Author: Lorenzo Mori \email{lorenzo.mori7@@unibo.it} and Maria Rosaria Ferrante
+Author: Lorenzo Mori \email{lorenzo.mori7@unibo.it} and Maria Rosaria Ferrante
 Maintainer: Lorenzo Mori <lorenzo.mori7@unibo.it>
 Description: This package provides a set of functions for  Small Area Unit Level based on Generalized Additive Models for Location, Scale and Shape, including functions for mean squared error estimation. 
 License: MIT + file LICENSE
@@ -15,7 +15,13 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Imports: 
-    stats
+    stats,
+    pracma,
+    GB2,
+    acid,
+    methods,
+    tidyr,
+    ggplot2
 Config/testthat/edition: 3
 URL: https://github.com/llorenxo/saegamlss
 BugReports: https://github.com/llorenxo/saegamlss/issues

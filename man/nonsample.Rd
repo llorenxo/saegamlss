@@ -7,14 +7,14 @@
 nonsample(data, sample, id)
 }
 \arguments{
-\item{data}{population dataset}
+\item{data}{Population dataset}
 
-\item{sample}{sample dataset}
+\item{sample}{Sample dataset}
 
-\item{id}{name of id, must be the same in both the datasets}
+\item{id}{id variable, must be the same in both the datasets}
 }
 \value{
-A dataset of non-sample units
+A dataset of non-sampled units
 }
 \description{
 Subset the non-sample part of the population
