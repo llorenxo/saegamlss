@@ -6,7 +6,7 @@
 #' @param y The dependent variable
 #' @param nRS Number of loop to do with the RS() algorithm
 #' @param nCG Number of loop to do with the CG() algorithm
-#' @param ndis Number of distribution to be consider at the first step. Default is 1
+#' @param ndis Number of distribution to be consider at the first step. Default is 3
 #' @param R Number of loop to be done within the k-fold cross validation
 #' @param k Number of fold in k-fold cross validation. Default is 7
 #' @param f_cov A formula containing all the possible covariates and/or additive terms (i.e. x1+x2+x3+random(x4))
