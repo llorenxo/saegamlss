@@ -184,12 +184,24 @@ m_selection <- function(sample_data, y, f_cov,  nRS = NULL, nCG = NULL,
         f2=stats::as.formula(select_v[[j]][[2]])
         f3=stats::as.formula(select_v[[j]][[3]])
         f4=stats::as.formula(select_v[[j]][[4]])
-      g3 <-   try((gamlss::gamlssCV(formula=f1, sigma.fo=f2,
-                                    nu.fo=f3, tau.fo=f4,
-                                    data=as.data.frame(sample_data),
-                                    method = mixed(substitute(nRS), substitute(nRG)),
-                                    family=substitute(sel[j]),  rand=rand_i)  )
-                  , silent=T, outFile = getOption("try.outFile", default = stderr()))
+      g3 <-tryCatch({
+        gamlss::gamlssCV(formula=f1, sigma.fo=f2,
+                         nu.fo=f3, tau.fo=f4,
+                         data=as.data.frame(sample_data),
+                         method = mixed(substitute(nRS), substitute(nRG)),
+                         family=substitute(sel[j]),  rand=rand_i)
+      }, error = function(e) {
+        cat("Error in iteration", j, ":", conditionMessage(e), "\n")
+      })
+
+
+
+      #try((gamlss::gamlssCV(formula=f1, sigma.fo=f2,
+      #                            nu.fo=f3, tau.fo=f4,
+      #                             data=as.data.frame(sample_data),
+      #                             method = mixed(substitute(nRS), substitute(nRG)),
+      #                              family=substitute(sel[j]),  rand=rand_i)  )
+      #           , silent=T, outFile = getOption("try.outFile", default = stderr()))
 
       if (inherits(g3, "gamlssCV", which = FALSE)){
         a[[i, j]] <- c(CV(g3))
