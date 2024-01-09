@@ -21,7 +21,7 @@
 #' @param tau.fix A value to be fixed to 1 to obtain the Singh-Maddala distribution. Dist must be GB2 and np=4
 #' @param nu.fix 	A value to be fixed to 1 to obtain the Dagum distribution. Dist must be GB2 and np=4
 #' @param z 	The Poverty line. Default is equal to 0.6 of the dependent variable
-#' @return a list of two list. The first list, named est has:
+#' @return an object of class "saegamlss_class" which contains two list. The first list, named est has:
 #'  ME 1xD vector with the estimate of the mean and
 #'  HCR 1xD vector with the estimate of the HCR.
 #'  The second, named input_var has:
@@ -47,7 +47,7 @@
 #' @examples # Generate data
 #' #
 #' dep.y <- data_gen(
-#'   Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 1, b1 = 10,
+#'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 1, b1 = 10,
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   b4 = NULL, x4 = NULL, xh = NULL, Dis = NO,
 #'   l = c(identity), sigma = 6, sigmah = NULL,

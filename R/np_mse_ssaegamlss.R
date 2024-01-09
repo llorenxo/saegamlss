@@ -17,7 +17,7 @@
 #' @param epsilon The value for the poverty aversion parameter. Default value is set to 1
 #' @param fdis The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EX (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)
 #'
-#' @return The values of the MSE for each area and for each index
+#' @return An object of class "saegamlss_class" containing the values of the MSE for each area and for each index
 #' @author Lorenzo Mori and Maria Rosaria Ferrante
 #' @export
 #'
@@ -30,10 +30,12 @@
 #' "ncomp"=rep(c(2,1,3,4), 5),
 #' "w"=1/runif(20, 0.5, 1))
 #'
-#' np_mse_ssaegamlss(data=data, y=data$y, sa = data$sa, ncomp=data$ncomp, fdis="LOGNO", index="Gini",
+#' np<- np_mse_ssaegamlss(data=data, y=data$y, sa = data$sa, ncomp=data$ncomp, fdis="LOGNO", index="Gini",
 #'                   nRS=2, nCG=2, R=2)
 #'
+#' np
 #'
+
 np_mse_ssaegamlss <- function(data, y, sa, ncomp,  R=200, sigma.f=TRUE, nu.f=TRUE,
                                tau.f=TRUE, w=NULL, fdis, nRS=20, nCG=20,
                                index=NULL, epsilon=NULL){

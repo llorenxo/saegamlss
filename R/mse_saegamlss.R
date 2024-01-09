@@ -15,16 +15,15 @@
 #' @param cov3 A matrix or a data frame with covariates for the whole population used for nu. If an intercept is used the first columns have to be a vector of 1
 #' @param cov4 A matrix or a data frame with covariates for the whole population used for tau. If an intercept is used the first columns have to be a vector of 1
 #' @param seed The seed
-#' @return MSE_mean A vector with the MSE of the mean for each area
-#'  MSE_HCR A vector with the MSE of the HCR for each area
-#'  All the value returned by est_saegamlss().
+#' @return an object of class "saegamlss_class" containing the MSE of the mean or/and HCR for each area
+#'  and all the values returned by est_saegamlss()
 #' @export
 #' @import gamlss
 #' @import dplyr
 #' @import splitstackshape
 #' @examples
 #' dep.y <- data_gen(
-#'   Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 4, b1 = 100,
+#'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 4, b1 = 100,
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
 #'   Dis, l = c(identity), sigma = 6, sigmah = NULL,
@@ -279,7 +278,6 @@ mse_saegamlss <- function(est, D, Ni, loop = NULL, l, Dis, Iden = F, samplesize,
 
     dif1 <- rep(0, D)
     dif2 <- rep(0, D)
-
     for (t in 1:D) {
       if (est$input_var$param == "both" | est$input_var$param == "mean") {
         dif1[t] <- (media_boot1$ysm[t] - estMSE$est$ME[t])^2

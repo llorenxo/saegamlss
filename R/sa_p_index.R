@@ -15,7 +15,7 @@
 #' @param nCG Number of loop to do with the CG() algorithm
 #' @param nRS Number of loop to do with the RS() algorithm
 #'
-#' @return A list with the estimated indicators and the value of
+#' @return An object of class "saegamlss_class" with the estimated indicators and the value of
 #' the estimated distribution parameters for each area
 #' @export
 #'

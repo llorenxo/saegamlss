@@ -14,7 +14,7 @@
 #' @param fix_dis A distribution to be tested even if is not selected within the ndis at step 1
 #' @param seed The seed
 #'
-#' @return A list with the results of the three steps.
+#' @return A list with the results of each steps.
 #' @note The summary (Step2) do not reports results on the random effects as usual for GAMLSS. See Step2 select_v for the random effects
 #' @export
 #'
@@ -26,10 +26,10 @@
 #' @examples
 #'
 #' sample_data=data_gen(
-#'   Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 100, b1 = 4,
+#'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 100, b1 = 4,
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
-#'   Dis, l = c(identity), sigma = 6, sigmah = NULL,
+#'   Dis = rNO, l = c(identity), sigma = 6, sigmah = NULL,
 #'   sigmae = 22, costh = NULL, seed = 124
 #' )
 #'
@@ -184,12 +184,24 @@ m_selection <- function(sample_data, y, f_cov,  nRS = NULL, nCG = NULL,
         f2=stats::as.formula(select_v[[j]][[2]])
         f3=stats::as.formula(select_v[[j]][[3]])
         f4=stats::as.formula(select_v[[j]][[4]])
-      g3 <-   try((gamlss::gamlssCV(formula=f1, sigma.fo=f2,
-                                    nu.fo=f3, tau.fo=f4,
-                                    data=as.data.frame(sample_data),
-                                    method = mixed(substitute(nRS), substitute(nRG)),
-                                    family=substitute(sel[j]),  rand=rand_i)  )
-                  , silent=T, outFile = getOption("try.outFile", default = stderr()))
+      g3 <-tryCatch({
+        gamlss::gamlssCV(formula=f1, sigma.fo=f2,
+                         nu.fo=f3, tau.fo=f4,
+                         data=as.data.frame(sample_data),
+                         method = mixed(substitute(nRS), substitute(nRG)),
+                         family=substitute(sel[j]),  rand=rand_i)
+      }, error = function(e) {
+        cat("Error in iteration", j, "\n")
+      })
+
+
+
+      #try((gamlss::gamlssCV(formula=f1, sigma.fo=f2,
+      #                            nu.fo=f3, tau.fo=f4,
+      #                             data=as.data.frame(sample_data),
+      #                             method = mixed(substitute(nRS), substitute(nRG)),
+      #                              family=substitute(sel[j]),  rand=rand_i)  )
+      #           , silent=T, outFile = getOption("try.outFile", default = stderr()))
 
       if (inherits(g3, "gamlssCV", which = FALSE)){
         a[[i, j]] <- c(CV(g3))

@@ -6,10 +6,10 @@
 #' @param e Vector of emission intensities by industries
 #' @param Phi Matrix in which the diagonal blocks represent domestic transaction flows of intermediate goods and services across industries, and the off-diagonal blocks represent the inter-country flows of intermediates via exports and imports
 #' @param Xi Matrix having on the principal diagonal the inverse of the total supply
-#' @param consumption A dataset where each row is correspond to the vector of household consumption and each column is a specific consumption group
+#' @param consumption A dataset where each row corresponds to the vector of household consumption and each column is a specific consumption group
 #' @param d Final use matrix
 #' @param cc Vector with the expenditure on combustible of the household
-#' @param DHE The total volume of direct household emissions
+#' @param DHE The total volume of direcùt household emissions
 #' @param N Number of the units in the population
 #' @param eimp Emission intensities derived from countries that play a central role in the import
 #' @param Im Matrix of imports
@@ -55,6 +55,7 @@
 #' cfp(e=e, Phi=Phi, Xi=Xi, consumption=consumption, d=d, cc=cc, DHE=DHE, N=N, eimp=eimp,
 #'     Im=Im, Ep=Ep,  classic=TRUE)
 #'
+
 cfp <- function(e, Phi, Xi, consumption, d, cc, DHE, N, eimp, Im, Ep, cf, classic=FALSE){
 
   IA=pracma::inv(diag(ncol=length(e), nrow=length(e))-Phi%*%Ep)

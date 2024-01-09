@@ -19,7 +19,7 @@ Summary of object of class "saegamlss_class
 }
 \examples{
 
-# est_saegamlss
+#est_saegamlss
 
  dep.y <- data_gen(
   Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 1, b1 = 10,

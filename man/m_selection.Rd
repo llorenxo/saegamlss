@@ -29,7 +29,7 @@ m_selection(
 
 \item{nCG}{Number of loop to do with the CG() algorithm}
 
-\item{ndis}{Number of distribution to be consider at the first step. Default is 1}
+\item{ndis}{Number of distribution to be consider at the first step. Default is 3}
 
 \item{R}{Number of loop to be done within the k-fold cross validation}
 
