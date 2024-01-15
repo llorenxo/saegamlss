@@ -6,7 +6,7 @@
 \usage{
 data_gen(
   Ni,
-  M,
+  M = NULL,
   D,
   k,
   b1,
@@ -32,7 +32,7 @@ data_gen(
 \arguments{
 \item{Ni}{1xD vector containing the number of units (in population) for each area}
 
-\item{M}{Number of replicates}
+\item{M}{Number of replicates. Default is 1}
 
 \item{D}{Number of areas}
 
@@ -56,7 +56,7 @@ data_gen(
 
 \item{xh}{A vector of covariate used to generate heteroschedasticity}
 
-\item{Dis}{Type of distribution in form of rDis where Dis is one of the distribution allowed by GAMLSS. It is to be defined to use distribution different from the normal one}
+\item{Dis}{Type of distribution in form of rDis where Dis is one of the distribution allowed by GAMLSS.}
 
 \item{l}{A vector,  of maximum length equal to 4, in which each space is a function (the inverse of the link-function) to be applied to the corresponding parameter, i.e. mu, sigma, nu and tau.}
 
@@ -74,9 +74,6 @@ data_gen(
 
 \item{id}{Unit id.}
 }
-\value{
-A list of data frame. Each one has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)
-}
 \description{
 A tool to generate the dependent variable, with fixed covariates.
  The dependent variable could be generated for more than 100 distributions    which have at maximum 4 parameters. Each parameter could be defined in terms of covariates and random-effects.
@@ -86,22 +83,22 @@ A tool to generate the dependent variable, with fixed covariates.
 The definition of the heteroschedastic term follows Ramirez-Aldana, R., & Naranjo, L. (2021).
 }
 \examples{
-# Normal data
+# Normal data (2 populations)
 data_gen(
   Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 100, b1 = 4,
   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
-  Dis, l = c(identity), sigma = 6, sigmah = NULL,
+  Dis=rNO, l = c(identity), sigma = 6, sigmah = NULL,
   sigmae = 22, costh = NULL, seed = 1234
 )
 #
 # Heteroschedastic Normal data
 #
 data_gen(
-  Ni = rep(10, 4), D = 4, M = 2, ty = "het", k = 100, b1 = 4,
+  Ni = rep(10, 4), D = 4, ty = "het", k = 100, b1 = 4,
   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
   x3 = NULL, b4 = NULL, x4 = NULL, xh = rnorm(40, 0, 1),
-  Dis, l = c(identity), sigma = 6, sigmah = 1, sigmae = 22,
+  Dis=rNO, l = c(identity), sigma = 6, sigmah = 1, sigmae = 22,
   costh = 0.1, seed = 1234
 )
 #
@@ -110,7 +107,7 @@ data_gen(
 # a) Log-normal data
 #
 data_gen(
-  Ni = rep(10, 4), D = 4, M = 2, ty = NULL, k = c(7, -2), b1 = 1,
+  Ni = rep(10, 4), D = 4, ty = NULL, k = c(7, -2), b1 = 1,
   x1 = rnorm(40, 0, 1), b2 = 0.5, x2 = rnorm(40, 0, 1),
   b3 = NULL, x3 = NULL, b4 = NULL, x4 = NULL,
   xh = NULL, Dis = rLOGNO2, l = c(exp, exp),
@@ -121,7 +118,7 @@ data_gen(
 # b) Dagum data
 #
 data_gen(
-  Ni = rep(10, 4), D = 4, M = 2, ty = NULL,
+  Ni = rep(10, 4), D = 4, ty = NULL,
   k = c(3, log(3.4), -0.4, log(1)), b1 = 1.5,
   x1 = rnorm(40, 0, 1), b2 = 0, x2 = NULL,
   b3 = 0.1, x3 = rnorm(40, 0, 1), b4 = 0, x4 = NULL,

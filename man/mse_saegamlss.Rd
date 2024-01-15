@@ -51,16 +51,15 @@ mse_saegamlss(
 \item{seed}{The seed}
 }
 \value{
-MSE_mean A vector with the MSE of the mean for each area
- MSE_HCR A vector with the MSE of the HCR for each area
- All the value returned by est_saegamlss().
+an object of class "saegamlss_class" containing the MSE of the mean or/and HCR for each area
+ and all the values returned by est_saegamlss()
 }
 \description{
 Compute the bootstrap MSE for the estimation of the mean and the HCR
 }
 \examples{
 dep.y <- data_gen(
-  Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 4, b1 = 100,
+  Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 4, b1 = 100,
   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
   Dis, l = c(identity), sigma = 6, sigmah = NULL,
