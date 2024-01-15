@@ -192,7 +192,7 @@ m_selection <- function(sample_data, y, f_cov,  nRS = NULL, nCG = NULL,
                          family=substitute(sel[j]),  rand=rand_i)
       }, error = function(e) {
         cat("Error in iteration", j, "\n")
-      })
+        })
 
 
 

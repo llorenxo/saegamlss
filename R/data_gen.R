@@ -121,10 +121,8 @@ data_gen <- function(Ni, M = NULL , D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NUL
   }
   set.seed <- seed
   ym <- matrix(nrow = sum(Ni), ncol = M)
-
   for (i in 1:M) {
     message("Generating ", i, " of ", M)
-
     if (ty == "no") {
       sigma1 <- sigma[1]
 
