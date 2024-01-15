@@ -194,15 +194,6 @@ m_selection <- function(sample_data, y, f_cov,  nRS = NULL, nCG = NULL,
         cat("Error in iteration", j, "\n")
         })
 
-
-
-      #try((gamlss::gamlssCV(formula=f1, sigma.fo=f2,
-      #                            nu.fo=f3, tau.fo=f4,
-      #                             data=as.data.frame(sample_data),
-      #                             method = mixed(substitute(nRS), substitute(nRG)),
-      #                              family=substitute(sel[j]),  rand=rand_i)  )
-      #           , silent=T, outFile = getOption("try.outFile", default = stderr()))
-
       if (inherits(g3, "gamlssCV", which = FALSE)){
         a[[i, j]] <- c(CV(g3))
       }
