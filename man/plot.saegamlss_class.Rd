@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_saegamlss.R
 \name{plot.saegamlss_class}
 \alias{plot.saegamlss_class}
-\title{Plot of object of class "saegamlss_class}
+\title{Plot of object of class "saegamlss_class"}
 \usage{
 \method{plot}{saegamlss_class}(
   obj,
@@ -15,7 +15,7 @@
 )
 }
 \arguments{
-\item{obj}{An object of class "saegamlss_clas"}
+\item{obj}{An object of class "saegamlss_class"}
 
 \item{compare.Gini}{The MSE of a second estimator to be compared for the Gini index}
 
@@ -33,14 +33,14 @@
 Return a plot for object of class "saegamlss_class"
 }
 \description{
-Plot of object of class "saegamlss_class
+Function to Plot object of class "saegamlss_class"
 }
 \examples{
 
-# est_saegamlss
+#est_saegamlss
 
  dep.y <- data_gen(
-  Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 1, b1 = 10,
+  Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 1, b1 = 10,
   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
   b4 = NULL, x4 = NULL, xh = NULL, Dis = NO,
   l = c(identity), sigma = 6, sigmah = NULL,
@@ -72,7 +72,7 @@ plot(est)
 #mse_saegamlss
 
 dep.y <- data_gen(
-  Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 4, b1 = 100,
+  Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 4, b1 = 100,
   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
   Dis, l = c(identity), sigma = 6, sigmah = NULL,

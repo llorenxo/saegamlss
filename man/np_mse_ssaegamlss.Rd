@@ -51,7 +51,7 @@ np_mse_ssaegamlss(
 \item{epsilon}{The value for the poverty aversion parameter. Default value is set to 1}
 }
 \value{
-The values of the MSE for each area and for each index
+An object of class "saegamlss_class" containing the values of the MSE for each area and for each index
 }
 \description{
 Compute the Non-parametric MSE for simplified SAE-GAMLSS for three possible different
@@ -66,9 +66,10 @@ data <- data.frame("y"=rLOGNO(20, mu=8, sigma=0.8),
 "ncomp"=rep(c(2,1,3,4), 5),
 "w"=1/runif(20, 0.5, 1))
 
-np_mse_ssaegamlss(data=data, y=data$y, sa = data$sa, ncomp=data$ncomp, fdis="LOGNO", index="Gini",
+np<- np_mse_ssaegamlss(data=data, y=data$y, sa = data$sa, ncomp=data$ncomp, fdis="LOGNO", index="Gini",
                   nRS=2, nCG=2, R=2)
 
+np
 
 }
 \author{

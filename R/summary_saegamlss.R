@@ -1,4 +1,6 @@
-#' Summary of object of class "saegamlss_class
+#' Summary of object of class "saegamlss_class"
+#' @description
+#' Summary for an object of class "saegamlss_class"
 #'
 #' @param obj An object of class "saegamlss_class"
 #' @param ... Additional parameters
@@ -10,7 +12,7 @@
 #' #est_saegamlss
 #'
 #'  dep.y <- data_gen(
-#'   Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 1, b1 = 10,
+#'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 1, b1 = 10,
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   b4 = NULL, x4 = NULL, xh = NULL, Dis = NO,
 #'   l = c(identity), sigma = 6, sigmah = NULL,
@@ -42,7 +44,7 @@
 #' #mse_saegamlss
 #'
 #' dep.y <- data_gen(
-#'   Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 4, b1 = 100,
+#'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 4, b1 = 100,
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
 #'   Dis, l = c(identity), sigma = 6, sigmah = NULL,

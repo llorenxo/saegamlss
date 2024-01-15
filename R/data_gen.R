@@ -27,7 +27,7 @@
 #' @import gamlss
 #' @import dplyr
 #' @import splitstackshape
-#' @returnA list of  length M. Each element of the list is a data frame that has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)
+#' @return A list of  length M. Each element of the list is a data frame that has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)
 #' @export
 #' @note The definition of the heteroschedastic term follows Ramirez-Aldana, R., & Naranjo, L. (2021).
 #' @examples # Normal data (2 populations)

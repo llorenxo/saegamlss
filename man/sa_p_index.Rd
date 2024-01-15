@@ -45,7 +45,7 @@ sa_p_index(
 \item{epsilon}{The value for the poverty aversion parameter. Default value is set to 1}
 }
 \value{
-A list with the estimated indicators and the value of
+An object of class "saegamlss_class" with the estimated indicators and the value of
 the estimated distribution parameters for each area
 }
 \description{

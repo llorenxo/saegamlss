@@ -1,6 +1,8 @@
-#' Plot of object of class "saegamlss_class
+#' Plot of object of class "saegamlss_class"
+#' @description
+#' Function to Plot object of class "saegamlss_class"
 #'
-#' @param obj An object of class "saegamlss_clas"
+#' @param obj An object of class "saegamlss_class"
 #' @param compare.Gini The MSE of a second estimator to be compared for the Gini index
 #' @param compare.Theil The MSE of a second estimator to be compared for the Theil index
 #' @param compare.Atkinson The MSE of a second estimator to be compared for the Atkinson index
@@ -15,7 +17,7 @@
 #' #est_saegamlss
 #'
 #'  dep.y <- data_gen(
-#'   Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 1, b1 = 10,
+#'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 1, b1 = 10,
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   b4 = NULL, x4 = NULL, xh = NULL, Dis = NO,
 #'   l = c(identity), sigma = 6, sigmah = NULL,
@@ -47,7 +49,7 @@
 #' #mse_saegamlss
 #'
 #' dep.y <- data_gen(
-#'   Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 4, b1 = 100,
+#'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 4, b1 = 100,
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
 #'   Dis, l = c(identity), sigma = 6, sigmah = NULL,

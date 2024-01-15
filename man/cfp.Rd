@@ -13,13 +13,13 @@ cfp(e, Phi, Xi, consumption, d, cc, DHE, N, eimp, Im, Ep, cf, classic = FALSE)
 
 \item{Xi}{Matrix having on the principal diagonal the inverse of the total supply}
 
-\item{consumption}{A dataset where each row is correspond to the vector of household consumption and each column is a specific consumption group}
+\item{consumption}{A dataset where each row corresponds to the vector of household consumption and each column is a specific consumption group}
 
 \item{d}{Final use matrix}
 
 \item{cc}{Vector with the expenditure on combustible of the household}
 
-\item{DHE}{The total volume of direct household emissions}
+\item{DHE}{The total volume of direcùt household emissions}
 
 \item{N}{Number of the units in the population}
 
