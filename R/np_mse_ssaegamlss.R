@@ -30,8 +30,10 @@
 #' "ncomp"=rep(c(2,1,3,4), 5),
 #' "w"=1/runif(20, 0.5, 1))
 #'
-#' np<- np_mse_ssaegamlss(data=data, y=data$y, sa = data$sa, ncomp=data$ncomp, fdis="LOGNO", index="Gini",
-#'                   nRS=2, nCG=2, R=2)
+#' np<- np_mse_ssaegamlss(data=data, y=data$y, sa = data$sa,
+#'                        ncomp=data$ncomp, fdis="LOGNO",
+#'                        index="Gini",
+#'                        nRS=2, nCG=2, R=2)
 #'
 #' np
 #'
