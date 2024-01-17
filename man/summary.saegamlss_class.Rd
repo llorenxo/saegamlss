@@ -4,10 +4,10 @@
 \alias{summary.saegamlss_class}
 \title{Summary of object of class "saegamlss_class"}
 \usage{
-\method{summary}{saegamlss_class}(obj, ...)
+\method{summary}{saegamlss_class}(object, ...)
 }
 \arguments{
-\item{obj}{An object of class "saegamlss_class"}
+\item{object}{An object of class "saegamlss_class"}
 
 \item{...}{Additional parameters}
 }
