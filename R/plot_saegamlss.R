@@ -2,7 +2,7 @@
 #' @description
 #' Function to Plot object of class "saegamlss_class"
 #'
-#' @param obj An object of class "saegamlss_class"
+#' @param x An object of class "saegamlss_class"
 #' @param compare.Gini The MSE of a second estimator to be compared for the Gini index
 #' @param compare.Theil The MSE of a second estimator to be compared for the Theil index
 #' @param compare.Atkinson The MSE of a second estimator to be compared for the Atkinson index
@@ -90,35 +90,35 @@
 #'
 #' plot(MSE, compare.Mean= runif(4,0, 2), compare.HCR= runif(4,2, 4))
 
-plot.saegamlss_class <- function(obj, compare.Gini = NULL,
+plot.saegamlss_class <- function(x, compare.Gini = NULL,
                                  compare.Theil = NULL,
                                  compare.Atkinson = NULL,
                                  compare.Mean = NULL,
                                  compare.HCR = NULL, ...){
-  if (names(obj[1])=="est"){
+  if (names(x[1])=="est"){
 
-    plot(obj$input_var$fit)
+    plot(x$input_var$fit)
 
-  } else if (names(obj[1])=="Gini" | names(obj[1])=="Theil" | names(obj[1])=="Atkinson"){
+  } else if (names(x[1])=="Gini" | names(x[1])=="Theil" | names(x[1])=="Atkinson"){
 
-    plot(obj$model)
+    plot(x$model)
 
-  } else if (names(obj[1])=="Gini.MSE" | names(obj[1])=="Theil.MSE" | names(obj[1])=="Atkinson.MSE"){
+  } else if (names(x[1])=="Gini.MSE" | names(x[1])=="Theil.MSE" | names(x[1])=="Atkinson.MSE"){
 
   if (is.null(compare.Gini) & is.null(compare.Theil) & is.null(compare.Atkinson)) stop(print("Error: an MSE to be compared is required"))
 
   Value <- Estimator <- NULL
 
-  l <- length(obj$Gini.MSE)
+  l <- length(x$Gini.MSE)
 
-  if ( l == 0 ) l <- length(obj$Theil.MSE)
-  if ( l == 0 ) l <- length(obj$Atkinson.MSE)
+  if ( l == 0 ) l <- length(x$Theil.MSE)
+  if ( l == 0 ) l <- length(x$Atkinson.MSE)
 
   pp <- pp1 <- pp2 <- pp3 <- pp4 <- pp5 <- rep(FALSE, l)
 
-  if (length(sapply(obj$Gini.MSE, function(x) is.null(x))) == l ) pp <- rep(TRUE, l)
-  if (length(sapply(obj$Theil.MSE, function(x) is.null(x))) == l ) pp1 <- rep(TRUE, l)
-  if (length(sapply(obj$Atkinson.MSE, function(x) is.null(x))) == l ) pp2 <- rep(TRUE, l)
+  if (length(sapply(x$Gini.MSE, function(x) is.null(x))) == l ) pp <- rep(TRUE, l)
+  if (length(sapply(x$Theil.MSE, function(x) is.null(x))) == l ) pp1 <- rep(TRUE, l)
+  if (length(sapply(x$Atkinson.MSE, function(x) is.null(x))) == l ) pp2 <- rep(TRUE, l)
   if (length(sapply(compare.Gini, function(x) is.null(x))) == l ) pp3 <- rep(TRUE, l)
   if (length(sapply(compare.Theil, function(x) is.null(x))) == l ) pp4 <- rep(TRUE, l)
   if (length(sapply(compare.Atkinson, function(x) is.null(x))) == l ) pp5 <- rep(TRUE, l)
@@ -127,9 +127,9 @@ plot.saegamlss_class <- function(obj, compare.Gini = NULL,
   sub <- rep(NA, l)
 
   data <- data.frame(
-      "Gini" = ifelse(!pp, sub , obj$Gini.MSE),
-      "Theil" = ifelse(!pp1, sub, obj$Theil.MSE),
-      "Atkinson" = ifelse(!pp2, sub, obj$Atkinson.MSE),
+      "Gini" = ifelse(!pp, sub , x$Gini.MSE),
+      "Theil" = ifelse(!pp1, sub, x$Theil.MSE),
+      "Atkinson" = ifelse(!pp2, sub, x$Atkinson.MSE),
       "compared.Gini" = ifelse(!pp3, sub, compare.Gini),
       "compared.Theil" = ifelse(!pp4, sub, compare.Theil),
       "compared.Atkinson" = ifelse(!pp5, sub, compare.Atkinson)
@@ -154,14 +154,14 @@ plot.saegamlss_class <- function(obj, compare.Gini = NULL,
 
     Value <- Estimator <- NULL
 
-    l <- length(obj$est_mse$MSE_mean)
+    l <- length(x$est_mse$MSE_mean)
 
-    if ( l == 0 ) l <- length(obj$est_mse$MSE_HCR)
+    if ( l == 0 ) l <- length(x$est_mse$MSE_HCR)
 
     pp <- pp1 <- pp2 <- pp3 <- rep(FALSE, l)
 
-    if (length(sapply(obj$est_mse$MSE_mean, function(x) is.null(x))) == l ) pp <- rep(TRUE, l)
-    if (length(sapply(obj$est_mse$MSE_HCR, function(x) is.null(x))) == l ) pp1 <- rep(TRUE, l)
+    if (length(sapply(x$est_mse$MSE_mean, function(x) is.null(x))) == l ) pp <- rep(TRUE, l)
+    if (length(sapply(x$est_mse$MSE_HCR, function(x) is.null(x))) == l ) pp1 <- rep(TRUE, l)
     if (length(sapply(compare.Mean, function(x) is.null(x))) == l ) pp2 <- rep(TRUE, l)
     if (length(sapply(compare.HCR, function(x) is.null(x))) == l ) pp3 <- rep(TRUE, l)
 
@@ -169,8 +169,8 @@ plot.saegamlss_class <- function(obj, compare.Gini = NULL,
     sub <- rep(NA, l)
 
     data <- data.frame(
-      "Mean" = ifelse(!pp, sub , obj$est_mse$MSE_mean),
-      "HCR" = ifelse(!pp1, sub, obj$est_mse$MSE_HCR),
+      "Mean" = ifelse(!pp, sub , x$est_mse$MSE_mean),
+      "HCR" = ifelse(!pp1, sub, x$est_mse$MSE_HCR),
       "compared.Mean" = ifelse(!pp2, sub, compare.Mean),
       "compared.HCR" = ifelse(!pp3, sub, compare.HCR)
     )
