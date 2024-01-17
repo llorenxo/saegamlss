@@ -2,7 +2,7 @@
 #' @description
 #' Summary for an object of class "saegamlss_class"
 #'
-#' @param obj An object of class "saegamlss_class"
+#' @param object An object of class "saegamlss_class"
 #' @param ... Additional parameters
 #'
 #' @return The summary of object of class "saegamlss_class"
@@ -85,103 +85,103 @@
 #'
 #' summary(MSE)
 
-summary.saegamlss_class <- function(obj, ...){
-  if (names(obj[1])=="est"){
-    summary(obj$input_var$fit)
+summary.saegamlss_class <- function(object, ...){
+  if (names(object[1])=="est"){
+    summary(object$input_var$fit)
 
     cat("\n\n",
         "Estimated random-effect(s): \n\n",
-        getSmo(obj$input_var$fit)$coef, "\n\n",
+        getSmo(object$input_var$fit)$coef, "\n\n",
 
         "Estimated values of the Mean: \n\n",
 
-        if (!is.null(obj$est$ME)){
-          obj$est$ME
+        if (!is.null(object$est$ME)){
+          object$est$ME
         }else {
           print("Not estimated")
         }, "\n\n",
         "Estimated values of the HCR: \n\n",
 
-        if (!is.null(obj$est$HCR)){
-          obj$est$HCR
+        if (!is.null(object$est$HCR)){
+          object$est$HCR
         } else {
           print("Not estimated")
         }, "\n\n")
 
-  } else if (names(obj[1])=="Gini" | names(obj[1])=="Theil" | names(obj[1])=="Atkinson"){
-    summary(obj$model)
+  } else if (names(object[1])=="Gini" | names(object[1])=="Theil" | names(object[1])=="Atkinson"){
+    summary(object$model)
 
     cat("\n\n",
         "Estimated random-effect(s): \n\n",
-        getSmo(obj$model)$coef, "\n\n",
+        getSmo(object$model)$coef, "\n\n",
 
         "Estimated values of the Gini: \n\n",
 
-        if (!is.null(obj$Gini)){
-          obj$Gini
+        if (!is.null(object$Gini)){
+          object$Gini
         }else {
           print("Not estimated")
         }, "\n\n",
         "Estimated values of the Theil: \n\n",
 
-        if (!is.null(obj$Theil)){
-          obj$Theil
+        if (!is.null(object$Theil)){
+          object$Theil
         } else {
           print("Not estimated")
         }, "\n\n",
         "Estimated values of the Atkinson: \n\n",
 
-        if (!is.null(obj$Atkinson)){
-          obj$Atkinson
+        if (!is.null(object$Atkinson)){
+          object$Atkinson
         } else {
           print("Not estimated")
         }, "\n\n")
-  } else if (names(obj[1])=="Gini.MSE" | names(obj[1])=="Theil.MSE" | names(obj[1])=="Atkinson.MSE"){
+  } else if (names(object[1])=="Gini.MSE" | names(object[1])=="Theil.MSE" | names(object[1])=="Atkinson.MSE"){
 
     cat("\n\n",
 
         "Estimated MSE for Gini index: \n\n",
 
-        if (!is.null(obj$Gini.MSE)){
-          obj$Gini.MSE
+        if (!is.null(object$Gini.MSE)){
+          object$Gini.MSE
         }else {
           print("Not estimated")
         }, "\n\n",
         "Estimated MSE for Theil index: \n\n",
 
-        if (!is.null(obj$Theil)){
-          obj$Theil.MSE
+        if (!is.null(object$Theil)){
+          object$Theil.MSE
         } else {
           print("Not estimated")
         }, "\n\n",
         "Estimated MSE for Atkinson index: \n\n",
 
-        if (!is.null(obj$Atkinson)){
-          obj$Atkinson.MSE
+        if (!is.null(object$Atkinson)){
+          object$Atkinson.MSE
         } else {
           print("Not estimated")
         }, "\n\n")
   }   else {
-    summary(obj$est$input_var$fit)
+    summary(object$est$input_var$fit)
 
     cat("\n\n",
 
         "Estimated random-effect(s): \n\n",
-        getSmo(obj$est$input_var$fit)$coef, "\n\n",
+        getSmo(object$est$input_var$fit)$coef, "\n\n",
 
         "Summary of estimated MSE (mean): \n\n",
 
-        if (!is.null(obj$est_mse$MSE_mean)){
-          names(summary(obj$est_mse$MSE_mean))
-          summary(obj$est_mse$MSE_mean)
+        if (!is.null(object$est_mse$MSE_mean)){
+          names(summary(object$est_mse$MSE_mean))
+          summary(object$est_mse$MSE_mean)
         }else {
           print("Not estimated")
         }, "\n\n",
         "Summary of estimated MSE (HCR): \n\n",
 
-        if (!is.null(obj$est_mse$MSE_HCR)){
-          names(summary(obj$est_mse$MSE_HCR))
-          summary(obj$est_mse$MSE_HCR)
+        if (!is.null(object$est_mse$MSE_HCR)){
+          names(summary(object$est_mse$MSE_HCR))
+          summary(object$est_mse$MSE_HCR)
         } else {
           print("Not estimated")
         }, "\n\n")
