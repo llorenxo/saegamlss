@@ -5,7 +5,7 @@
 \title{Plot of object of class "saegamlss_class"}
 \usage{
 \method{plot}{saegamlss_class}(
-  obj,
+  x,
   compare.Gini = NULL,
   compare.Theil = NULL,
   compare.Atkinson = NULL,
@@ -15,7 +15,7 @@
 )
 }
 \arguments{
-\item{obj}{An object of class "saegamlss_class"}
+\item{x}{An object of class "saegamlss_class"}
 
 \item{compare.Gini}{The MSE of a second estimator to be compared for the Gini index}
 
