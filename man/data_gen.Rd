@@ -74,9 +74,12 @@ data_gen(
 
 \item{id}{Unit id.}
 }
+<<<<<<< HEAD
 \value{
 A list of  length M. Each element of the list is a data frame that has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)
 }
+=======
+>>>>>>> a74883390a3cda411eefbe008ee4d6279fd79702
 \description{
 A tool to generate the dependent variable, with fixed covariates.
  The dependent variable could be generated for more than 100 distributions    which have at maximum 4 parameters. Each parameter could be defined in terms of covariates and random-effects.

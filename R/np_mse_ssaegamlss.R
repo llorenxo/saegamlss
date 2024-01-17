@@ -145,6 +145,8 @@ for (t2 in 1:R){
   dif5=rbind(dif5, theil_gamlss_boot[-1])
 }
 
+
+
 if (is.null(index)){
   result <- list("Gini.MSE"=colMeans(dif4[-1,]), "Theil.MSE"=colMeans(dif5[-1,]), "Atkinson.MSE"=colMeans(dif3[-1,]))
 } else if (index=="Gini"){

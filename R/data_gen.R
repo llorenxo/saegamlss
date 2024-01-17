@@ -270,9 +270,5 @@ data_gen <- function(Ni, M = NULL , D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NUL
     list.data[[i]] <- data
   }
 
-
-
-
-
   return(list.data)
 }
