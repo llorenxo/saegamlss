@@ -82,27 +82,26 @@ data_gen <- function(Ni, M = NULL , D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NUL
                      xh = NULL, Dis, l, sigma = NULL, sigmah = NULL, sigmae = NULL, ty = NULL, costh = NULL,
                      seed = NULL, id = NULL) {
   list.data <- list()
-  if (is.null(seed) == TRUE) {
-    seed <- 123
+  if (is.null(seed)) {
+    set.seed(123)
+  } else {
+    set.seed(seed)
   }
-  if (is.null(M) == TRUE) {
-    M <- 1
-  }
-  if (is.null(ty) == TRUE) {
-    ty <- "other"
-  }
-  if (is.null(costh) == TRUE) {
-    costh <- 1
-  }
-  if (is.null(id) == TRUE) {
-    id <- c(1:sum(Ni))
-  }
-  if (is.null(x2) == TRUE & is.null(x3) == TRUE & is.null(x4) == TRUE) {
+
+  if (is.null(M))     M <- 1
+
+  if (is.null(ty))  ty <- "other"
+
+  if (is.null(costh) )     costh <- 1
+
+  if (is.null(id)) id <- c(1:sum(Ni))
+
+  if (all(is.null(c(x2, x3, x4)))) {
     covariate <- as.data.frame(x1)
-  } else if (is.null(x3) == TRUE & is.null(x4) == TRUE) {
+  } else if (all(is.null(c(x3, x4)))) {
     covariate <- as.data.frame(cbind(x1, x2))
     covariate <- subset(covariate, select = which(!duplicated(names(covariate))))
-  } else if (is.null(x4) == TRUE) {
+  } else if (is.null(x4)) {
     covariate <- as.data.frame(cbind(x1, x2, x3))
     covariate <- subset(covariate, select = which(!duplicated(names(covariate))))
   } else {
@@ -110,16 +109,12 @@ data_gen <- function(Ni, M = NULL , D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NUL
     covariate <- subset(covariate, select = which(!duplicated(names(covariate))))
   }
 
-  if (is.null(x2) == TRUE) {
-    x2 <- rep(0, sum(Ni))
-  }
-  if (is.null(x3) == TRUE) {
-    x3 <- rep(0, sum(Ni))
-  }
-  if (is.null(x4) == TRUE) {
-    x4 <- rep(0, sum(Ni))
-  }
-  set.seed <- seed
+  if (is.null(x2))  x2 <- rep(0, sum(Ni))
+
+  if (is.null(x3))  x3 <- rep(0, sum(Ni))
+
+  if (is.null(x4)) x4 <- rep(0, sum(Ni))
+
   ym <- matrix(nrow = sum(Ni), ncol = M)
   for (i in 1:M) {
     message("Generating ", i, " of ", M)

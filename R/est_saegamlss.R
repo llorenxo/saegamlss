@@ -116,7 +116,7 @@ est_saegamlss <- function(sample, nonsample, D, Ni, ni, f1, f2 = NULL, f3 = NULL
     z <- 0.6 * median(dpvar, na.rm = TRUE)
   }
 
-  set.seed <- seed
+  set.seed(seed)
 
   if (np == 1) {
     gam1 <- gamlss::gamlss(f1,

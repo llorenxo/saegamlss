@@ -85,13 +85,13 @@ mse_saegamlss <- function(est, D, Ni, loop = NULL, l, Dis, Iden = F, samplesize,
   est <<- (est)
 
   if (is.null(loop) == TRUE) {
-    seed <- 200
+    loop <- 200
   }
 
   if (is.null(seed) == TRUE) {
     seed <- 123
   }
-  set.seed <- seed
+  set.seed(seed)
 
   sa <- as.factor(c(1:D))
   mse <- array()
