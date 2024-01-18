@@ -70,15 +70,15 @@
 mse_saegamlss <- function(est, D, Ni, loop = NULL, l, Dis, Iden = F, samplesize, data, cov1, cov2 = NULL, cov3 = NULL, cov4 = NULL, seed = NULL) {
   "%!in%" <- function(x, y) !("%in%"(x, y))
 
-  replace_term <- function(f, old, new) {
-    n <- length(f)
+  replace_term <- function(f1, old, new) {
+    n <- length(f1)
     if (n > 1) {
-      for (i in 1:n) f[[i]] <- Recall(f[[i]], old, new)
+      for (i in 1:n) f1[[i]] <- Recall(f1[[i]], old, new)
 
-      return(f)
+      return(f1)
     }
 
-    if (f == old) new else f
+    if (f1 == old) new else f1
   }
 
 
@@ -93,15 +93,7 @@ mse_saegamlss <- function(est, D, Ni, loop = NULL, l, Dis, Iden = F, samplesize,
   }
   set.seed(seed)
 
-  sa <- as.factor(c(1:D))
-  mse <- array()
-  for (i in 1:D) {
-    mse[i] <- 0
-  }
-  MSE <- array()
-  for (i in 1:D) {
-    MSE[i] <- 0
-  }
+  mse <- MSE <- rep(0, D)
   u <- 0
 
 
@@ -238,7 +230,7 @@ mse_saegamlss <- function(est, D, Ni, loop = NULL, l, Dis, Iden = F, samplesize,
     } else if (est$input_var$np == 3) {
       ys1 <- Dis(sum(Ni), mu = mu_star, sigma = sigma_star, nu = nu_star)
     } else if (est$input_var$np == 4) {
-      if (is.null(est$input_var$tau.fix) == TRUE & is.null(est$input_var$nu.fix) == TRUE) {
+      if (is.null(est$input_var$tau.fix) == TRUE && is.null(est$input_var$nu.fix) == TRUE) {
         ys1 <- Dis(sum(Ni), mu = mu_star, sigma = sigma_star, nu = nu_star, tau = tau_star)
       } else if (is.null(est$input_var$tau.fix) == TRUE) {
         ys1 <- Dis(sum(Ni), mu = mu_star, sigma = sigma_star, nu = 1, tau = tau_star)
