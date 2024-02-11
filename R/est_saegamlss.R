@@ -1,15 +1,16 @@
 #' Monte Carlo estimation of mean and HCR based on SAE GAMLSS
 #' @description A function to estimate the mean or/and the HCR     derived from unit-level small area estimation based on generalized additive models for location, scale and shape
 #'
-#' @param sample A dataset of sampled units. With dependent variable (named y), covariates and small area (named sa)
-#' @param nonsample  A dataset of non-sampled units. With covariates and small area (named sa)
-#' @param D Number of Areas
+#' @param sample A dataset of sampled units.
+#' @param nonsample  A dataset of non-sampled units. With covariates and small areas
+#' @param y_dip The dependent variable
+#' @param sa The name of the variable cotaining the areas
 #' @param Ni 1xD vector containing the number of units (in population) for each area
 #' @param ni 1xD vector containing the number of sampled-units for each area
-#' @param f1 A formula object for fitting a model to the mu parameter, e.g.f1=y~x+random(sa)
-#' @param f2 A formula object for fitting a model to the sigma parameter, e.g.f2=y~x+random(sa)
-#' @param f3 A formula object for fitting a model to the nu parameter, e.g.f3=y~x+random(sa)
-#' @param f4 A formula object for fitting a model to the tau parameter, e.g.f4=y~x+random(sa)
+#' @param f1 A formula object for fitting a model for the mu parameter, e.g.f1=y~x+random(sa)
+#' @param f2 A formula object for fitting a model for the sigma parameter, e.g.f2=y~x+random(sa)
+#' @param f3 A formula object for fitting a model for the nu parameter, e.g.f3=y~x+random(sa)
+#' @param f4 A formula object for fitting a model for the tau parameter, e.g.f4=y~x+random(sa)
 #' @param fdis The distribution family of the GAMLSS object
 #' @param nRS Number of loop to do with the RS() algorithm
 #' @param nCG Number of loop to do with the CG() algorithm
@@ -21,10 +22,13 @@
 #' @param tau.fix A value to be fixed to 1 to obtain the Singh-Maddala distribution. Dist must be GB2 and np=4
 #' @param nu.fix 	A value to be fixed to 1 to obtain the Dagum distribution. Dist must be GB2 and np=4
 #' @param z 	The Poverty line. Default is equal to 0.6 of the dependent variable
+#'
 #' @return an object of class "saegamlss_class" which contains two list. The first list, named est has:
 #'  ME 1xD vector with the estimate of the mean and
 #'  HCR 1xD vector with the estimate of the HCR.
 #'  The second, named input_var has:
+#'  y the dependent variable
+#'  sa the name of the variable cotaining the areas
 #'  fit a GAMLSS object with all the components of the regression
 #'  f1 a formula object used for fitting a model to the mu parameter
 #'  f2 a formula object used for fitting a model to the sigma parameter
@@ -56,19 +60,18 @@
 #'
 #' data <- dep.y[[1]]
 #' #
-#' # sample data with a sample fraction of 0.1
+#' # sample data with a sample fraction of 0.5
 #' #
-#' library(splitstackshape)
 #' # sample data
 #' #
-#' sample <- stratified(data, "sa", size = 0.1)
+#' sample <- stratified(data, "sa", size = 0.5)
 #' # nonsample data
 #' #
-#' nonsample <- nonsample(data = data, sample = sample, id = id)
+#' nonsample <- subset(data, !(data$id%in%sample$id))
 #' # estimate
 #' est_saegamlss(
-#'   sample = sample, nonsample = nonsample,
-#'   D = 4, Ni = rep(10, 4), ni = rep(1, 4),
+#'   sample = sample, nonsample = nonsample, y_dip="y",
+#'   sa="sa", Ni = rep(10, 4), ni = rep(1, 4),
 #'   f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
 #'   f4 = NULL, fdis = NO, nRS = 150, nCG = 150, R = 200,
 #'   Dis = rNO, np = 2, param = NULL,
@@ -80,41 +83,33 @@
 #' @note With "object"$input_var$fit is possible to use all the classical function used by gamlss
 #'  The Small Area have to be denoted with a number from 1 to D
 
-est_saegamlss <- function(sample, nonsample, D, Ni, ni, f1, f2 = NULL, f3 = NULL, f4 = NULL, fdis, nRS = NULL, nCG = NULL, R = NULL,
+est_saegamlss <- function(sample, nonsample, y_dip, sa, Ni, ni, f1, f2 = NULL, f3 = NULL, f4 = NULL, fdis, nRS = NULL, nCG = NULL, R = NULL,
                           Dis, np, param = NULL, seed = NULL, tau.fix = NULL, nu.fix = NULL, z = NULL) {
-  sa <- y <- NULL
+
+  y <- sample[[y_dip]]
+  sa_n <- nonsample[[sa]]
   mixed <- NULL
-  dpvar <- dplyr::bind_rows(sample, nonsample)$y
+  D <- length(Ni)
 
-  if (is.null(seed) == TRUE) {
-    seed <- 123
-  }
-  if (is.null(param) == TRUE) {
-    param <- c("both")
-  }
+  if (is.null(seed)) seed <- 123
 
-  if (is.null(R) == TRUE) {
-    R <- 50
-  }
-  if (is.null(nRS) == TRUE) {
-    nRS <- 150
-  }
-  if (is.null(nCG) == TRUE) {
-    nCG <- 150
-  }
+  if (is.null(param)) param <- c("both")
 
-  if (is.null(f2) == TRUE) {
-    f2 <- y ~1
-  }
-  if (is.null(f3) == TRUE) {
-    f3 <- y ~1
-  }
-  if (is.null(f4) == TRUE) {
-    f4 <- y ~1
-  }
-  if (is.null(z) == TRUE) {
-    z <- 0.6 * median(dpvar, na.rm = TRUE)
-  }
+
+  if (is.null(R)) R <- 50
+
+  if (is.null(nRS)) nRS <- 150
+
+  if (is.null(nCG)) nCG <- 150
+
+  if (is.null(f2)) f2 <- y ~ 1
+
+  if (is.null(f3)) f3 <- y ~ 1
+
+  if (is.null(f4)) f4 <- y ~ 1
+
+  if (is.null(z)) z <- 0.6 * median(y, na.rm = TRUE)
+
 
   set.seed(seed)
 
@@ -125,13 +120,21 @@ est_saegamlss <- function(sample, nonsample, D, Ni, ni, f1, f2 = NULL, f3 = NULL
 
     yns <- data.frame(
       "ys" = as.vector(gamlss::predictAll(gam1, data = sample, newdata = nonsample)$mu),
-      "sa" = nonsample$sa
+      "sa" = sa_n
     )
     ME <- rep(0, D)
     HCR <- rep(0, D)
+
+    ranf <- gamlss::getSmo(gam1)$coef
+    sige <- gamlss::getSmo(gam1)$sige
+    sigb <- gamlss::getSmo(gam1)$sigb
+
+
     for (x in 1:R) {
       for (i in 1:D) {
         yns1 <- subset(yns, sa == i)
+        lamb <- sigb / (sigb+sige/length(yns1$ys))
+        yns1$ys <- yns1$ys - rep(ranf[i], length(yns1$ys))+lamb*(rep(ranf[i], length(yns1$ys)))
         samp <- as.vector(Dis(Ni[i] - ni[i], mu = yns1$ys))
         sp <- dplyr::pull(subset(sample, sa == i), f1[[2]])
         samp1 <- c(samp, sp)
@@ -155,7 +158,7 @@ est_saegamlss <- function(sample, nonsample, D, Ni, ni, f1, f2 = NULL, f3 = NULL
     yns <- data.frame(
       "ys" = as.vector(gamlss::predictAll(gam1, data = sample, newdata = nonsample)$mu),
       "yss" = as.vector(gamlss::predictAll(gam1, data = sample, newdata = nonsample)$sigma),
-      "sa" = nonsample$sa
+      "sa" = sa_n
     )
     ME <- rep(0, D)
     HCR <- rep(0, D)
@@ -186,7 +189,7 @@ est_saegamlss <- function(sample, nonsample, D, Ni, ni, f1, f2 = NULL, f3 = NULL
       "ys" = as.vector(gamlss::predictAll(gam1, data = sample, newdata = nonsample)$mu),
       "yss" = as.vector(gamlss::predictAll(gam1, data = sample, newdata = nonsample)$sigma),
       "ysn" = as.vector(gamlss::predictAll(gam1, data = sample, newdata = nonsample)$nu),
-      "sa" = nonsample$sa
+      "sa" = sa_n
     )
     ME <- rep(0, D)
     HCR <- rep(0, D)
@@ -218,7 +221,7 @@ est_saegamlss <- function(sample, nonsample, D, Ni, ni, f1, f2 = NULL, f3 = NULL
       "yss" = as.vector(gamlss::predictAll(gam1, data = sample, newdata = nonsample)$sigma),
       "ysn" = as.vector(gamlss::predictAll(gam1, data = sample, newdata = nonsample)$nu),
       "yst" = as.vector(gamlss::predictAll(gam1, data = sample, newdata = nonsample)$tau),
-      "sa" = nonsample$sa
+      "sa" = sa_n
     )
     ME <- rep(0, D)
     HCR <- rep(0, D)
@@ -249,12 +252,12 @@ est_saegamlss <- function(sample, nonsample, D, Ni, ni, f1, f2 = NULL, f3 = NULL
     estim <- list("HCR" = HCR)
   }
 
-  input_var <- list(
+  input_var <- list(y=y_dip, sa=sa,
     "fit" = gam1, "f1" = f1, "f2" = f2, "f3" = f3, "f4" = f4, "fdis" = fdis, Dis=Dis,
     "np" = np, "nRS" = nRS, "nCG" = nCG, "R" = R, "D" = D, "Ni" = Ni, "ni" = ni,
     "nu.fix" = nu.fix, "tau.fix" = tau.fix, "param" = param, "origindata" = sample, "z" = z
   )
-  result <- list("est" = estim, "input_var" = input_var)
+  result <- list("estimates" = estim, "input_var" = input_var)
   attr(result, "class") <- "saegamlss_class"
   return(result)
 }
