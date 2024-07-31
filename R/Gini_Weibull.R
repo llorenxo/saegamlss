@@ -1,11 +1,4 @@
-#' Gini index Weibull distribution
-#' @description Compute the Gini index with Weibull distribution
-#'
-#' @param sigma The estimated value of sigma
-#'
-#' @return The Gini index
-#'
-
+#Not Exp
 
 
 gini.weibull <- function(sigma){
