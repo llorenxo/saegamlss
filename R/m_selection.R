@@ -6,6 +6,7 @@
 #' @param y The dependent variable
 #' @param nRS Number of loop to do with the RS() algorithm
 #' @param nCG Number of loop to do with the CG() algorithm
+#' @param kp the penalty for the GAIC (Step 1) with default values kp=2 the standard AIC.
 #' @param ndis Number of distribution to be consider at the first step. Default is 3
 #' @param R Number of loop to be done within the k-fold cross validation
 #' @param k Number of fold in k-fold cross validation. Default is 7
@@ -13,8 +14,9 @@
 #' @param type Type of step 2 to be done. A or B. Default is B (see references)
 #' @param fix_dis A distribution to be tested even if is not selected within the ndis at step 1
 #' @param seed The seed
+#' @param supp Suppress the warning in the three step. Defualt is TRUE
 #'
-#' @return A list with the results of each steps.
+#' @return An object of class "saegamlss_class", named results, with the results of each steps and the GAIC of all the tested distributions at step 1.
 #' @note The summary (Step2) do not reports results on the random effects as usual for GAMLSS. See Step2 select_v for the random effects
 #' @export
 #'
@@ -39,34 +41,25 @@
 #' sample_data$x2=rnorm(40, 0, 1)
 #'
 #' m_selection(sample_data=sample_data, y = sample_data$y,
-#'             f_cov= ~x1+x2+random(sa),nRS=20, nCG=20, ndis=2,
-#'             R=2, k=2, type="A", fix_dis="NO", seed=123)
+#'             f_cov= ~x1+x2+random(sa), nRS=20, nCG=20, ndis=1,
+#'             R=2, k=1, type="A", fix_dis="NO", seed=123)
 
-m_selection <- function(sample_data, y, f_cov,  nRS = NULL, nCG = NULL,
-                        ndis=NULL, R=NULL, k=NULL, type=NULL, fix_dis=NULL, seed=NULL ){
+m_selection <- function(sample_data, y, f_cov,  nRS = NULL, nCG = NULL, kp=2,
+                        ndis=NULL, R=NULL, k=NULL, type=NULL, fix_dis=NULL, seed=NULL,
+                        supp=TRUE){
   mixed <- NULL
   sel2 <- NULL
   if (is.null(ndis))  ndis <- 3
   if (is.null(R))  R <- 200
   if (is.null(k))  k <- 7
   if (is.null(seed)) seed <- 123
-  options(warn=-1)
+  if(isTRUE(supp)) options(warn=-1)
   set.seed(seed)
   sample_data$y = sample_data %>% dplyr::select(y) %>% dplyr::pull()
 
-  #usethis
-
-  is.NullOb <- function(x) is.null(x) | all(sapply(x, is.null))
-
-  ## Recursively step down into list, removing all such objects
-  rmNullObs <- function(x) {
-    x <- Filter(Negate(is.NullOb), x)
-    lapply(x, function(x) if (is.list(x)) rmNullObs(x) else x)
-  }
-
 #step 1
-
-  sel <- rownames(as.data.frame(gamlss::fitDist(y)$fits[1:ndis]))
+  res_step1 <- gamlss::fitDist(y, k=kp)
+  sel <- rownames(as.data.frame(res_step1$fits[1:ndis]))
   if (!is.null(fix_dis)) sel <- c(sel, fix_dis)
   sel <- unique(sel)
 
@@ -201,7 +194,7 @@ m_selection <- function(sample_data, y, f_cov,  nRS = NULL, nCG = NULL,
   }
 
   step3=as.data.frame(colMeans(a, na.rm=TRUE))
-  colnames(step3)="Values"
+  colnames(step3) = "Values"
   step3$Dist <- as.vector(sel)
   rm(sel2, envir = .GlobalEnv)
   names(select_v)=sel
@@ -210,8 +203,9 @@ m_selection <- function(sample_data, y, f_cov,  nRS = NULL, nCG = NULL,
 
   }
   select_v <- rmNullObs(select_v)
-
-  return(list("step1"=sel, "step2"=select_v, "step3"=step3))
-
+  results=list("step1"=sel, "step2"=select_v, "step3"=step3, "GAIC values"=res_step1,
+               "sample_data"=sample_data, y="y")
+  attr(results, "class") <- "saegamlss_class"
+  return(results)
 }
 

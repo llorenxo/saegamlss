@@ -13,10 +13,9 @@ sa_p_index(
   sa,
   w = NULL,
   fdis,
-  nRS = 10,
-  nCG = 10,
   index = NULL,
-  epsilon = NULL
+  epsilon = NULL,
+  seed = 123
 )
 }
 \arguments{
@@ -36,13 +35,11 @@ sa_p_index(
 
 \item{fdis}{The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EXP (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)}
 
-\item{nRS}{Number of loop to do with the RS() algorithm}
-
-\item{nCG}{Number of loop to do with the CG() algorithm}
-
 \item{index}{The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is all}
 
 \item{epsilon}{The value for the poverty aversion parameter. Default value is set to 1}
+
+\item{seed}{The seed. Default is 124}
 }
 \value{
 An object of class "saegamlss_class" with the estimated indicators and the value of
@@ -53,10 +50,9 @@ Estimate the values of poverty indicators in small areas using the simplified SA
 }
 \examples{
 
-set.seed(1234)
 
 data <- data.frame("y"= rLOGNO(1000, mu=10, sigma=0.8),
-"sa" = as.factor(rep(c(1,2,3,4,5),200)))
+                   "sa" = as.factor(rep(c(1,2,3,4,5),200)))
 
 sa_p_index(data=data, y=data$y, sa = data$sa, fdis="LOGNO", index="Gini")
 }

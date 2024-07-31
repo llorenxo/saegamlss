@@ -29,13 +29,13 @@
 #' sample <- stratified(data, "sa", size = 0.1)
 #' # nonsample data
 #' #
-#' nonsample <- nonsample(data = data, sample = sample, id = id)
+#' nonsample <- subset(data, !(data$id%in%sample$id))
 #' # estimate
 #' est <- est_saegamlss(
-#'   sample = sample, nonsample = nonsample,
-#'   D = 4, Ni = rep(10, 4), ni = rep(1, 4),
+#'   sample = sample, nonsample = nonsample,  y_dip="y",
+#'   sa="sa", Ni = rep(10, 4), ni = rep(1, 4),
 #'   f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
-#'   f4 = NULL, fdis = NO, nRS = 150, nCG = 150, R = 200,
+#'   f4 = NULL, fdis = NO, R = 200,
 #'   Dis = rNO, np = 2, param = NULL,
 #'   seed = 1234, tau.fix = NULL, nu.fix = NULL
 #' )
@@ -60,13 +60,13 @@
 #' sample <- stratified(data, "sa", size = 0.5)
 #' # nonsample data
 #' #
-#' nonsample <- nonsample(data = data, sample = sample, id = id)
+#' nonsample <- subset(data, !(data$id%in%sample$id))
 #' # estimate
 #' est <- est_saegamlss(
-#'   sample = sample, nonsample = nonsample, D = 4,
+#'   sample = sample, nonsample = nonsample, y_dip="y",  sa="sa",
 #'   Ni = rep(10, 4), ni = rep(1, 4), f1 = y ~ x1 + random(sa),
-#'   f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO, nRS = 150,
-#'   nCG = 150, R = 2, Dis = rNO, np = 2, param = NULL,
+#'   f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
+#'   R = 2, Dis = rNO, np = 2, param = NULL,
 #'   seed = 1234, tau.fix = NULL, nu.fix = NULL
 #' )
 #' #
@@ -77,33 +77,33 @@
 #' # compute the MSE
 #' #
 #' MSE <- mse_saegamlss(
-#'   est = est, D = 4, Ni = rep(10, 4), loop = 2,
-#'   l = c(identity), Dis = rNO, Iden = TRUE,
-#'   samplesize = 0.1, data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
+#'   est = est, loop = 2,
+#'   l = c(identity), Iden = TRUE,
+#'  data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
 #'   cov4 = NULL, seed = 1234
 #' )
-#'
 #' summary(MSE)
 
 summary.saegamlss_class <- function(object, ...){
-  if (names(object[1])=="est"){
+  if (names(object[1])=="estimates"){
     summary(object$input_var$fit)
 
     cat("\n\n",
-        "Estimated random-effect(s): \n\n",
-        getSmo(object$input_var$fit)$coef, "\n\n",
+        "Estimated random-effect(s): \n\n")
 
-        "Estimated values of the Mean: \n\n",
+        getSmo(object$input_var$fit)$coef
 
-        if (!is.null(object$est$ME)){
-          object$est$ME
+       cat("\n\n Estimated values of the Mean: \n\n",
+
+        if (!is.null(object$estimates$ME)){
+          object$estimates$ME
         }else {
           print("Not estimated")
         }, "\n\n",
         "Estimated values of the HCR: \n\n",
 
-        if (!is.null(object$est$HCR)){
-          object$est$HCR
+        if (!is.null(object$estimates$HCR)){
+          object$estimates$HCR
         } else {
           print("Not estimated")
         }, "\n\n")
@@ -136,7 +136,9 @@ summary.saegamlss_class <- function(object, ...){
         } else {
           print("Not estimated")
         }, "\n\n")
-  } else if (names(object[1])=="Gini.MSE" | names(object[1])=="Theil.MSE" | names(object[1])=="Atkinson.MSE"){
+  } else if (names(object[1])=="Gini.MSE"
+             | names(object[1])=="Theil.MSE"
+             | names(object[1])=="Atkinson.MSE"){
 
     cat("\n\n",
 
@@ -161,13 +163,55 @@ summary.saegamlss_class <- function(object, ...){
         } else {
           print("Not estimated")
         }, "\n\n")
-  }   else {
-    summary(object$est$input_var$fit)
+  } else if (names(object[1])=="step1") {
+
+    cat("\n\n",
+        "Step 1 distribution selection:\n\n",
+        object$step1, "\n\n",
+        "Step 2 variable selection: \n\n")
+
+    for (i in 1:length(object$step1)) {
+      print(object$step1[i])
+
+      if (as.character(eval(parse(text = deparse(object$step2[i])))[[1]][2])=="NULL"){
+        mu_f <- as.character(eval(parse(text = deparse(object$step2[i])))[[1]][1])
+        cat(paste("mu_f=", mu_f, "\n "))
+      } else if (as.character(eval(parse(text = deparse(object$step2[i])))[[1]][3])=="NULL"){
+        mu_f <- as.character(eval(parse(text = deparse(object$step2[i])))[[1]][1])
+        sigma_f <- as.character(eval(parse(text = deparse(object$step2[i])))[[1]][2])
+        cat(paste("mu_f=", mu_f, " sigma_f=", sigma_f, "\n "))
+      } else if (as.character(eval(parse(text = deparse(object$step2[i])))[[1]][2])=="NULL"){
+        mu_f <- as.character(eval(parse(text = deparse(object$step2[i])))[[1]][1])
+        sigma_f <- as.character(eval(parse(text = deparse(object$step2[i])))[[1]][2])
+        nu_f <- as.character(eval(parse(text = deparse(object$step2[i])))[[1]][3])
+        cat(paste("mu_f=", mu_f, " sigma_f=", sigma_f, " nu_f=", nu_f, "\n "))
+      } else {
+        mu_f <- as.character(eval(parse(text = deparse(object$step2[i])))[[1]][1])
+        sigma_f <- as.character(eval(parse(text = deparse(object$step2[i])))[[1]][2])
+        nu_f <- as.character(eval(parse(text = deparse(object$step2[i])))[[1]][3])
+        tau_f <- as.character(eval(parse(text = deparse(object$step2[i])))[[1]][4])
+        cat(paste("mu_f=", mu_f, " sigma_f=", sigma_f, " nu_f=", nu_f, " tau_f=", tau_f, "\n "))
+      }
+    }
+
+    cat("\n\n",
+        "Step 3 k-fold cross-validation: \n\n")
+    object$step3
+
+  } else if (names(object[1])=="dataset 1") {
+    cat("\n\n")
+    for (i in 1:length(object)) {
+      print(paste("summary of population",i))
+      print(summary(as.data.frame(object[i])))
+    }
+
+  } else {
+    summary(object$estimates$input_var$fit)
 
     cat("\n\n",
 
         "Estimated random-effect(s): \n\n",
-        getSmo(object$est$input_var$fit)$coef, "\n\n",
+        getSmo(object$estimates$input_var$fit)$coef, "\n\n",
 
         "Summary of estimated MSE (mean): \n\n",
 

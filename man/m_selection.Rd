@@ -10,12 +10,14 @@ m_selection(
   f_cov,
   nRS = NULL,
   nCG = NULL,
+  kp = 2,
   ndis = NULL,
   R = NULL,
   k = NULL,
   type = NULL,
   fix_dis = NULL,
-  seed = NULL
+  seed = NULL,
+  supp = TRUE
 )
 }
 \arguments{
@@ -29,6 +31,8 @@ m_selection(
 
 \item{nCG}{Number of loop to do with the CG() algorithm}
 
+\item{kp}{the penalty for the GAIC (Step 1) with default values kp=2 the standard AIC.}
+
 \item{ndis}{Number of distribution to be consider at the first step. Default is 3}
 
 \item{R}{Number of loop to be done within the k-fold cross validation}
@@ -40,9 +44,11 @@ m_selection(
 \item{fix_dis}{A distribution to be tested even if is not selected within the ndis at step 1}
 
 \item{seed}{The seed}
+
+\item{supp}{Suppress the warning in the three step. Defualt is TRUE}
 }
 \value{
-A list with the results of each steps.
+An object of class "saegamlss_class", named results, with the results of each steps and the GAIC of all the tested distributions at step 1.
 }
 \description{
 The function select the final SAE-GAMLSS model following three steps as described by Mori and Ferrante (2023)
@@ -66,8 +72,8 @@ sample_data=as.data.frame(sample_data[[1]])
 sample_data$x2=rnorm(40, 0, 1)
 
 m_selection(sample_data=sample_data, y = sample_data$y,
-            f_cov= ~x1+x2+random(sa),nRS=20, nCG=20, ndis=2,
-            R=2, k=2, type="A", fix_dis="NO", seed=123)
+            f_cov= ~x1+x2+random(sa), nRS=20, nCG=20, ndis=1,
+            R=2, k=1, type="A", fix_dis="NO", seed=123)
 }
 \references{
 Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.

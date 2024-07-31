@@ -2,26 +2,26 @@
 #'
 #' @description Compute the bootstrap MSE for the estimation of the mean and the HCR
 #' @param est An object obtained with est_saegamlss()
-#' @param D  Number of Areas
-#' @param Ni 1xD vector containing the number of units (in population) for each area
 #' @param loop Number of loop of bootstrap. Default is 200
 #' @param l A vector, of maximum length equal to 4, in which each space is a function (the inverse of the link-function) to be applied to the corresponding parameter, i.e. mu, sigma, nu and tau
-#' @param Dis Type of distribution in form of rDis where Dis is one of the distribution allowed by GAMLSS
 #' @param Iden  TRUE if the Identity link function is used for mu. Default is FALSE
-#' @param samplesize The desired sample size. If size is a value between 0 and 1 expressed as a decimal, size is set to be proportional to the number of observations per group. If size is a single positive integer, it will be assumed that you want the same number of samples from each group. If size is a named vector, the function will check to see whether the length of the vector matches the number of groups and that the names match the group names
 #' @param data A dataset. Mandatory columns: covariates and areas (named sa). Additional columns are admitted.
 #' @param cov1 A matrix or a data frame with covariates for the whole population used for mu. If an intercept is used the first columns have to be a vector of 1
 #' @param cov2 A matrix or a data frame with covariates for the whole population used for sigma. If an intercept is used the first columns have to be a vector of 1
 #' @param cov3 A matrix or a data frame with covariates for the whole population used for nu. If an intercept is used the first columns have to be a vector of 1
 #' @param cov4 A matrix or a data frame with covariates for the whole population used for tau. If an intercept is used the first columns have to be a vector of 1
-#' @param seed The seed
+#' @param seed The seed. Default is 124
+#'
 #' @return an object of class "saegamlss_class" containing the MSE of the mean or/and HCR for each area
 #'  and all the values returned by est_saegamlss()
 #' @export
 #' @import gamlss
 #' @import dplyr
 #' @import splitstackshape
+#' @import utils
+#'
 #' @examples
+#'
 #' dep.y <- data_gen(
 #'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 4, b1 = 100,
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
@@ -39,13 +39,13 @@
 #' sample <- stratified(data, "sa", size = 0.5)
 #' # nonsample data
 #' #
-#' nonsample <- nonsample(data = data, sample = sample, id = id)
+#' nonsample <- subset(data, !(data$id%in%sample$id))
 #' # estimate
 #' est <- est_saegamlss(
-#'   sample = sample, nonsample = nonsample, D = 4,
+#'   sample = sample, nonsample = nonsample, y_dip="y", sa="sa",
 #'   Ni = rep(10, 4), ni = rep(1, 4), f1 = y ~ x1 + random(sa),
-#'   f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO, nRS = 150,
-#'   nCG = 150, R = 2, Dis = rNO, np = 2, param = NULL,
+#'   f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
+#'   R = 2, Dis = rNO, np = 2, param = NULL,
 #'   seed = 1234, tau.fix = NULL, nu.fix = NULL
 #' )
 #' #
@@ -56,42 +56,37 @@
 #' # compute the MSE
 #' #
 #' MSE <- mse_saegamlss(
-#'   est = est, D = 4, Ni = rep(10, 4), loop = 2,
-#'   l = c(identity), Dis = rNO, Iden = TRUE,
-#'   samplesize = 0.1, data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
+#'   est = est, loop = 2,
+#'   l = c(identity), Iden = TRUE,
+#'   data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
 #'   cov4 = NULL, seed = 1234
 #' )
 #' MSE$est_mse$MSE_mean
 #' MSE$est_mse$MSE_HCR
+#'
 #' @references Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.
 #'  Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597.
 #' @author Lorenzo Mori and Maria Rosaria Ferrante
 
-mse_saegamlss <- function(est, D, Ni, loop = NULL, l, Dis, Iden = F, samplesize, data, cov1, cov2 = NULL, cov3 = NULL, cov4 = NULL, seed = NULL) {
-  "%!in%" <- function(x, y) !("%in%"(x, y))
-
-  replace_term <- function(f1, old, new) {
-    n <- length(f1)
-    if (n > 1) {
-      for (i in 1:n) f1[[i]] <- Recall(f1[[i]], old, new)
-
-      return(f1)
-    }
-
-    if (f1 == old) new else f1
-  }
+mse_saegamlss <- function(est, loop = NULL, l, Iden = F,
+                          data, cov1, cov2 = NULL, cov3 = NULL, cov4 = NULL,
+                          seed = 124) {
 
 
-  est <<- (est)
 
-  if (is.null(loop) == TRUE) {
-    loop <- 200
-  }
+  sa <- est$input_var$sa
+  samplesize <- est$input_var$origindata%>%dplyr::count(sa)%>%dplyr::pull()/ sum(est$input_var$Ni)
+  D <- est$input_var$D
+  Dis <- est$input_var$Dis
+  Ni <- est$input_var$Ni
+  np <- est$input_var$np
+  np <- est$input_var$np
 
-  if (is.null(seed) == TRUE) {
-    seed <- 123
-  }
-  set.seed(seed)
+
+  if (is.null(loop))    loop <- 200
+
+
+
 
   mse <- MSE <- rep(0, D)
   u <- 0
@@ -99,33 +94,35 @@ mse_saegamlss <- function(est, D, Ni, loop = NULL, l, Dis, Iden = F, samplesize,
 
   gam <- est$input_var$fit
 
+  if (is.null(seed))  seed <- 123
+
+  set.seed(seed)
+
   for (i in 1:loop) {
     sigm <- gamlss::getSmo(gam, what = "mu")$sigb
-    if (est$input_var$np > 1) {
+    if (np > 1) {
       sigs <- gamlss::getSmo(gam, what = "sigma")$sigb
     } else {
       sigs <- 0
     }
-    if (est$input_var$np > 2) {
+    if (np > 2) {
       sign <- gamlss::getSmo(gam, what = "nu")$sigb
     } else {
       sign <- 0
     }
-    if (est$input_var$np > 3) {
+    if (np > 3) {
       sigt <- gamlss::getSmo(gam, what = "tau")$sigb
     } else {
       sigt <- 0
     }
 
-    if (is.null(sigs) == TRUE) {
-      sigs <- 0
-    }
-    if (is.null(sign) == TRUE) {
-      sign <- 0
-    }
-    if (is.null(sigt) == TRUE) {
-      sigt <- 0
-    }
+    if (is.null(sigs)) sigs <- 0
+
+    if (is.null(sign)) sign <- 0
+
+    if (is.null(sigt)) sigt <- 0
+
+
 
 
 
@@ -248,20 +245,20 @@ mse_saegamlss <- function(est, D, Ni, loop = NULL, l, Dis, Iden = F, samplesize,
     sample_boot <- splitstackshape::stratified(data, "sa", samplesize)
 
     s <- as.data.frame(sample_boot)
-    ns <- subset(data, data$id %!in% s$id)
+    ns <- subset(data, !(data$id %in% s$id))
     estMSE <- est_saegamlss(
-      sample = s, nonsample = ns,
+      sample = s, nonsample = ns, y_dip=est$input_var$y,
+      sa=est$input_var$sa,
       f1 = replace_term(est$input_var$f1, quote(y), quote(ys)),
       Ni = est$input_var$Ni,
       ni = est$input_var$ni,
       f2 = replace_term(est$input_var$f2, quote(y), quote(ys)),
       f3 = replace_term(est$input_var$f3, quote(y), quote(ys)),
       f4 = replace_term(est$input_var$f4, quote(y), quote(ys)),
-      fdis = est$input_var$fdis, D = est$input_var$D,
-      R = est$input_var$R, nRS = as.numeric(est$input_var$nRS),
-      nCG = as.numeric(est$input_var$nCG),
-      Dis = Dis,
-      param = est$input_var$param,
+      fdis =est$input_var$fids,
+      R = est$input_var$R,
+      Dis =est$input_var$Dis,
+      param =est$input_var$param,
       np = as.numeric(est$input_var$np),
       tau.fix = as.numeric(est$input_var$tau.fix),
       nu.fix = as.numeric(est$input_var$nu.fix),
@@ -271,15 +268,15 @@ mse_saegamlss <- function(est, D, Ni, loop = NULL, l, Dis, Iden = F, samplesize,
     dif1 <- rep(0, D)
     dif2 <- rep(0, D)
     for (t in 1:D) {
-      if (est$input_var$param == "both" | est$input_var$param == "mean") {
+      if (est$input_var$param == "both" |est$input_var$param == "mean") {
         dif1[t] <- (media_boot1$ysm[t] - estMSE$est$ME[t])^2
       }
-      if (est$input_var$param == "both" | est$input_var$param == "HCR") {
+      if (est$input_var$param == "both" |est$input_var$param == "HCR") {
         dif2[t] <- (media_boot2$ysm[t] - estMSE$est$HCR[t])^2
       }
     }
 
-    if (gam$iter < max(est$input_var$nRS, est$input_var$nCG)) {
+    if (gam$iter < max(est$input_var$nRS,est$input_var$nCG)) {
       for (h in 1:D) {
         MSE[h] <- dif1[h] + MSE[h]
         mse[h] <- dif2[h] + mse[h]
@@ -300,8 +297,8 @@ mse_saegamlss <- function(est, D, Ni, loop = NULL, l, Dis, Iden = F, samplesize,
   } else {
     est_mse <- list("MSE_HCR" = mse)
   }
-  rm(est, envir = .GlobalEnv)
-  result <- list("est_mse" = est_mse, "est" = est)
+  #rm(fdis, envir = .GlobalEnv)
+  result <- list("est_mse" = est_mse, "estimates" = est, "replicates"=loop)
   attr(result, "class") <- "saegamlss_class"
   return(result)
 }

@@ -18,7 +18,8 @@ np_mse_ssaegamlss(
   nRS = 20,
   nCG = 20,
   index = NULL,
-  epsilon = NULL
+  epsilon = NULL,
+  seed = 124
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ np_mse_ssaegamlss(
 \item{index}{The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is all}
 
 \item{epsilon}{The value for the poverty aversion parameter. Default value is set to 1}
+
+\item{seed}{The seed. Default is 124}
 }
 \value{
 An object of class "saegamlss_class" containing the values of the MSE for each area and for each index
@@ -61,7 +64,7 @@ indicators (Gini, Theil, Atkinson)
 
 set.seed(124)
 
-data <- data.frame("y"=rLOGNO(20, mu=8, sigma=0.8),
+data <- data.frame("y"=rLOGNO(20, mu=3, sigma=0.8),
 "sa" =  as.factor(rep(c(1,2,3,4,5),4)),
 "ncomp"=rep(c(2,1,3,4), 5),
 "w"=1/runif(20, 0.5, 1))
@@ -69,7 +72,7 @@ data <- data.frame("y"=rLOGNO(20, mu=8, sigma=0.8),
 np<- np_mse_ssaegamlss(data=data, y=data$y, sa = data$sa,
                        ncomp=data$ncomp, fdis="LOGNO",
                        index="Gini",
-                       nRS=2, nCG=2, R=2)
+                       R=2)
 
 np
 

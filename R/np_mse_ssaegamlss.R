@@ -16,7 +16,7 @@
 #' @param index The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is all
 #' @param epsilon The value for the poverty aversion parameter. Default value is set to 1
 #' @param fdis The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EX (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)
-#'
+#' @param seed The seed. Default is 124
 #' @return An object of class "saegamlss_class" containing the values of the MSE for each area and for each index
 #' @author Lorenzo Mori and Maria Rosaria Ferrante
 #' @export
@@ -25,7 +25,7 @@
 #'
 #' set.seed(124)
 #'
-#' data <- data.frame("y"=rLOGNO(20, mu=8, sigma=0.8),
+#' data <- data.frame("y"=rLOGNO(20, mu=3, sigma=0.8),
 #' "sa" =  as.factor(rep(c(1,2,3,4,5),4)),
 #' "ncomp"=rep(c(2,1,3,4), 5),
 #' "w"=1/runif(20, 0.5, 1))
@@ -33,14 +33,15 @@
 #' np<- np_mse_ssaegamlss(data=data, y=data$y, sa = data$sa,
 #'                        ncomp=data$ncomp, fdis="LOGNO",
 #'                        index="Gini",
-#'                        nRS=2, nCG=2, R=2)
+#'                        R=2)
 #'
 #' np
 #'
 
 np_mse_ssaegamlss <- function(data, y, sa, ncomp,  R=200, sigma.f=TRUE, nu.f=TRUE,
                                tau.f=TRUE, w=NULL, fdis, nRS=20, nCG=20,
-                               index=NULL, epsilon=NULL){
+                               index=NULL, epsilon=NULL, seed=124){
+  set.seed(seed)
   mixed <- NULL
   f1 <- y ~1 + random(as.factor(sa))
   f2 <- f3 <- f4 <- y ~1
@@ -50,14 +51,14 @@ np_mse_ssaegamlss <- function(data, y, sa, ncomp,  R=200, sigma.f=TRUE, nu.f=TRU
   if(isTRUE(tau.f))f4 <- f1
   if(is.null(epsilon))epsilon<-1
 
-  s2<- data %>% dplyr::select("y", "sa", "ncomp", "w")
+  s2 <- data %>% dplyr::select("y", "sa", "ncomp", "w")
   s2$id <- c(1:nrow(s2))
   l_sa <- length(data %>% dplyr::distinct(sa) %>% dplyr::pull())
 
 
-  dif3=rep(0, l_sa)
-  dif4=rep(0, l_sa)
-  dif5=rep(0, l_sa)
+  dif3 <- rep(0, l_sa)
+  dif4 <- rep(0, l_sa)
+  dif5 <- rep(0, l_sa)
 
 
 for (t2 in 1:R){
@@ -93,11 +94,11 @@ for (t2 in 1:R){
   if (t2>1){
     ga<-gamlss::gamlss(f1, sigma.fo=f2, nu.fo=f3, tau.fo=f4, weights = w, start.from = ga,
                       trace = FALSE, family = substitute(fdis), data = as.data.frame(s1),
-                      method = mixed(substitute(nRS), substitute(nCG)))
+                      method = mixed(100, 100))
   } else {
     ga<-gamlss::gamlss(f1, sigma.fo=f2, nu.fo=f3, tau.fo=f4, weights = w,
                       trace = FALSE, family = substitute(fdis), data = as.data.frame(s1),
-                      method = mixed(substitute(nRS), substitute(nCG)))
+                      method = mixed(100, 100))
   }
 
 
@@ -126,26 +127,28 @@ for (t2 in 1:R){
   }
 
 
-  atkinson_gamlss_boot=0
-  gini_gamlss_boot=0
-  theil_gamlss_boot=0
+  atkinson_gamlss_boot <- 0
+  gini_gamlss_boot <- 0
+  theil_gamlss_boot <- 0
 
 
   for (i in 1:l_sa) {
-    a=subset(data, sa==i)
-    gini_gamlss_boot=rbind(gini_gamlss_boot, p_index(mu=s1$mu_d[1], sigma=s1$sigma_d[1],
+    a <- subset(data, sa==i)
+    gini_gamlss_boot <- rbind(gini_gamlss_boot, p_index(mu=s1$mu_d[1], sigma=s1$sigma_d[1],
                                            nu=s1$nu_d[1], tau=s1$tau_d[1], fdis= fdis, index="Gini", epsilon = epsilon ))
-    theil_gamlss_boot=rbind(theil_gamlss_boot, p_index(mu=s1$mu_d[1], sigma=s1$sigma_d[1],
+    theil_gamlss_boot <- rbind(theil_gamlss_boot, p_index(mu=s1$mu_d[1], sigma=s1$sigma_d[1],
                                              nu=s1$nu_d[1], tau=s1$tau_d[1], fdis=fdis, index="Theil", epsilon = epsilon ))
-    atkinson_gamlss_boot=rbind(atkinson_gamlss_boot, p_index(mu=s1$mu_d[1], sigma=s1$sigma_d[1],
+    atkinson_gamlss_boot <- rbind(atkinson_gamlss_boot, p_index(mu=s1$mu_d[1], sigma=s1$sigma_d[1],
                                                    nu=s1$nu_d[1], tau=s1$tau_d[1], fdis=fdis, index="Atkinson", epsilon = epsilon ))
     }
-  dif3=rbind(dif3, atkinson_gamlss_boot[-1])
-  dif4=rbind(dif4, gini_gamlss_boot[-1])
-  dif5=rbind(dif5, theil_gamlss_boot[-1])
+  dif3 <- rbind(dif3, atkinson_gamlss_boot[-1])
+  dif4 <- rbind(dif4, gini_gamlss_boot[-1])
+  dif5 <- rbind(dif5, theil_gamlss_boot[-1])
 }
 
-
+  dif3 <- as.data.frame(lapply(as.data.frame(dif3), as.numeric))
+  dif4 <- as.data.frame(lapply(as.data.frame(dif4), as.numeric))
+  dif5 <- as.data.frame(lapply(as.data.frame(dif5), as.numeric))
 
 if (is.null(index)){
   result <- list("Gini.MSE"=colMeans(dif4[-1,]), "Theil.MSE"=colMeans(dif5[-1,]), "Atkinson.MSE"=colMeans(dif3[-1,]))

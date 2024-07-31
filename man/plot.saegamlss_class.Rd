@@ -57,13 +57,13 @@ library(splitstackshape)
 sample <- stratified(data, "sa", size = 0.1)
 # nonsample data
 #
-nonsample <- nonsample(data = data, sample = sample, id = id)
+nonsample <- subset(data, !(data$id\%in\%sample$id))
 # estimate
 est <- est_saegamlss(
-  sample = sample, nonsample = nonsample,
-  D = 4, Ni = rep(10, 4), ni = rep(1, 4),
+  sample = sample, nonsample = nonsample, y_dip="y",
+  sa="sa", Ni = rep(10, 4), ni = rep(1, 4),
   f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
-  f4 = NULL, fdis = NO, nRS = 150, nCG = 150, R = 200,
+  f4 = NULL, fdis = NO, R = 200,
   Dis = rNO, np = 2, param = NULL,
   seed = 1234, tau.fix = NULL, nu.fix = NULL
 )
@@ -88,13 +88,13 @@ library(splitstackshape)
 sample <- stratified(data, "sa", size = 0.5)
 # nonsample data
 #
-nonsample <- nonsample(data = data, sample = sample, id = id)
+nonsample <- subset(data, !(data$id\%in\%sample$id))
 # estimate
 est <- est_saegamlss(
-  sample = sample, nonsample = nonsample, D = 4,
+  sample = sample, nonsample = nonsample, y_dip="y", sa="sa",
   Ni = rep(10, 4), ni = rep(1, 4), f1 = y ~ x1 + random(sa),
-  f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO, nRS = 150,
-  nCG = 150, R = 2, Dis = rNO, np = 2, param = NULL,
+  f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
+  R = 2, Dis = rNO, np = 2, param = NULL,
   seed = 1234, tau.fix = NULL, nu.fix = NULL
 )
 #
@@ -105,9 +105,9 @@ x <- data.frame(rep(1, nrow(data)), "x1" = data$x1)
 # compute the MSE
 #
 MSE <- mse_saegamlss(
-  est = est, D = 4, Ni = rep(10, 4), loop = 2,
-  l = c(identity), Dis = rNO, Iden = TRUE,
-  samplesize = 0.1, data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
+  est = est, loop = 2,
+  l = c(identity), Iden = TRUE,
+  data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
   cov4 = NULL, seed = 1234
 )
 

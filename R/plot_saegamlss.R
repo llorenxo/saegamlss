@@ -34,13 +34,13 @@
 #' sample <- stratified(data, "sa", size = 0.1)
 #' # nonsample data
 #' #
-#' nonsample <- nonsample(data = data, sample = sample, id = id)
+#' nonsample <- subset(data, !(data$id%in%sample$id))
 #' # estimate
 #' est <- est_saegamlss(
-#'   sample = sample, nonsample = nonsample,
-#'   D = 4, Ni = rep(10, 4), ni = rep(1, 4),
+#'   sample = sample, nonsample = nonsample, y_dip="y",
+#'   sa="sa", Ni = rep(10, 4), ni = rep(1, 4),
 #'   f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
-#'   f4 = NULL, fdis = NO, nRS = 150, nCG = 150, R = 200,
+#'   f4 = NULL, fdis = NO, R = 200,
 #'   Dis = rNO, np = 2, param = NULL,
 #'   seed = 1234, tau.fix = NULL, nu.fix = NULL
 #' )
@@ -65,13 +65,13 @@
 #' sample <- stratified(data, "sa", size = 0.5)
 #' # nonsample data
 #' #
-#' nonsample <- nonsample(data = data, sample = sample, id = id)
+#' nonsample <- subset(data, !(data$id%in%sample$id))
 #' # estimate
 #' est <- est_saegamlss(
-#'   sample = sample, nonsample = nonsample, D = 4,
+#'   sample = sample, nonsample = nonsample, y_dip="y", sa="sa",
 #'   Ni = rep(10, 4), ni = rep(1, 4), f1 = y ~ x1 + random(sa),
-#'   f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO, nRS = 150,
-#'   nCG = 150, R = 2, Dis = rNO, np = 2, param = NULL,
+#'   f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
+#'   R = 2, Dis = rNO, np = 2, param = NULL,
 #'   seed = 1234, tau.fix = NULL, nu.fix = NULL
 #' )
 #' #
@@ -82,9 +82,9 @@
 #' # compute the MSE
 #' #
 #' MSE <- mse_saegamlss(
-#'   est = est, D = 4, Ni = rep(10, 4), loop = 2,
-#'   l = c(identity), Dis = rNO, Iden = TRUE,
-#'   samplesize = 0.1, data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
+#'   est = est, loop = 2,
+#'   l = c(identity), Iden = TRUE,
+#'   data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
 #'   cov4 = NULL, seed = 1234
 #' )
 #'
@@ -95,7 +95,7 @@ plot.saegamlss_class <- function(x, compare.Gini = NULL,
                                  compare.Atkinson = NULL,
                                  compare.Mean = NULL,
                                  compare.HCR = NULL, ...){
-  if (names(x[1])=="est"){
+  if (names(x[1])=="estimates"){
 
     plot(x$input_var$fit)
 
@@ -148,7 +148,38 @@ plot.saegamlss_class <- function(x, compare.Gini = NULL,
   ggplot2::ggplot(data,  ggplot2::aes(x= sa, y = Value, group = Estimator, color=Estimator)) +
   ggplot2::geom_line()
 
-  }   else {
+  } else if (names(x[1])=="step1"){
+
+    family <- as.character(x$step1[1])
+    y <- x$y
+    gamlss::histDist(y,family=family, data=x$sample_data)
+
+  } else if (names(x[1])=="dataset 1"){
+
+    for (i in 1:min(length(x), 5)) {
+    nam <- colnames(x[[i]])
+
+    graphics::par(mfrow=c(1,2))
+    graphics::par(mar = c(5, 4, 4, 2) + 0.1)
+    graphics::hist(x[[i]][,nam[1]],xlab="y", probability=TRUE, main="")
+
+      corrplot::corrplot(stats::cor(x[[i]][,-c(length(nam)-1, length(nam))]),
+                         method = "circle", type = "full", tl.cex = 0.7)
+
+      graphics::mtext(paste("Histogram and Correlation Matrix - Population", i), side=3, line=-2, outer=TRUE)
+
+
+      if (length(x)>1){
+      cat("Press Enter for the next population")
+      readline()
+      }
+      if (length(x)>5) print(paste("Omitted", length(x)-5, "populations"))
+    }
+    graphics::par(mfrow = c(1, 1))
+
+
+
+  }  else {
 
     if (is.null(compare.Mean) & is.null(compare.HCR)) stop(print("Error: an MSE to be compared is required"))
 
@@ -189,4 +220,5 @@ plot.saegamlss_class <- function(x, compare.Gini = NULL,
 
   }
 }
+
 

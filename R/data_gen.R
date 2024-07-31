@@ -27,7 +27,7 @@
 #' @import gamlss
 #' @import dplyr
 #' @import splitstackshape
-#' @return A list of  length M. Each element of the list is a data frame that has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)
+#' @return An object of class "saegamlss_class" of length M. Each element of this list is a data frame that has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)
 #' @export
 #' @note The definition of the heteroschedastic term follows Ramirez-Aldana, R., & Naranjo, L. (2021).
 #' @examples # Normal data (2 populations)
@@ -116,6 +116,7 @@ data_gen <- function(Ni, M = NULL , D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NUL
   if (is.null(x4)) x4 <- rep(0, sum(Ni))
 
   ym <- matrix(nrow = sum(Ni), ncol = M)
+
   for (i in 1:M) {
     message("Generating ", i, " of ", M)
     if (ty == "no") {
@@ -263,7 +264,11 @@ data_gen <- function(Ni, M = NULL , D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NUL
       "id" = id
     )
     list.data[[i]] <- data
+    names(list.data)[i] <- paste("dataset", i)
   }
+
+  attr(list.data, "class") <- "saegamlss_class"
 
   return(list.data)
 }
+

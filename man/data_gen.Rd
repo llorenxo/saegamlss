@@ -75,7 +75,7 @@ data_gen(
 \item{id}{Unit id.}
 }
 \value{
-A list of  length M. Each element of the list is a data frame that has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)
+An object of class "saegamlss_class" of length M. Each element of this list is a data frame that has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)
 }
 \description{
 A tool to generate the dependent variable, with fixed covariates.

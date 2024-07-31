@@ -6,37 +6,25 @@
 \usage{
 mse_saegamlss(
   est,
-  D,
-  Ni,
   loop = NULL,
   l,
-  Dis,
   Iden = F,
-  samplesize,
   data,
   cov1,
   cov2 = NULL,
   cov3 = NULL,
   cov4 = NULL,
-  seed = NULL
+  seed = 124
 )
 }
 \arguments{
 \item{est}{An object obtained with est_saegamlss()}
 
-\item{D}{Number of Areas}
-
-\item{Ni}{1xD vector containing the number of units (in population) for each area}
-
 \item{loop}{Number of loop of bootstrap. Default is 200}
 
 \item{l}{A vector, of maximum length equal to 4, in which each space is a function (the inverse of the link-function) to be applied to the corresponding parameter, i.e. mu, sigma, nu and tau}
 
-\item{Dis}{Type of distribution in form of rDis where Dis is one of the distribution allowed by GAMLSS}
-
 \item{Iden}{TRUE if the Identity link function is used for mu. Default is FALSE}
-
-\item{samplesize}{The desired sample size. If size is a value between 0 and 1 expressed as a decimal, size is set to be proportional to the number of observations per group. If size is a single positive integer, it will be assumed that you want the same number of samples from each group. If size is a named vector, the function will check to see whether the length of the vector matches the number of groups and that the names match the group names}
 
 \item{data}{A dataset. Mandatory columns: covariates and areas (named sa). Additional columns are admitted.}
 
@@ -48,7 +36,7 @@ mse_saegamlss(
 
 \item{cov4}{A matrix or a data frame with covariates for the whole population used for tau. If an intercept is used the first columns have to be a vector of 1}
 
-\item{seed}{The seed}
+\item{seed}{The seed. Default is 124}
 }
 \value{
 an object of class "saegamlss_class" containing the MSE of the mean or/and HCR for each area
@@ -58,6 +46,7 @@ an object of class "saegamlss_class" containing the MSE of the mean or/and HCR f
 Compute the bootstrap MSE for the estimation of the mean and the HCR
 }
 \examples{
+
 dep.y <- data_gen(
   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 4, b1 = 100,
   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
@@ -75,13 +64,13 @@ library(splitstackshape)
 sample <- stratified(data, "sa", size = 0.5)
 # nonsample data
 #
-nonsample <- nonsample(data = data, sample = sample, id = id)
+nonsample <- subset(data, !(data$id\%in\%sample$id))
 # estimate
 est <- est_saegamlss(
-  sample = sample, nonsample = nonsample, D = 4,
+  sample = sample, nonsample = nonsample, y_dip="y", sa="sa",
   Ni = rep(10, 4), ni = rep(1, 4), f1 = y ~ x1 + random(sa),
-  f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO, nRS = 150,
-  nCG = 150, R = 2, Dis = rNO, np = 2, param = NULL,
+  f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
+  R = 2, Dis = rNO, np = 2, param = NULL,
   seed = 1234, tau.fix = NULL, nu.fix = NULL
 )
 #
@@ -92,13 +81,14 @@ x <- data.frame(rep(1, nrow(data)), "x1" = data$x1)
 # compute the MSE
 #
 MSE <- mse_saegamlss(
-  est = est, D = 4, Ni = rep(10, 4), loop = 2,
-  l = c(identity), Dis = rNO, Iden = TRUE,
-  samplesize = 0.1, data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
+  est = est, loop = 2,
+  l = c(identity), Iden = TRUE,
+  data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
   cov4 = NULL, seed = 1234
 )
 MSE$est_mse$MSE_mean
 MSE$est_mse$MSE_HCR
+
 }
 \references{
 Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.

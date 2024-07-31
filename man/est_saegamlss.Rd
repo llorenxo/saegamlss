@@ -7,7 +7,8 @@
 est_saegamlss(
   sample,
   nonsample,
-  D,
+  y_dip,
+  sa,
   Ni,
   ni,
   f1,
@@ -15,8 +16,6 @@ est_saegamlss(
   f3 = NULL,
   f4 = NULL,
   fdis,
-  nRS = NULL,
-  nCG = NULL,
   R = NULL,
   Dis,
   np,
@@ -28,29 +27,27 @@ est_saegamlss(
 )
 }
 \arguments{
-\item{sample}{A dataset of sampled units. With dependent variable (named y), covariates and small area (named sa)}
+\item{sample}{A dataset of sampled units.}
 
-\item{nonsample}{A dataset of non-sampled units. With covariates and small area (named sa)}
+\item{nonsample}{A dataset of non-sampled units. With covariates and small areas}
 
-\item{D}{Number of Areas}
+\item{y_dip}{The dependent variable}
+
+\item{sa}{The name of the variable cotaining the areas}
 
 \item{Ni}{1xD vector containing the number of units (in population) for each area}
 
 \item{ni}{1xD vector containing the number of sampled-units for each area}
 
-\item{f1}{A formula object for fitting a model to the mu parameter, e.g.f1=y~x+random(sa)}
+\item{f1}{A formula object for fitting a model for the mu parameter, e.g.f1=y~x+random(sa)}
 
-\item{f2}{A formula object for fitting a model to the sigma parameter, e.g.f2=y~x+random(sa)}
+\item{f2}{A formula object for fitting a model for the sigma parameter, e.g.f2=y~x+random(sa)}
 
-\item{f3}{A formula object for fitting a model to the nu parameter, e.g.f3=y~x+random(sa)}
+\item{f3}{A formula object for fitting a model for the nu parameter, e.g.f3=y~x+random(sa)}
 
-\item{f4}{A formula object for fitting a model to the tau parameter, e.g.f4=y~x+random(sa)}
+\item{f4}{A formula object for fitting a model for the tau parameter, e.g.f4=y~x+random(sa)}
 
 \item{fdis}{The distribution family of the GAMLSS object}
-
-\item{nRS}{Number of loop to do with the RS() algorithm}
-
-\item{nCG}{Number of loop to do with the CG() algorithm}
 
 \item{R}{Number of Monte-Carlo repetition. Default is 50}
 
@@ -73,14 +70,14 @@ an object of class "saegamlss_class" which contains two list. The first list, na
  ME 1xD vector with the estimate of the mean and
  HCR 1xD vector with the estimate of the HCR.
  The second, named input_var has:
+ y the dependent variable
+ sa the name of the variable cotaining the areas
  fit a GAMLSS object with all the components of the regression
  f1 a formula object used for fitting a model to the mu parameter
  f2 a formula object used for fitting a model to the sigma parameter
  f3 a  formula object used for fitting a model to the nu parameter
  f4 a formula object used for fitting a model to the tau parameter
  np the number of the parameters of the chosen distribution
- nRS the number of loop used within the RS() algorithm. Default is 150.
- nCG the number of loop used within the CG() algorithm. Default is 150.
  R the number of loop used to obtain the monte-carlo estimation
  D the number of area
  Ni 1xD vector containing the number of units (in population) for each area
@@ -109,24 +106,24 @@ dep.y <- data_gen(
 
 data <- dep.y[[1]]
 #
-# sample data with a sample fraction of 0.1
+# sample data with a sample fraction of 0.5
 #
-library(splitstackshape)
 # sample data
 #
-sample <- stratified(data, "sa", size = 0.1)
+sample <- stratified(data, "sa", size = 0.5)
 # nonsample data
 #
-nonsample <- nonsample(data = data, sample = sample, id = id)
+nonsample <- subset(data, !(data$id\%in\%sample$id))
 # estimate
 est_saegamlss(
-  sample = sample, nonsample = nonsample,
-  D = 4, Ni = rep(10, 4), ni = rep(1, 4),
+  sample = sample, nonsample = nonsample, y_dip="y",
+  sa="sa", Ni = rep(10, 4), ni = rep(1, 4),
   f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
-  f4 = NULL, fdis = NO, nRS = 150, nCG = 150, R = 200,
+  f4 = NULL, fdis = NO, R = 200,
   Dis = rNO, np = 2, param = NULL,
   seed = 1234, tau.fix = NULL, nu.fix = NULL
 )
+
 }
 \references{
 Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.

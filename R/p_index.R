@@ -32,79 +32,137 @@
 #' p_index(sigma=0.8, fdis="LOGNO", index=NULL, epsilon=2)
 
 p_index  <- function (mu, sigma, nu, tau, fdis, index=NULL, epsilon=NULL) {
+
   if(is.null(epsilon))epsilon=1
 
   if (is.null(index)){
     if (fdis=="LOGNO"){
-      gini=gini.logno(sigma=sigma)
-      theil=theil.logno(sigma=sigma)
-      atkinson = atkinson.logno(sigma=sigma, epsilon=epsilon)
+
+      gini <- gini.logno(sigma=sigma)
+      theil <- theil.logno(sigma=sigma)
+      atkinson <- atkinson.logno(sigma=sigma, epsilon=epsilon)
+
     } else if (fdis=="GB2"){
-      gini=GB2::gini.gb2(shape1=sigma, shape2=nu, shape3=tau)
-      theil=theil.gb2(mu=mu, sigma=sigma, nu=nu, tau=tau)
-      atkinson =acid::atkinson.GB2(p=nu, a=sigma, b=mu, q=tau,epsilon = epsilon )
+
+      gini <- GB2::gini.gb2(shape1=sigma, shape2=nu, shape3=tau)
+      theil <- theil.gb2(mu=mu, sigma=sigma, nu=nu, tau=tau)
+      atkinson  <- acid::atkinson.GB2(p=nu, a=sigma, b=mu, q=tau,epsilon = epsilon )
+
     }  else if (fdis=="EXP"){
-      gini=0.5
-      theil=theil.exp(mu=mu)
-      atkinson = print("The Atkinson index for this distribution is not already implemented")
+
+      gini <- 0.5
+      theil <- theil.exp(mu=mu)
+      atkinson <- print("The Atkinson index for this distribution is not already implemented")
+
     } else if (fdis=="WEI"){
-      gini=gini.weibull(sigma=sigma)
-      theil=theil.weibull(sigma=sigma)
-      atkinson = print("The Atkinson index for this distribution is not already implemented")
+
+      gini <- gini.weibull(sigma=sigma)
+      theil <- theil.weibull(sigma=sigma)
+      atkinson <- print("The Atkinson index for this distribution is not already implemented")
+
     } else if (fdis=="GAMMA"){
-      gini=gini.gamma(sigma=sigma)
-      theil=theil.gamma(sigma=sigma)
-      atkinson = print("The Atkinson index for this distribution is not already implemented")
+
+      gini <- gini.gamma(sigma=sigma)
+      theil <- theil.gamma(sigma=sigma)
+      atkinson <- print("The Atkinson index for this distribution is not already implemented")
+
     } else if (fdis=="Pareto"){
-      gini=gini.pareto(sigma=sigma)
-      theil=theil.pareto(sigma=sigma)
-      atkinson = atkinson.pareto(sigma=sigma, epsilon=epsilon)
+
+      gini <- gini.pareto(sigma=sigma)
+      theil <- theil.pareto(sigma=sigma)
+      atkinson <- atkinson.pareto(sigma=sigma, epsilon=epsilon)
+
     }
-    return(index=list(Gini=gini, Theil=theil, Atkinson=atkinson))
+
+    index <- list(Gini=gini, Theil=theil, Atkinson=atkinson)
+
   } else if (index=="Gini"){
+
     if (fdis=="LOGNO"){
-      gini=gini.logno(sigma=sigma)
+
+      gini <- gini.logno(sigma=sigma)
+
     } else if (fdis=="GB2"){
-      gini=GB2::gini.gb2(shape1=sigma, shape2=nu, shape3=tau)
+
+      gini <- GB2::gini.gb2(shape1=sigma, shape2=nu, shape3=tau)
+
     }else if (fdis=="EXP"){
-      gini=0.5
+
+      gini <- 0.5
+
     } else if (fdis=="WEI"){
-      gini=gini.weibull(sigma=sigma)
+
+      gini <- gini.weibull(sigma=sigma)
+
     } else if (fdis=="GAMMA"){
-      gini=gini.gamma(sigma=sigma)
+
+      gini <- gini.gamma(sigma=sigma)
+
     } else if (fdis=="Pareto"){
-      gini=gini.pareto(sigma=sigma)
+
+      gini <- gini.pareto(sigma=sigma)
+
     }
-    return("Gini"=gini)
-    } else if (index=="Theil"){
+    index=list(Gini=gini)
+
+  } else if (index=="Theil"){
+
     if (fdis=="LOGNO"){
-      theil=theil.logno(sigma=sigma)
+
+      theil <- theil.logno(sigma=sigma)
+
     } else if (fdis=="GB2"){
-      theil=theil.gb2(mu=mu, sigma=sigma, nu=nu, tau=tau)
+
+      theil <- theil.gb2(mu=mu, sigma=sigma, nu=nu, tau=tau)
+
     } else if (fdis=="EXP"){
-      theil=theil.exp(mu=mu)
+
+      theil <- theil.exp(mu=mu)
+
     } else if (fdis=="WEI"){
-      theil=theil.weibull(sigma=sigma)
+
+      theil <- theil.weibull(sigma=sigma)
+
     } else if (fdis=="GAMMA"){
-      theil=theil.gamma(sigma=sigma)
+
+      theil <- theil.gamma(sigma=sigma)
+
     } else if (fdis=="Pareto"){
-      theil=theil.pareto(sigma=sigma)
+
+      theil <- theil.pareto(sigma=sigma)
+
     }
-  return("Theil"=theil)
+
+    index <- list(Theil=theil)
+
   } else {
     if (fdis=="LOGNO"){
-      atkinson = atkinson.logno(sigma=sigma, epsilon=epsilon)
+
+      atkinson <- atkinson.logno(sigma=sigma, epsilon=epsilon)
+
     } else if (fdis=="GB2"){
-      atkinson =acid::atkinson.GB2(p=nu, a=sigma, b=mu, q=tau,epsilon = epsilon )
+
+      atkinson <- acid::atkinson.GB2(p=nu, a=sigma, b=mu, q=tau,epsilon = epsilon )
+
     } else if (fdis=="EXP"){
-      atkinson = print("The Atkinson index for this distribution is not already implemented")
+
+      atkinson <- print("The Atkinson index for this distribution is not already implemented")
+
     } else if (fdis=="WEI"){
-      atkinson = print("The Atkinson index for this distribution is not already implemented")
+
+      atkinson <- print("The Atkinson index for this distribution is not already implemented")
+
     } else if (fdis=="GAMMA"){
-      atkinson = print("The Atkinson index for this distribution is not already implemented")
+
+      atkinson <- print("The Atkinson index for this distribution is not already implemented")
+
     } else if (fdis=="Pareto"){
-      atkinson = atkinson.pareto(sigma=sigma, epsilon=epsilon)
+
+      atkinson <- atkinson.pareto(sigma=sigma, epsilon=epsilon)
     }
-    return("Atkinson"=atkinson)
+
+    index <- list(Atkinson=atkinson)
   }
+
+  return(index)
 }
