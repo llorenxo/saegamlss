@@ -145,7 +145,7 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, Ni, f1, f2 = NULL,
 
       for (i in 1:D) {
 
-        yns1 <- subset(yns, sa == sa[i])
+        yns1 <-  subset(yns, yns$sa == sa[i])
         lamb <- sigb / (sigb+sige/length(yns1$ys))
         yns1$ys <- yns1$ys - rep(ranf[i], length(yns1$ys))+lamb*(rep(ranf[i], length(yns1$ys)))
         samp <- as.vector(Dis(Ni[i] - ni[i], mu = yns1$ys))
@@ -185,7 +185,7 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, Ni, f1, f2 = NULL,
 
       for (i in 1:D) {
 
-        yns1 <- subset(yns, sa == sa[i])
+        yns1 <- subset(yns, yns$sa == sa[i])
         samp <- as.vector ( Dis( n = Ni[i] - ni[i], mu = yns1$ys, sigma = yns1$yss))
         sp <- dplyr::pull(subset(sample, sa == sa[i]), f1[[2]])
         samp1 <- c(samp, sp)
@@ -226,7 +226,7 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, Ni, f1, f2 = NULL,
     for (x in 1:R) {
       for (i in 1:D) {
 
-        yns1 <- subset(yns, sa == sa[i])
+        yns1 <- subset(yns, yns$sa == sa[i])
         samp <- as.vector(Dis(Ni[i] - ni[i], mu = yns1$ys, sigma = yns1$yss, nu = yns1$ysn))
         sp <- dplyr::pull(subset(sample, sa == sa[i]), f1[[2]])
         samp1 <- c(samp, sp)
@@ -266,7 +266,7 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, Ni, f1, f2 = NULL,
 
       for (i in 1:D) {
 
-        yns1 <- subset(yns, sa == sa[i])
+        yns1 <- subset(yns, yns$sa == sa[i])
         samp <- as.vector(Dis(Ni[i] - ni[i], mu = yns1$ys, sigma = yns1$yss, nu = yns1$ysn, tau = yns1$yst))
         sp <- dplyr::pull(subset(sample, sa == sa[i]), f1[[2]])
         samp1 <- c(samp, sp)

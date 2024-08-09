@@ -6,7 +6,7 @@
 \alias{saegamlss-package}
 \title{saegamlss: Unit-Level small area estimation using Generalized Additive Models for Location, Scale and Shape}
 \description{
-This package provides a set of functions for Small Area Unit Level based on Generalized Additive Models for Location, Scale and Shape, including functions for mean squared error estimation.
+A set of functions to estimate Small Area Unit Level based on Generalized Additive Models for Location, Scale and Shape, including functions for mean squared error estimation.
 }
 \seealso{
 Useful links:
