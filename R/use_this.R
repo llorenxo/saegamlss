@@ -2,6 +2,9 @@
 ###Minor not exported functions###
 ##################################
 
+# All those functions are used in the package. It is not necessary to export them.
+# The description is commented due to not expoted files
+
 # Replace term in functions
 #
 # @param f1 a function
@@ -11,6 +14,7 @@
 # @return a function
 
 replace_term <- function(f1, old, new) {
+
   n <- length(f1)
   if (n > 1) {
     for (i in 1:n) f1[[i]] <- Recall(f1[[i]], old, new)
@@ -43,7 +47,7 @@ rmNullObs <- function(x) {
 }
 
 
-## Count argoment for np in est_saegamlss
+# Count argoment for np in est_saegamlss
 # @param func a function
 
 count_arguments <- function(func) {
