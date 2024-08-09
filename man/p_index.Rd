@@ -4,7 +4,7 @@
 \alias{p_index}
 \title{Distribution based Gini, Theil and Atkinson index estimation}
 \usage{
-p_index(mu, sigma, nu, tau, fdis, index = NULL, epsilon = NULL)
+p_index(mu, sigma, nu, tau, fdis, index = "all", epsilon = 1)
 }
 \arguments{
 \item{mu}{The estimated value of mu}
@@ -19,7 +19,7 @@ p_index(mu, sigma, nu, tau, fdis, index = NULL, epsilon = NULL)
 
 \item{index}{The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is all}
 
-\item{epsilon}{The value for the poverty aversion parameter. Default value is set to 1.}
+\item{epsilon}{The value for the poverty aversion parameter. Default is  1}
 }
 \value{
 The estimated index (indicators)
@@ -36,7 +36,7 @@ data=rGB2(200, mu=5, sigma=2, nu=1, tau=1)
 p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Gini", epsilon=2)
 p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Theil", epsilon=2)
 p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Atkinson", epsilon=2)
-p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index=NULL, epsilon=2)
+p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="all", epsilon=2)
 
 #Using Log-Normal distribution
 
@@ -44,7 +44,7 @@ data=rLOGNO(200, mu=1000, sigma=0.8)
 p_index(sigma=0.8, fdis="LOGNO", index="Gini", epsilon=2)
 p_index(sigma=0.8, fdis="LOGNO", index="Theil", epsilon=2)
 p_index(sigma=0.8, fdis="LOGNO", index="Atkinson", epsilon=2)
-p_index(sigma=0.8, fdis="LOGNO", index=NULL, epsilon=2)
+p_index(sigma=0.8, fdis="LOGNO", index="all", epsilon=2)
 }
 \author{
 Lorenzo Mori and Maria Rosaria Ferrante

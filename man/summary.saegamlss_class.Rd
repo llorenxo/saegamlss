@@ -21,13 +21,13 @@ Summary for an object of class "saegamlss_class"
 
 #est_saegamlss
 
- dep.y <- data_gen(
+dep.y <- data_gen(
   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 1, b1 = 10,
   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
   b4 = NULL, x4 = NULL, xh = NULL, Dis = NO,
   l = c(identity), sigma = 6, sigmah = NULL,
-  sigmae = 2, costh = NULL, seed = 1234
-)
+  sigmae = 2, costh = NULL,
+  )
 
 data <- dep.y[[1]]
 #
@@ -43,11 +43,11 @@ nonsample <- subset(data, !(data$id\%in\%sample$id))
 # estimate
 est <- est_saegamlss(
   sample = sample, nonsample = nonsample,  y_dip="y",
-  sa="sa", Ni = rep(10, 4), ni = rep(1, 4),
+  sa="sa", Ni = rep(10, 4),
   f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
   f4 = NULL, fdis = NO, R = 200,
-  Dis = rNO, np = 2, param = NULL,
-  seed = 1234, tau.fix = NULL, nu.fix = NULL
+  Dis = rNO, param = "Mean",
+  tau.fix = NULL, nu.fix = NULL
 )
 summary(est)
 
@@ -58,7 +58,7 @@ dep.y <- data_gen(
   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
   Dis, l = c(identity), sigma = 6, sigmah = NULL,
-  sigmae = 22, costh = NULL, seed = 1234
+  sigmae = 22, costh = NULL
 )
 data <- dep.y[[1]]
 #
@@ -74,10 +74,10 @@ nonsample <- subset(data, !(data$id\%in\%sample$id))
 # estimate
 est <- est_saegamlss(
   sample = sample, nonsample = nonsample, y_dip="y",  sa="sa",
-  Ni = rep(10, 4), ni = rep(1, 4), f1 = y ~ x1 + random(sa),
+  Ni = rep(10, 4), f1 = y ~ x1 + random(sa),
   f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
-  R = 2, Dis = rNO, np = 2, param = NULL,
-  seed = 1234, tau.fix = NULL, nu.fix = NULL
+  R = 2, Dis = rNO, param = "Mean",
+  tau.fix = NULL, nu.fix = NULL
 )
 #
 # covariates
@@ -89,8 +89,8 @@ x <- data.frame(rep(1, nrow(data)), "x1" = data$x1)
 MSE <- mse_saegamlss(
   est = est, loop = 2,
   l = c(identity), Iden = TRUE,
- data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
-  cov4 = NULL, seed = 1234
+  data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
+  cov4 = NULL
 )
 summary(MSE)
 }

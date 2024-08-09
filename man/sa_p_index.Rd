@@ -13,8 +13,8 @@ sa_p_index(
   sa,
   w = NULL,
   fdis,
-  index = NULL,
-  epsilon = NULL,
+  index = "all",
+  epsilon = 1,
   seed = 123
 )
 }
@@ -39,7 +39,7 @@ sa_p_index(
 
 \item{epsilon}{The value for the poverty aversion parameter. Default value is set to 1}
 
-\item{seed}{The seed. Default is 124}
+\item{seed}{The seed. Default is 123}
 }
 \value{
 An object of class "saegamlss_class" with the estimated indicators and the value of
@@ -55,6 +55,9 @@ data <- data.frame("y"= rLOGNO(1000, mu=10, sigma=0.8),
                    "sa" = as.factor(rep(c(1,2,3,4,5),200)))
 
 sa_p_index(data=data, y=data$y, sa = data$sa, fdis="LOGNO", index="Gini")
+
+
+
 }
 \author{
 Lorenzo Mori and Maria Rosaria Ferrante

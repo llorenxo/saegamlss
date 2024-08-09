@@ -4,8 +4,6 @@
 #'
 #' @param sample_data The dataset with sampled units
 #' @param y The dependent variable
-#' @param nRS Number of loop to do with the RS() algorithm
-#' @param nCG Number of loop to do with the CG() algorithm
 #' @param kp the penalty for the GAIC (Step 1) with default values kp=2 the standard AIC.
 #' @param ndis Number of distribution to be consider at the first step. Default is 3
 #' @param R Number of loop to be done within the k-fold cross validation
@@ -13,8 +11,8 @@
 #' @param f_cov A formula containing all the possible covariates and/or additive terms (i.e. x1+x2+x3+random(x4))
 #' @param type Type of step 2 to be done. A or B. Default is B (see references)
 #' @param fix_dis A distribution to be tested even if is not selected within the ndis at step 1
-#' @param seed The seed
-#' @param supp Suppress the warning in the three step. Defualt is TRUE
+#' @param supp Suppress the warning in the three step. Default is TRUE
+#' @param seed The seed. Default is 123
 #'
 #' @return An object of class "saegamlss_class", named results, with the results of each steps and the GAIC of all the tested distributions at step 1.
 #' @note The summary (Step2) do not reports results on the random effects as usual for GAMLSS. See Step2 select_v for the random effects
@@ -32,7 +30,7 @@
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
 #'   Dis = rNO, l = c(identity), sigma = 6, sigmah = NULL,
-#'   sigmae = 22, costh = NULL, seed = 124
+#'   sigmae = 22, costh = NULL
 #' )
 #'
 #' #Adding x2
@@ -41,20 +39,19 @@
 #' sample_data$x2=rnorm(40, 0, 1)
 #'
 #' m_selection(sample_data=sample_data, y = sample_data$y,
-#'             f_cov= ~x1+x2+random(sa), nRS=20, nCG=20, ndis=1,
-#'             R=2, k=1, type="A", fix_dis="NO", seed=123)
+#'             f_cov= ~x1+x2+random(sa), ndis=1,
+#'             R=2, k=1, type="A", fix_dis="NO")
 
-m_selection <- function(sample_data, y, f_cov,  nRS = NULL, nCG = NULL, kp=2,
-                        ndis=NULL, R=NULL, k=NULL, type=NULL, fix_dis=NULL, seed=NULL,
-                        supp=TRUE){
-  mixed <- NULL
-  sel2 <- NULL
-  if (is.null(ndis))  ndis <- 3
-  if (is.null(R))  R <- 200
-  if (is.null(k))  k <- 7
-  if (is.null(seed)) seed <- 123
-  if(isTRUE(supp)) options(warn=-1)
+m_selection <- function(sample_data, y, f_cov, kp=2,
+                        ndis=3, R=200, k=7, type=NULL, fix_dis=NULL,
+                        supp=TRUE, seed = 123) {
+
   set.seed(seed)
+
+  sel2 <- NULL
+
+  if(isTRUE(supp)) options(warn=-1)
+
   sample_data$y = sample_data %>% dplyr::select(y) %>% dplyr::pull()
 
 #step 1
@@ -75,6 +72,7 @@ m_selection <- function(sample_data, y, f_cov,  nRS = NULL, nCG = NULL, kp=2,
     sel2 <<- sel[[j]]
 
     if ( type=="B"){
+
     mod0 <- gamlss::gamlss(y~1, data=as.data.frame(sample_data), family=sel2)
 
     a <- gamlss::stepGAICAll.B(mod0,
@@ -181,7 +179,7 @@ m_selection <- function(sample_data, y, f_cov,  nRS = NULL, nCG = NULL, kp=2,
         gamlss::gamlssCV(formula=f1, sigma.fo=f2,
                          nu.fo=f3, tau.fo=f4,
                          data=as.data.frame(sample_data),
-                         method = mixed(substitute(nRS), substitute(nRG)),
+                         method = mixed(100, 100),
                          family=substitute(sel[j]),  rand=rand_i)
       }, error = function(e) {
         cat("Error in iteration", j, "\n")

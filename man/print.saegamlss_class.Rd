@@ -21,12 +21,13 @@ Print for an x of class "saegamlss_class"
 
 #est_saegamlss
 
- dep.y <- data_gen(
+dep.y <- data_gen(
   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 1, b1 = 10,
   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
   b4 = NULL, x4 = NULL, xh = NULL, Dis = NO,
   l = c(identity), sigma = 6, sigmah = NULL,
-  sigmae = 2, costh = NULL, seed = 1234
+  sigmae = 2, costh = NULL
 )
 
+print(dep.y)
 }

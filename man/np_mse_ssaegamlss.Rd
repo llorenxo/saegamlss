@@ -15,11 +15,9 @@ np_mse_ssaegamlss(
   tau.f = TRUE,
   w = NULL,
   fdis,
-  nRS = 20,
-  nCG = 20,
-  index = NULL,
-  epsilon = NULL,
-  seed = 124
+  index = "all",
+  epsilon = 1,
+  seed = 123
 )
 }
 \arguments{
@@ -43,15 +41,11 @@ np_mse_ssaegamlss(
 
 \item{fdis}{The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EX (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)}
 
-\item{nRS}{Number of loop to do with the RS() algorithm}
-
-\item{nCG}{Number of loop to do with the CG() algorithm}
-
 \item{index}{The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is all}
 
 \item{epsilon}{The value for the poverty aversion parameter. Default value is set to 1}
 
-\item{seed}{The seed. Default is 124}
+\item{seed}{The seed. Default is 123}
 }
 \value{
 An object of class "saegamlss_class" containing the values of the MSE for each area and for each index
@@ -65,16 +59,16 @@ indicators (Gini, Theil, Atkinson)
 set.seed(124)
 
 data <- data.frame("y"=rLOGNO(20, mu=3, sigma=0.8),
-"sa" =  as.factor(rep(c(1,2,3,4,5),4)),
-"ncomp"=rep(c(2,1,3,4), 5),
-"w"=1/runif(20, 0.5, 1))
+                   "sa" =  as.factor(rep(c(1,2,3,4,5),4)),
+                   "ncomp"=rep(c(2,1,3,4), 5),
+                   "w"=rep(2,20))
 
-np<- np_mse_ssaegamlss(data=data, y=data$y, sa = data$sa,
+np <- np_mse_ssaegamlss(data=data, y=data$y, sa = data$sa,
                        ncomp=data$ncomp, fdis="LOGNO",
-                       index="Gini",
+                       index="Gini", seed = 124,
                        R=2)
 
-np
+np$Gini.MSE
 
 }
 \author{

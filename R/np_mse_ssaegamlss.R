@@ -11,12 +11,10 @@
 #' @param nu.f Logical value if TRUE (default) a random effect is used for nu
 #' @param tau.f Logical value if TRUE (default) a random effect is used for tau
 #' @param w Sample weights
-#' @param nCG Number of loop to do with the CG() algorithm
-#' @param nRS Number of loop to do with the RS() algorithm
 #' @param index The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is all
 #' @param epsilon The value for the poverty aversion parameter. Default value is set to 1
 #' @param fdis The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EX (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)
-#' @param seed The seed. Default is 124
+#' @param seed The seed. Default is 123
 #' @return An object of class "saegamlss_class" containing the values of the MSE for each area and for each index
 #' @author Lorenzo Mori and Maria Rosaria Ferrante
 #' @export
@@ -26,30 +24,29 @@
 #' set.seed(124)
 #'
 #' data <- data.frame("y"=rLOGNO(20, mu=3, sigma=0.8),
-#' "sa" =  as.factor(rep(c(1,2,3,4,5),4)),
-#' "ncomp"=rep(c(2,1,3,4), 5),
-#' "w"=1/runif(20, 0.5, 1))
+#'                    "sa" =  as.factor(rep(c(1,2,3,4,5),4)),
+#'                    "ncomp"=rep(c(2,1,3,4), 5),
+#'                    "w"=rep(2,20))
 #'
-#' np<- np_mse_ssaegamlss(data=data, y=data$y, sa = data$sa,
+#' np <- np_mse_ssaegamlss(data=data, y=data$y, sa = data$sa,
 #'                        ncomp=data$ncomp, fdis="LOGNO",
-#'                        index="Gini",
+#'                        index="Gini", seed = 124,
 #'                        R=2)
 #'
-#' np
+#' np$Gini.MSE
 #'
 
 np_mse_ssaegamlss <- function(data, y, sa, ncomp,  R=200, sigma.f=TRUE, nu.f=TRUE,
-                               tau.f=TRUE, w=NULL, fdis, nRS=20, nCG=20,
-                               index=NULL, epsilon=NULL, seed=124){
+                               tau.f=TRUE, w=NULL, fdis,
+                               index="all", epsilon=1, seed=123){
   set.seed(seed)
-  mixed <- NULL
+
   f1 <- y ~1 + random(as.factor(sa))
   f2 <- f3 <- f4 <- y ~1
 
   if(isTRUE(sigma.f))f2 <- f1
   if(isTRUE(nu.f))f3 <- f1
   if(isTRUE(tau.f))f4 <- f1
-  if(is.null(epsilon))epsilon<-1
 
   s2 <- data %>% dplyr::select("y", "sa", "ncomp", "w")
   s2$id <- c(1:nrow(s2))
@@ -94,11 +91,11 @@ for (t2 in 1:R){
   if (t2>1){
     ga<-gamlss::gamlss(f1, sigma.fo=f2, nu.fo=f3, tau.fo=f4, weights = w, start.from = ga,
                       trace = FALSE, family = substitute(fdis), data = as.data.frame(s1),
-                      method = mixed(100, 100))
+                      method = RS(100))
   } else {
     ga<-gamlss::gamlss(f1, sigma.fo=f2, nu.fo=f3, tau.fo=f4, weights = w,
                       trace = FALSE, family = substitute(fdis), data = as.data.frame(s1),
-                      method = mixed(100, 100))
+                      method = RS(100))
   }
 
 

@@ -7,7 +7,7 @@
 #' @param tau The estimated value of tau
 #' @param fdis The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EXP (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)
 #' @param index The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is all
-#' @param epsilon The value for the poverty aversion parameter. Default value is set to 1.
+#' @param epsilon The value for the poverty aversion parameter. Default is  1
 #'
 #' @return The estimated index (indicators)
 #' @export
@@ -21,7 +21,7 @@
 #' p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Gini", epsilon=2)
 #' p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Theil", epsilon=2)
 #' p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Atkinson", epsilon=2)
-#' p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index=NULL, epsilon=2)
+#' p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="all", epsilon=2)
 #'
 #' #Using Log-Normal distribution
 #'
@@ -29,13 +29,13 @@
 #' p_index(sigma=0.8, fdis="LOGNO", index="Gini", epsilon=2)
 #' p_index(sigma=0.8, fdis="LOGNO", index="Theil", epsilon=2)
 #' p_index(sigma=0.8, fdis="LOGNO", index="Atkinson", epsilon=2)
-#' p_index(sigma=0.8, fdis="LOGNO", index=NULL, epsilon=2)
+#' p_index(sigma=0.8, fdis="LOGNO", index="all", epsilon=2)
 
-p_index  <- function (mu, sigma, nu, tau, fdis, index=NULL, epsilon=NULL) {
+p_index  <- function (mu, sigma, nu, tau, fdis, index="all", epsilon=1) {
 
-  if(is.null(epsilon))epsilon=1
 
-  if (is.null(index)){
+  if (index=="all"){
+
     if (fdis=="LOGNO"){
 
       gini <- gini.logno(sigma=sigma)

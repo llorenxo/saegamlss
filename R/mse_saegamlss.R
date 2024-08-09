@@ -10,7 +10,7 @@
 #' @param cov2 A matrix or a data frame with covariates for the whole population used for sigma. If an intercept is used the first columns have to be a vector of 1
 #' @param cov3 A matrix or a data frame with covariates for the whole population used for nu. If an intercept is used the first columns have to be a vector of 1
 #' @param cov4 A matrix or a data frame with covariates for the whole population used for tau. If an intercept is used the first columns have to be a vector of 1
-#' @param seed The seed. Default is 124
+#' @param seed The seed. Default is 123
 #'
 #' @return an object of class "saegamlss_class" containing the MSE of the mean or/and HCR for each area
 #'  and all the values returned by est_saegamlss()
@@ -27,7 +27,7 @@
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
 #'   Dis, l = c(identity), sigma = 6, sigmah = NULL,
-#'   sigmae = 22, costh = NULL, seed = 1234
+#'   sigmae = 22, costh = NULL
 #' )
 #' data <- dep.y[[1]]
 #' #
@@ -43,10 +43,10 @@
 #' # estimate
 #' est <- est_saegamlss(
 #'   sample = sample, nonsample = nonsample, y_dip="y", sa="sa",
-#'   Ni = rep(10, 4), ni = rep(1, 4), f1 = y ~ x1 + random(sa),
+#'   Ni = rep(10, 4),  f1 = y ~ x1 + random(sa),
 #'   f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
-#'   R = 2, Dis = rNO, np = 2, param = NULL,
-#'   seed = 1234, tau.fix = NULL, nu.fix = NULL
+#'   R = 2, Dis = rNO, param = "both",
+#'   tau.fix = NULL, nu.fix = NULL
 #' )
 #' #
 #' # covariates
@@ -59,18 +59,41 @@
 #'   est = est, loop = 2,
 #'   l = c(identity), Iden = TRUE,
 #'   data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
-#'   cov4 = NULL, seed = 1234
+#'   cov4 = NULL
 #' )
 #' MSE$est_mse$MSE_mean
 #' MSE$est_mse$MSE_HCR
+#'
+#' est <- est_saegamlss(
+#'   sample = sample, nonsample = nonsample, y_dip="y", sa="sa",
+#'   Ni = rep(10, 4),  f1 = y ~ x1 + random(sa),
+#'   f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
+#'   R = 2, Dis = rNO, param = function(x) (mean(x^2)),
+#'   tau.fix = NULL, nu.fix = NULL
+#' )
+#' #
+#' # covariates
+#' #
+#' x <- data.frame(rep(1, nrow(data)), "x1" = data$x1)
+#' #
+#' # compute the MSE
+#' #
+#' MSE <- mse_saegamlss(
+#'   est = est, loop = 2,
+#'   l = c(identity), Iden = TRUE,
+#'   data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
+#'   cov4 = NULL
+#' )
+#' MSE$est_mse$MSE_param
 #'
 #' @references Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.
 #'  Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597.
 #' @author Lorenzo Mori and Maria Rosaria Ferrante
 
-mse_saegamlss <- function(est, loop = NULL, l, Iden = F,
-                          data, cov1, cov2 = NULL, cov3 = NULL, cov4 = NULL,
-                          seed = 124) {
+mse_saegamlss <- function(est, loop = 200, l, Iden = F,
+                          data, cov1, cov2 = NULL, cov3 = NULL, cov4 = NULL, seed = 123) {
+
+  set.seed(seed)
 
 
 
@@ -79,40 +102,44 @@ mse_saegamlss <- function(est, loop = NULL, l, Iden = F,
   D <- est$input_var$D
   Dis <- est$input_var$Dis
   Ni <- est$input_var$Ni
-  np <- est$input_var$np
-  np <- est$input_var$np
+  np <- count_arguments(Dis)-1
 
+  param <- est$input_var$param
 
-  if (is.null(loop))    loop <- 200
-
-
-
-
-  mse <- MSE <- rep(0, D)
+  mse_p <- mse <- MSE <- rep(0, D)
   u <- 0
 
 
   gam <- est$input_var$fit
 
-  if (is.null(seed))  seed <- 123
-
-  set.seed(seed)
 
   for (i in 1:loop) {
+
     sigm <- gamlss::getSmo(gam, what = "mu")$sigb
+
     if (np > 1) {
+
       sigs <- gamlss::getSmo(gam, what = "sigma")$sigb
+
     } else {
+
       sigs <- 0
     }
+
     if (np > 2) {
+
       sign <- gamlss::getSmo(gam, what = "nu")$sigb
     } else {
+
       sign <- 0
     }
+
     if (np > 3) {
+
       sigt <- gamlss::getSmo(gam, what = "tau")$sigb
+
     } else {
+
       sigt <- 0
     }
 
@@ -169,14 +196,22 @@ mse_saegamlss <- function(est, loop = NULL, l, Iden = F,
 
     mu_star <- l1(as.matrix(mm) %*% as.vector(gam$mu.coefficients[1:(llm - 1)]) + sm)
 
-    if (est$input_var$np > 1) {
+    if (np > 1) {
+
       def <- c("~", "y", "1")
+
       if (setequal(c(as.character(est$input_var$f2)), def) == TRUE) {
+
         if (Iden == TRUE) {
+
           sigma_star <- stats::fitted(gam, "sigma")[1] * gamlss::getSmo(gam)$sige
+
         } else {
+
           sigma_star <- stats::fitted(gam, "sigma")[1]
+
         }
+
       } else {
         if (Iden == TRUE) {
           if (is.na(as.character(gam$sigma.coefficients)[lls]) == TRUE) {
@@ -194,19 +229,26 @@ mse_saegamlss <- function(est, loop = NULL, l, Iden = F,
       }
     }
 
-    if (est$input_var$np > 2) {
+    if (np > 2) {
+
       def <- c("~", "y", "1")
+
       if (setequal(c(as.character(est$input_var$f3)), def) == TRUE) {
+
         nu_star <- stats::fitted(gam, "nu")[1]
+
       } else {
+
         if (is.na(as.character(gam$nu.coefficients)[lln]) == TRUE) {
           nu_star <- l3(as.matrix(mn) %*% as.vector(gam$nu.coefficients[1:(lln - 1)]) + sn)
         } else {
           nu_star <- l3(as.matrix(mn) %*% as.vector(gam$nu.coefficients[1:(lln)]) + sn)
         }
+
       }
     }
-    if (est$input_var$np > 3) {
+
+    if (np > 3) {
       def <- c("~", "y", "1")
       if (setequal(c(as.character(est$input_var$f4)), def) == TRUE) {
         tau_star <- stats::fitted(gam, "tau")[1]
@@ -220,25 +262,39 @@ mse_saegamlss <- function(est, loop = NULL, l, Iden = F,
     }
 
     ys1 <- array()
-    if (est$input_var$np == 1) {
+    if (np == 1) {
+
       ys1 <- Dis(sum(Ni), mu = mu_star)
-    } else if (est$input_var$np == 2) {
+
+    } else if (np == 2) {
+
       ys1 <- Dis(sum(Ni), mu = mu_star, sigma = sigma_star)
-    } else if (est$input_var$np == 3) {
+
+    } else if (np == 3) {
+
       ys1 <- Dis(sum(Ni), mu = mu_star, sigma = sigma_star, nu = nu_star)
-    } else if (est$input_var$np == 4) {
+
+    } else if (np == 4) {
+
       if (is.null(est$input_var$tau.fix) == TRUE && is.null(est$input_var$nu.fix) == TRUE) {
+
         ys1 <- Dis(sum(Ni), mu = mu_star, sigma = sigma_star, nu = nu_star, tau = tau_star)
+
       } else if (is.null(est$input_var$tau.fix) == TRUE) {
+
         ys1 <- Dis(sum(Ni), mu = mu_star, sigma = sigma_star, nu = 1, tau = tau_star)
+
       } else {
+
         ys1 <- Dis(sum(Ni), mu = mu_star, sigma = sigma_star, nu = nu_star, tau = 1)
+
       }
     }
 
     data$ys <- as.vector(ys1) # add dataset
     media_boot1 <- data.frame("sa" = c(1:D), "ysm" = as.vector(by(data$ys, data$sa, mean)))
     media_boot2 <- data.frame("sa" = c(1:D), "ysm" = as.vector(by(data$ys, data$sa, povinc)))
+    if (is.function(est$input_var$param)) media_boot3 <- data.frame("sa" = c(1:D), "ysm" = as.vector(by(data$ys, data$sa, est$input_var$param)))
 
 
     data <- subset(data, select = which(!duplicated(names(data))))
@@ -248,18 +304,16 @@ mse_saegamlss <- function(est, loop = NULL, l, Iden = F,
     ns <- subset(data, !(data$id %in% s$id))
     estMSE <- est_saegamlss(
       sample = s, nonsample = ns, y_dip=est$input_var$y,
-      sa=est$input_var$sa,
+      sa = est$input_var$sa,
       f1 = replace_term(est$input_var$f1, quote(y), quote(ys)),
       Ni = est$input_var$Ni,
-      ni = est$input_var$ni,
       f2 = replace_term(est$input_var$f2, quote(y), quote(ys)),
       f3 = replace_term(est$input_var$f3, quote(y), quote(ys)),
       f4 = replace_term(est$input_var$f4, quote(y), quote(ys)),
-      fdis =est$input_var$fids,
+      fdis = est$input_var$fdis,
       R = est$input_var$R,
-      Dis =est$input_var$Dis,
-      param =est$input_var$param,
-      np = as.numeric(est$input_var$np),
+      Dis = est$input_var$Dis,
+      param = est$input_var$param,
       tau.fix = as.numeric(est$input_var$tau.fix),
       nu.fix = as.numeric(est$input_var$nu.fix),
       z = as.numeric(est$input_var$z)
@@ -267,19 +321,27 @@ mse_saegamlss <- function(est, loop = NULL, l, Iden = F,
 
     dif1 <- rep(0, D)
     dif2 <- rep(0, D)
+    dif3 <- rep(0, D)
+
     for (t in 1:D) {
-      if (est$input_var$param == "both" |est$input_var$param == "mean") {
-        dif1[t] <- (media_boot1$ysm[t] - estMSE$est$ME[t])^2
-      }
-      if (est$input_var$param == "both" |est$input_var$param == "HCR") {
-        dif2[t] <- (media_boot2$ysm[t] - estMSE$est$HCR[t])^2
-      }
+
+
+      if ( !is.function(param) ) if (param == "both" | param == "mean") dif1[t] <- (media_boot1$ysm[t] - estMSE$est$ME[t])^2
+
+
+      if ( !is.function(param) ) if (param == "both" | param == "HCR")  dif2[t] <- (media_boot2$ysm[t] - estMSE$est$HCR[t])^2
+
+      if ( is.function(param) ) dif3[t] <- (media_boot3$ysm[t] - estMSE$est$Parameter[t])^2
+
+
     }
 
     if (gam$iter < max(est$input_var$nRS,est$input_var$nCG)) {
       for (h in 1:D) {
         MSE[h] <- dif1[h] + MSE[h]
         mse[h] <- dif2[h] + mse[h]
+        mse_p[h] <- dif3[h] + mse_p[h]
+
       }
       u <- u + 1
     } else {
@@ -287,18 +349,34 @@ mse_saegamlss <- function(est, loop = NULL, l, Iden = F,
     }
     message("Processing mse loop ", u, " of ", loop)
   }
+
   MSE <- MSE / u
   mse <- mse / u
+  mse_p <- mse_p / u
 
+  if (!is.function(param)){
   if (est$input_var$param == "both") {
+
     est_mse <- list("MSE_mean" = MSE, "MSE_HCR" = mse)
+
   } else if (est$input_var$param == "mean") {
+
     est_mse <- list("MSE_mean" = MSE)
+
   } else {
+
     est_mse <- list("MSE_HCR" = mse)
+
   }
+    } else{
+
+    est_mse <- list("MSE_param" = mse_p)
+
+  }
+
   #rm(fdis, envir = .GlobalEnv)
   result <- list("est_mse" = est_mse, "estimates" = est, "replicates"=loop)
   attr(result, "class") <- "saegamlss_class"
+
   return(result)
 }

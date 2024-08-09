@@ -11,14 +11,15 @@
 #'
 #' #est_saegamlss
 #'
-#'  dep.y <- data_gen(
+#'dep.y <- data_gen(
 #'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 1, b1 = 10,
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   b4 = NULL, x4 = NULL, xh = NULL, Dis = NO,
 #'   l = c(identity), sigma = 6, sigmah = NULL,
-#'   sigmae = 2, costh = NULL, seed = 1234
+#'   sigmae = 2, costh = NULL
 #' )
 #'
+#'print(dep.y)
 
 print.saegamlss_class <- function(x, ...){
   if (names(x[1])=="estimates"){
@@ -73,7 +74,7 @@ print.saegamlss_class <- function(x, ...){
     cat("\n\n")
     for (i in 1:min(length(x), 5)) {
       print(paste("Print of population",i))
-      print(print(as.data.frame(x[i])))
+      print((as.data.frame(x[i])))
       if(length(x)>5) print(paste("Omitted", length(x)-5, "populations"))
     }
 

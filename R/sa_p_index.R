@@ -12,7 +12,7 @@
 #' @param nu.f Logical value if TRUE (default) a random effect is used for nu
 #' @param tau.f Logical value if TRUE (default) a random effect is used for tau
 #' @param w Sample weights
-#' @param seed The seed. Default is 124
+#' @param seed The seed. Default is 123
 #'
 #' @return An object of class "saegamlss_class" with the estimated indicators and the value of
 #' the estimated distribution parameters for each area
@@ -26,11 +26,15 @@
 #'                    "sa" = as.factor(rep(c(1,2,3,4,5),200)))
 #'
 #' sa_p_index(data=data, y=data$y, sa = data$sa, fdis="LOGNO", index="Gini")
+#'
+#'
+#'
 
 sa_p_index <- function (data, y, sigma.f=TRUE, nu.f=TRUE, tau.f=TRUE,  sa, w=NULL, fdis,
-                        index=NULL, epsilon=NULL, seed = 123){
+                        index="all", epsilon=1, seed = 123){
 
-  mixed <- NULL
+
+
   f1 <- y ~1 + random(as.factor(sa))
   f2 <- f3 <- f4 <- y ~1
 
@@ -39,13 +43,12 @@ sa_p_index <- function (data, y, sigma.f=TRUE, nu.f=TRUE, tau.f=TRUE,  sa, w=NUL
   if(isTRUE(nu.f)) f3 <- f1
   if(isTRUE(tau.f)) f4 <- f1
 
-  if(is.null(epsilon)) epsilon=1
 
   set.seed(seed)
 
   gamlss_reg=gamlss::gamlss(f1, sigma.fo=f2, nu.fo=f3, tau.fo=f4, weights = w,
                               trace = F, family = substitute(fdis), data = as.data.frame(data),
-                              method = mixed(10,10))
+                              method = mixed(100,100))
 
 
 
@@ -63,10 +66,10 @@ sa_p_index <- function (data, y, sigma.f=TRUE, nu.f=TRUE, tau.f=TRUE,  sa, w=NUL
    theil_gamlss <- array()
    atkinson_gamlss <- array()
    est_gamlss <- data.frame("sa"=data %>% dplyr::distinct(sa) %>% dplyr::pull(),
-                            "mu_est"=rep(NA, l_sa),
-                            "sigma_est"=rep(NA, l_sa),
-                            "nu_est"=rep(NA, l_sa),
-                            "tau_est"=rep(NA, l_sa))
+                            "mu_est"=rep(NA_integer_, l_sa),
+                            "sigma_est"=rep(NA_integer_, l_sa),
+                            "nu_est"=rep(NA_integer_, l_sa),
+                            "tau_est"=rep(NA_integer_, l_sa))
 
     for (i in 1:l_sa) {
       a <- subset(data, sa==i)
@@ -85,7 +88,7 @@ sa_p_index <- function (data, y, sigma.f=TRUE, nu.f=TRUE, tau.f=TRUE,  sa, w=NUL
     }
      est_gamlss <- est_gamlss[, colSums(is.na(est_gamlss)) < nrow(est_gamlss)]
 
-    if (is.null(index)){
+    if (index=="all"){
 
       result <- list("Gini"=gini_gamlss[-1], "Theil"=theil_gamlss[-1], "Atkinson"=atkinson_gamlss[-1], "estimates_par"=est_gamlss, "model"=gamlss_reg)
 

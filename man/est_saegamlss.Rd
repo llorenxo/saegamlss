@@ -10,20 +10,18 @@ est_saegamlss(
   y_dip,
   sa,
   Ni,
-  ni,
   f1,
   f2 = NULL,
   f3 = NULL,
   f4 = NULL,
   fdis,
-  R = NULL,
+  R = 50,
   Dis,
-  np,
-  param = NULL,
-  seed = NULL,
+  param = "both",
   tau.fix = NULL,
   nu.fix = NULL,
-  z = NULL
+  z = NULL,
+  seed = 123
 )
 }
 \arguments{
@@ -33,11 +31,9 @@ est_saegamlss(
 
 \item{y_dip}{The dependent variable}
 
-\item{sa}{The name of the variable cotaining the areas}
+\item{sa}{The name of the variable containing the areas}
 
 \item{Ni}{1xD vector containing the number of units (in population) for each area}
-
-\item{ni}{1xD vector containing the number of sampled-units for each area}
 
 \item{f1}{A formula object for fitting a model for the mu parameter, e.g.f1=y~x+random(sa)}
 
@@ -53,17 +49,15 @@ est_saegamlss(
 
 \item{Dis}{Type of distribution in form of rDis where Dis is one of the distribution allowed by GAMLSS}
 
-\item{np}{Number of parameters of the distribution. i.e. for the normal distribution np=2, for the GB2 distribution np=4}
+\item{param}{The parameter to estimate: "mean", "HCR" or "both". Default is both. A new parameter to be estimated can be passed as a function}
 
-\item{param}{The parameter to estimate, "mean" or "HCR". Default is both.}
+\item{tau.fix}{A value to be fixed to 1 to obtain the Singh-Maddala distribution. Dist must be GB2}
 
-\item{seed}{The seed}
-
-\item{tau.fix}{A value to be fixed to 1 to obtain the Singh-Maddala distribution. Dist must be GB2 and np=4}
-
-\item{nu.fix}{A value to be fixed to 1 to obtain the Dagum distribution. Dist must be GB2 and np=4}
+\item{nu.fix}{A value to be fixed to 1 to obtain the Dagum distribution. Dist must be GB2}
 
 \item{z}{The Poverty line. Default is equal to 0.6 of the dependent variable}
+
+\item{seed}{The seed. Default is 123}
 }
 \value{
 an object of class "saegamlss_class" which contains two list. The first list, named est has:
@@ -77,11 +71,9 @@ an object of class "saegamlss_class" which contains two list. The first list, na
  f2 a formula object used for fitting a model to the sigma parameter
  f3 a  formula object used for fitting a model to the nu parameter
  f4 a formula object used for fitting a model to the tau parameter
- np the number of the parameters of the chosen distribution
  R the number of loop used to obtain the monte-carlo estimation
  D the number of area
  Ni 1xD vector containing the number of units (in population) for each area
- ni 1xD vector containing the number of sampled-units for each area
  originaldata The dataset of sampled-units
  fids The distribution used for the estimation
  z The poverty line
@@ -101,7 +93,7 @@ dep.y <- data_gen(
   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
   b4 = NULL, x4 = NULL, xh = NULL, Dis = NO,
   l = c(identity), sigma = 6, sigmah = NULL,
-  sigmae = 2, costh = NULL, seed = 1234
+  sigmae = 2, costh = NULL
 )
 
 data <- dep.y[[1]]
@@ -115,14 +107,27 @@ sample <- stratified(data, "sa", size = 0.5)
 #
 nonsample <- subset(data, !(data$id\%in\%sample$id))
 # estimate
+
 est_saegamlss(
   sample = sample, nonsample = nonsample, y_dip="y",
-  sa="sa", Ni = rep(10, 4), ni = rep(1, 4),
+  sa="sa", Ni = rep(10, 4),
   f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
   f4 = NULL, fdis = NO, R = 200,
-  Dis = rNO, np = 2, param = NULL,
-  seed = 1234, tau.fix = NULL, nu.fix = NULL
+  Dis = rNO,  param = "both",
+  tau.fix = NULL, nu.fix = NULL
 )
+
+# Defining a new parameter to be estimated
+
+est <- est_saegamlss(
+  sample = sample, nonsample = nonsample, y_dip="y",
+  sa="sa", Ni = rep(10, 4),
+  f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
+  f4 = NULL, fdis = NO, R = 200,
+  Dis = rNO, param = function(x) (mean(x^2)),
+  tau.fix = NULL, nu.fix = NULL
+ )
+est$estimates
 
 }
 \references{

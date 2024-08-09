@@ -1,11 +1,11 @@
 #' Data generation
-#' @description A tool to generate the dependent variable, with fixed covariates.
-#'  The dependent variable could be generated for more than 100 distributions    which have at maximum 4 parameters. Each parameter could be defined in terms of covariates and random-effects.
-#'  The dependent variable, when normal, could include both an additional error-term and heteroschedasticity.
+#'
+#' @description A tool to generate a population with the dependent variable that is defined in terms of a given distribution and a set of (fixed) covariates.
+#'  The dependent variable could be generated for more than 100 distributions which have at maximum 4 parameters. Each parameter could be defined in terms of covariates and random-effects.
+#'  The dependent variable when the link function is the Identity one could include  an additional error-term. For the Normal distribution is possible to add heteroschedasticity.
 #' @param D Number of areas
 #' @param Ni 1xD vector containing the number of units (in population) for each area
-#' @param M Number of replicates. Default is 1
-#' @param k A vector, of maximum length equal to 4, of constant (intercept) used to generate data, i.e. mu=k+b1*x
+#' @param k A vector, maximum length equal to 4, of constants (intercepts) used to generate data, i.e. mu=k+b1*x
 #' @param b1 A vector of regression coefficients used for mu
 #' @param x1 A matrix or a dataset where each column is a covariate used for mu
 #' @param b2 A vector of regression coefficients used for sigma
@@ -22,8 +22,8 @@
 #' @param sigmae The standard deviation used to generate the error term when the link-function is the identity one
 #' @param ty To be specified equal to "no" if the generation process is mu=k+b1*x+e  or equal to "het" if the generation process have to include heteroschedasticity
 #' @param costh A constant used to generate heteroschedasticity
-#' @param seed The seed to be used
-#' @param id Unit id.
+#' @param id Unit id
+#' @param M Number of replicates. Default is 1
 #' @import gamlss
 #' @import dplyr
 #' @import splitstackshape
@@ -31,12 +31,13 @@
 #' @export
 #' @note The definition of the heteroschedastic term follows Ramirez-Aldana, R., & Naranjo, L. (2021).
 #' @examples # Normal data (2 populations)
+#'
 #' data_gen(
-#'   Ni = rep(10, 4), D = 4, M = 2, ty = "no", k = 100, b1 = 4,
+#'   Ni = rep(10, 4), D = 4, ty = "no", k = 100, b1 = 4,
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
 #'   Dis=rNO, l = c(identity), sigma = 6, sigmah = NULL,
-#'   sigmae = 22, costh = NULL, seed = 1234
+#'   sigmae = 22, costh = NULL, M = 2
 #' )
 #' #
 #' # Heteroschedastic Normal data
@@ -46,23 +47,12 @@
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
 #'   x3 = NULL, b4 = NULL, x4 = NULL, xh = rnorm(40, 0, 1),
 #'   Dis=rNO, l = c(identity), sigma = 6, sigmah = 1, sigmae = 22,
-#'   costh = 0.1, seed = 1234
+#'   costh = 0.1
 #' )
 #' #
 #' # Non-normal data:
 #' #
-#' # a) Log-normal data
-#' #
-#' data_gen(
-#'   Ni = rep(10, 4), D = 4, ty = NULL, k = c(7, -2), b1 = 1,
-#'   x1 = rnorm(40, 0, 1), b2 = 0.5, x2 = rnorm(40, 0, 1),
-#'   b3 = NULL, x3 = NULL, b4 = NULL, x4 = NULL,
-#'   xh = NULL, Dis = rLOGNO2, l = c(exp, exp),
-#'   sigma = c(0.4, 0.3), sigmah = NULL, sigmae = NULL,
-#'   costh = NULL, seed = 1234
-#' )
-#' #
-#' # b) Dagum data
+#' # Dagum data
 #' #
 #' data_gen(
 #'   Ni = rep(10, 4), D = 4, ty = NULL,
@@ -71,22 +61,18 @@
 #'   b3 = 0.1, x3 = rnorm(40, 0, 1), b4 = 0, x4 = NULL,
 #'   xh = NULL, Dis = rGB2, l = c(exp, exp, exp, exp),
 #'   sigma = c(0.15, 0, 0, 0), sigmah = NULL, sigmae = NULL,
-#'   costh = NULL, seed = 1234
+#'   costh = NULL
 #' )
 #' @references Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.
 #'  Ramirez-Aldana, R., & Naranjo, L. (2021). Random intercept and linear mixed models including heteroscedasticity in a logarithmic scale: Correction terms and prediction in the original scale. PloS one, 16(4), e0249910.
 #'  Rigby, R. A., & Stasinopoulos, D. M. (2005). Generalized additive models for location, scale and shape. Journal of the Royal Statistical Society: Series C (Applied Statistics), 54(3), 507–554.
 #' @author Lorenzo Mori and Maria Rosaria Ferrante
 
-data_gen <- function(Ni, M = NULL , D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NULL, x3 = NULL, b4 = NULL, x4 = NULL,
+data_gen <- function(Ni, D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NULL, x3 = NULL, b4 = NULL, x4 = NULL,
                      xh = NULL, Dis, l, sigma = NULL, sigmah = NULL, sigmae = NULL, ty = NULL, costh = NULL,
-                     seed = NULL, id = NULL) {
+                     id = NULL, M = NULL) {
   list.data <- list()
-  if (is.null(seed)) {
-    set.seed(123)
-  } else {
-    set.seed(seed)
-  }
+
 
   if (is.null(M))     M <- 1
 
@@ -97,23 +83,31 @@ data_gen <- function(Ni, M = NULL , D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NUL
   if (is.null(id)) id <- c(1:sum(Ni))
 
   if (all(is.null(c(x2, x3, x4)))) {
+
     covariate <- as.data.frame(x1)
+
   } else if (all(is.null(c(x3, x4)))) {
+
     covariate <- as.data.frame(cbind(x1, x2))
     covariate <- subset(covariate, select = which(!duplicated(names(covariate))))
+
   } else if (is.null(x4)) {
+
     covariate <- as.data.frame(cbind(x1, x2, x3))
     covariate <- subset(covariate, select = which(!duplicated(names(covariate))))
+
   } else {
+
     covariate <- as.data.frame(cbind(x1, x2, x3, x4))
     covariate <- subset(covariate, select = which(!duplicated(names(covariate))))
+
   }
 
-  if (is.null(x2))  x2 <- rep(0, sum(Ni))
+  if (isTRUE(is.null(x2)))  x2 <- rep(0, sum(Ni))
 
-  if (is.null(x3))  x3 <- rep(0, sum(Ni))
+  if (isTRUE(is.null(x3)))  x3 <- rep(0, sum(Ni))
 
-  if (is.null(x4)) x4 <- rep(0, sum(Ni))
+  if (isTRUE(is.null(x4)))  x4 <- rep(0, sum(Ni))
 
   ym <- matrix(nrow = sum(Ni), ncol = M)
 
@@ -134,7 +128,9 @@ data_gen <- function(Ni, M = NULL , D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NUL
       x1 <- as.matrix(x1)
 
       ym[, i] <- k[1] + t(b1) %*% t(x1) + rep1 + repe
+
     } else if (ty == "het") {
+
       sigma1 <- sigma[1]
 
       u1 <- rnorm(D, 0, sigma1) # re x
@@ -151,7 +147,9 @@ data_gen <- function(Ni, M = NULL , D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NUL
       repw <- wj * repe
 
       ym[, i] <- k[1] + t(b1) %*% t(x1) + rep1 + repw
+
     } else {
+
       if (length(l) == 2) {
         l1 <- l[[1]]
         l2 <- l[[2]]
@@ -179,7 +177,9 @@ data_gen <- function(Ni, M = NULL , D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NUL
 
 
         ym[, i] <- Dis(n = sum(Ni), mu, sigmad)
+
       } else if (length(l) == 3) {
+
         l1 <- l[[1]]
         l2 <- l[[2]]
         l3 <- l[[3]]
@@ -215,7 +215,9 @@ data_gen <- function(Ni, M = NULL , D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NUL
         nu <- as.vector(l3(k[3] + t(b3) %*% t(x3) + rep3))
 
         ym[, i] <- Dis(sum(Ni), mu, sigmad, nu)
+
       } else {
+
         l1 <- l[[1]]
         l2 <- l[[2]]
         l3 <- l[[3]]
@@ -259,10 +261,12 @@ data_gen <- function(Ni, M = NULL , D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NUL
         ym[, i] <- Dis(n = sum(Ni), mu, sigmad, nu, tau)
       }
     }
+
     data <- data.frame(
       "y" = ym[, i], covariate, "sa" = as.factor(sort(rep(seq(1:D), Ni))),
       "id" = id
     )
+
     list.data[[i]] <- data
     names(list.data)[i] <- paste("dataset", i)
   }
