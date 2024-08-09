@@ -44,6 +44,7 @@ rmNullObs <- function(x) {
 
 
 ## Count argoment for np in est_saegamlss
+# @param func a function
 
 count_arguments <- function(func) {
   if (!is.function(func)) {
