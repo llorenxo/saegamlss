@@ -1,7 +1,7 @@
 Package: saegamlss
 Type: Package
 Title: Unit-Level small area estimation using Generalized Additive Models for Location, Scale and Shape
-Version: 0.1.1
+Version: 1.0.0
 Author: Lorenzo Mori \email{lorenzo.mori7@unibo.it} and Maria Rosaria Ferrante
 Maintainer: Lorenzo Mori <lorenzo.mori7@unibo.it>
 Description: This package provides a set of functions for  Small Area Unit Level based on Generalized Additive Models for Location, Scale and Shape, including functions for mean squared error estimation. 
