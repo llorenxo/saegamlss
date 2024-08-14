@@ -27,8 +27,7 @@ print.saegamlss_class <- function(x, ...){
 
   if (names(x[1])=="estimates"){
     cat("SAE-GAMLSS based on:", "\n\n")
-    print(x$input_var$fit)
-
+    print(x$input_var$fit$family)
 
 
   } else if (names(x[1])=="Gini" | names(x[1])=="Theil" | names(x[1])=="Atkinson"){
@@ -77,17 +76,19 @@ print.saegamlss_class <- function(x, ...){
     cat("\n\n")
     for (i in 1:min(length(x), 5)) {
       print(paste("Print of population",i))
-      print((as.data.frame(x[i])))
-      if(length(x)>5) print(paste("Omitted", length(x)-5, "populations"))
+      print(((x[i])))
     }
+    if(length(x)>5) print(paste("Omitted", length(x)-5, "populations"))
+
 
   } else if (names(x[1]) == "results_HT") {
     cat("\n\n")
     print("ok")
   } else {
-    cat("The MSE values are based on:", x$replicates, "replicates", "\n\n")
-    if (!is.null(x$est_mse$MSE_mean)) cat("The mean MSE for the Mean is:",mean(x$est_mse$MSE_mean), "\n\n")
-    if (!is.null(x$est_mse$MSE_HCR)) cat("The mean MSE for the HCR is:",mean(x$est_mse$MSE_HCR), "\n\n")
+    cat("MSE values based on:", x$replicates, "replicates", "\n\n")
+    if (!is.null(x$est_mse$MSE_mean)) cat("Mean MSE for the Mean:",mean(x$est_mse$MSE_mean), "\n\n")
+    if (!is.null(x$est_mse$MSE_HCR)) cat("Mean MSE for the HCR:",mean(x$est_mse$MSE_HCR), "\n\n")
+    if (!is.null(x$est_mse$MSE_param)) cat("Mean MSE for the self-defined parameter:",mean(x$est_mse$MSE_param), "\n\n")
 
   }
 }

@@ -103,7 +103,7 @@ p_index  <- function (mu, sigma, nu, tau, fdis, index="all", epsilon=1) {
       gini <- gini.pareto(sigma=sigma)
 
     }
-    index=list(Gini=gini)
+    index=list(P_Gini=gini)
 
   } else if (index=="Theil"){
 
@@ -133,7 +133,7 @@ p_index  <- function (mu, sigma, nu, tau, fdis, index="all", epsilon=1) {
 
     }
 
-    index <- list(Theil=theil)
+    index <- list(P_Theil=theil)
 
   } else {
     if (fdis=="LOGNO"){
@@ -161,7 +161,7 @@ p_index  <- function (mu, sigma, nu, tau, fdis, index="all", epsilon=1) {
       atkinson <- atkinson.pareto(sigma=sigma, epsilon=epsilon)
     }
 
-    index <- list(Atkinson=atkinson)
+    index <- list(P_Atkinson=atkinson)
   }
 
   return(index)

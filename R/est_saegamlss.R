@@ -171,7 +171,8 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, Ni, f1, f2 = NULL,
 
     gam1 <- gamlss::gamlss(f1,
                            sigma.fo = f2, nu.fo = f3, tau.fo = f4,
-                           trace = F, family = substitute(fdis), data = sample, method = mixed(100, 100)
+                           trace = F, family = substitute(fdis), data = sample,
+                           method = mixed(100, 100)
     )
 
     yns <- data.frame(
@@ -210,7 +211,8 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, Ni, f1, f2 = NULL,
 
     gam1 <- gamlss::gamlss(f1,
                            sigma.fo = f2, nu.fo = f3, tau.fo = f4,
-                           trace = F, family = substitute(fdis), data = sample, method = mixed(100, 100)
+                           trace = F, family = substitute(fdis), data = sample,
+                           method = mixed(100, 100)
     )
 
     yns <- data.frame(
@@ -250,7 +252,8 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, Ni, f1, f2 = NULL,
 
     gam1 <- gamlss::gamlss(f1,
                            sigma.fo = f2, nu.fo = f3, tau.fo = f4, tau.fixed = substitute(tau.fixed), nu.fixed = substitute(nu.fixed),
-                           trace = F, family = substitute(fdis), data = sample, method = mixed(100, 100)
+                           trace = F, family = substitute(fdis), data = sample,
+                           method = mixed(100, 100)
     )
 
     yns <- data.frame(

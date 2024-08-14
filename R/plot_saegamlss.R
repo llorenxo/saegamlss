@@ -8,6 +8,7 @@
 #' @param compare.Atkinson The MSE of a second estimator to be compared for the Atkinson index
 #' @param compare.Mean The MSE of a second estimator to be compared for the Mean
 #' @param compare.HCR The MSE of a second estimator to be compared for the HCR
+#' @param compare.param The MSE of a second estimator to be compared for the self-defined parameter
 #' @param ... Additional parameters
 #'
 #' @return Return a plot for object of class "saegamlss_class"
@@ -94,7 +95,9 @@ plot.saegamlss_class <- function(x, compare.Gini = NULL,
                                  compare.Theil = NULL,
                                  compare.Atkinson = NULL,
                                  compare.Mean = NULL,
-                                 compare.HCR = NULL, ...){
+                                 compare.HCR = NULL,
+                                 compare.param = NULL,
+                                 ...){
   if (names(x[1])=="estimates"){
 
     plot(x$input_var$fit)
@@ -157,44 +160,61 @@ plot.saegamlss_class <- function(x, compare.Gini = NULL,
   } else if (names(x[1])=="dataset 1"){
 
     for (i in 1:min(length(x), 5)) {
-    nam <- colnames(x[[i]])
 
-    graphics::par(mfrow=c(1,2))
-    graphics::par(mar = c(5, 4, 4, 2) + 0.1)
-    graphics::hist(x[[i]][,nam[1]],xlab="y", probability=TRUE, main="")
+      data <- as.data.frame(x[[i]])  # Select the i-th dataset
+      y_column <- colnames(data)[[1]]
 
-      corrplot::corrplot(stats::cor(x[[i]][,-c(length(nam)-1, length(nam))]),
-                         method = "circle", type = "full", tl.cex = 0.7)
 
-      graphics::mtext(paste("Histogram and Correlation Matrix - Population", i), side=3, line=-2, outer=TRUE)
+    p1 <-  ggplot2::ggplot(data,  ggplot2::aes(y)) +
+      ggplot2::geom_histogram( ggplot2::aes(y = ..density..), fill = "lightblue", color = "black") +
+      ggplot2::xlab("y") +
+      ggplot2::ggtitle("")
 
+    # Calculate the correlation matrix excluding the last two columns
+    correlation_matrix <- cor(data %>% select(-c(sa, id)))
+
+    # Create correlation plot using ggcorrplot
+    p2 <- ggcorrplot::ggcorrplot(correlation_matrix,
+                                 method = "circle",
+                                 type = "full",
+                                 lab_size = 3,  # Adjust size of the correlation coefficient labels
+                                 tl.cex = 0.7,  # Adjust text label size for axis
+                                 tl.srt = 45,  # Rotate the text labels for readability
+                                 tl.col = "black") + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 1, hjust = 1, size = 9),
+                                                           axis.text.y = ggplot2::element_text(size = 9))
+
+    # Combine the histogram and correlation plot using gridExtra
+    combined_plot <- gridExtra::grid.arrange(p1, p2, ncol = 2,
+                                             top = grid::textGrob(paste("Histogram and Correlation Matrix - Population", i),
+                                                                  gp = grid::gpar(fontsize = 14, fontface = "bold")))
 
       if (length(x)>1){
       cat("Press Enter for the next population")
       readline()
       }
-      if (length(x)>5) print(paste("Omitted", length(x)-5, "populations"))
     }
-    graphics::par(mfrow = c(1, 1))
+    if (length(x)>5) print(paste("Omitted", length(x)-5, "populations"))
+
 
 
 
   }  else {
 
-    if (is.null(compare.Mean) & is.null(compare.HCR)) stop(print("Error: an MSE to be compared is required"))
+    if (is.null(compare.Mean) & is.null(compare.HCR) & is.null(compare.param)) stop(print("Error: an MSE to be compared is required"))
 
     Value <- Estimator <- NULL
 
-    l <- length(x$est_mse$MSE_mean)
+    l <- max(length(x$est_mse$MSE_mean), length(x$est_mse$MSE_param), length(x$est_mse$MSE_HCR))
 
-    if ( l == 0 ) l <- length(x$est_mse$MSE_HCR)
 
-    pp <- pp1 <- pp2 <- pp3 <- rep(FALSE, l)
+    pp <- pp1 <- pp1.p <- pp2 <- pp3 <- pp4 <- rep(FALSE, l)
 
     if (length(sapply(x$est_mse$MSE_mean, function(x) is.null(x))) == l ) pp <- rep(TRUE, l)
     if (length(sapply(x$est_mse$MSE_HCR, function(x) is.null(x))) == l ) pp1 <- rep(TRUE, l)
+    if (length(sapply(x$est_mse$MSE_param, function(x) is.null(x))) == l ) pp1.p <- rep(TRUE, l)
     if (length(sapply(compare.Mean, function(x) is.null(x))) == l ) pp2 <- rep(TRUE, l)
     if (length(sapply(compare.HCR, function(x) is.null(x))) == l ) pp3 <- rep(TRUE, l)
+    if (length(sapply(compare.param, function(x) is.null(x))) == l ) pp4 <- rep(TRUE, l)
 
 
     sub <- rep(NA, l)
@@ -202,8 +222,10 @@ plot.saegamlss_class <- function(x, compare.Gini = NULL,
     data <- data.frame(
       "Mean" = ifelse(!pp, sub , x$est_mse$MSE_mean),
       "HCR" = ifelse(!pp1, sub, x$est_mse$MSE_HCR),
-      "compared.Mean" = ifelse(!pp2, sub, compare.Mean),
-      "compared.HCR" = ifelse(!pp3, sub, compare.HCR)
+      "Param" = ifelse(!pp1.p, sub, x$est_mse$MSE_param),
+      "Compared.Mean" = ifelse(!pp2, sub, compare.Mean),
+      "Compared.HCR" = ifelse(!pp3, sub, compare.HCR),
+      "Compared.param" = ifelse(!pp4, sub, compare.param)
     )
 
     data= data[, colnames(data)[apply(data, 2, function(x) any(!is.na(x)))]]

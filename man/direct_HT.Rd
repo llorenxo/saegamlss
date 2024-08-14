@@ -49,5 +49,14 @@ collected from a complex sampling design for Small Area.
 
 data = data.frame("y"= c(1:10), "sa"=sample(c("a","b"), 10, replace=TRUE),
                   "pi"=rep(0.1, 10))
-direct_HT(y = "y", sa = "sa", pi = "pi", data = data)
+
+
+dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = data)
+
+dir$results_HT
+
+dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = data,
+          var_method = "LinHH")
+
+dir$results_HT
 }

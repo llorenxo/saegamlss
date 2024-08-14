@@ -28,7 +28,7 @@
 #'                    "ncomp"=rep(c(2,1,3,4), 5),
 #'                    "w"=rep(2,20))
 #'
-#' np <- np_mse_ssaegamlss(data=data, y=data$y, sa = data$sa,
+#' np <- np_mse(data=data, y=data$y, sa = data$sa,
 #'                        ncomp=data$ncomp, fdis="LOGNO",
 #'                        index="Gini", seed = 124,
 #'                        R=2)
@@ -36,7 +36,7 @@
 #' np$Gini.MSE
 #'
 
-np_mse_ssaegamlss <- function(data, y, sa, ncomp,  R=200, sigma.f=TRUE, nu.f=TRUE,
+np_mse <- function(data, y, sa, ncomp,  R=200, sigma.f=TRUE, nu.f=TRUE,
                                tau.f=TRUE, w=NULL, fdis,
                                index="all", epsilon=1, seed=123){
   set.seed(seed)

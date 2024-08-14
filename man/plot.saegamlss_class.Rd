@@ -11,6 +11,7 @@
   compare.Atkinson = NULL,
   compare.Mean = NULL,
   compare.HCR = NULL,
+  compare.param = NULL,
   ...
 )
 }
@@ -26,6 +27,8 @@
 \item{compare.Mean}{The MSE of a second estimator to be compared for the Mean}
 
 \item{compare.HCR}{The MSE of a second estimator to be compared for the HCR}
+
+\item{compare.param}{The MSE of a second estimator to be compared for the self-defined parameter}
 
 \item{...}{Additional parameters}
 }

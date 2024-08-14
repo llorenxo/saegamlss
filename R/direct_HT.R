@@ -61,14 +61,19 @@ direct_HT <- function(y, sa, pi, pi2 = NULL, N = NULL, var_est = TRUE, var_metho
                             message =FALSE)
 
   if(i==1){
+
     results <- c(d$pop_mean, d$pop_mean_var, sqrt(d$pop_mean_var),  sqrt(d$pop_mean_var)/d$pop_mean )
-  } else{
+
+    } else{
+
     results <- rbind(results, c(d$pop_mean, d$pop_mean_var, sqrt(d$pop_mean_var),  sqrt(d$pop_mean_var)/d$pop_mean ))
+
+    }
+
   }
 
- }
-
   rownames(results) <- as.character(sa); results  <- results[order(rownames(results)), ]
+
   colnames(results) <- c("Est_mean", "Est_var", "Est_SD", "CV")
 
   results = list("results_HT" = results, "type" = var_method, "B" = B)

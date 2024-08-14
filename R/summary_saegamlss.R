@@ -85,30 +85,48 @@
 #' summary(MSE)
 
 summary.saegamlss_class <- function(object, ...){
+
   if (names(object[1])=="estimates"){
+
     summary(object$input_var$fit)
 
     cat("\n\n",
+
         "Estimated random-effect(s): \n\n")
 
-        getSmo(object$input_var$fit)$coef
+        print(getSmo(object$input_var$fit)$coef)
+        cat("\n\n")
 
-       cat("\n\n Estimated values of the Mean: \n\n",
 
         if (!is.null(object$estimates$ME)){
-          object$estimates$ME
-        }else {
-          print("Not estimated")
-        }, "\n\n",
-        "Estimated values of the HCR: \n\n",
+
+        cat("\n\n Estimated values of the Mean: \n\n")
+
+        print(object$estimates$ME)
+
+        cat("\n\n")
+
+        }
+
 
         if (!is.null(object$estimates$HCR)){
-          object$estimates$HCR
-        } else {
-          print("Not estimated")
-        }, "\n\n")
+
+          cat("Estimated values of the HCR: \n\n")
+
+          print(object$estimates$HCR)
+          cat("\n\n")
+
+        }
+
+
+        if (!is.null(object$estimates$Parameter)){
+          cat("Estimated values of the self-defined parameter: \n\n")
+         print(object$estimates$Parameter)
+
+        }
 
   } else if (names(object[1])=="Gini" | names(object[1])=="Theil" | names(object[1])=="Atkinson"){
+
     summary(object$model)
 
     cat("\n\n",
@@ -202,33 +220,31 @@ summary.saegamlss_class <- function(object, ...){
     cat("\n\n")
     for (i in 1:length(object)) {
       print(paste("summary of population",i))
-      print(summary(as.data.frame(object[i])))
+
+      print(summary((object[[i]])))
     }
 
   } else {
-    summary(object$estimates$input_var$fit)
 
-    cat("\n\n",
+    cat("Summary of estimated MSE: \n\n")
 
-        "Estimated random-effect(s): \n\n",
-        getSmo(object$estimates$input_var$fit)$coef, "\n\n",
-
-        "Summary of estimated MSE (mean): \n\n",
 
         if (!is.null(object$est_mse$MSE_mean)){
-          names(summary(object$est_mse$MSE_mean))
-          summary(object$est_mse$MSE_mean)
-        }else {
-          print("Not estimated")
-        }, "\n\n",
-        "Summary of estimated MSE (HCR): \n\n",
+          cat("Mean:  \n\n")
+          print(summary(object$est_mse$MSE_mean))
+          cat("\n\n")
+        }
 
         if (!is.null(object$est_mse$MSE_HCR)){
-          names(summary(object$est_mse$MSE_HCR))
-          summary(object$est_mse$MSE_HCR)
-        } else {
-          print("Not estimated")
-        }, "\n\n")
+          cat("HCR:  \n\n")
+          print(summary(object$est_mse$MSE_HCR))
+          cat("\n\n")
+        }
+    if (!is.null(object$est_mse$MSE_param)){
+      cat("Self-defined parameter:  \n\n")
+      print(summary(object$est_mse$MSE_param))
+      cat("\n\n")
+    }
 
   }
 }
