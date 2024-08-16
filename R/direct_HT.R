@@ -24,22 +24,30 @@
 #'
 #' @examples
 #'
-#' data = data.frame("y"= c(1:10), "sa"=sample(c("a","b"), 10, replace=TRUE),
-#'                   "pi"=rep(0.1, 10))
+#' ##################
+#' ###Using s_data###
+#' ##################
 #'
 #'
-#' dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = data)
+#'
+#' dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = s_data)
 #'
 #' dir$results_HT
 #'
-#' dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = data,
+#' dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = s_data,
 #'           var_method = "LinHH")
 #'
 #' dir$results_HT
+#'
+#'
+
 
 
 direct_HT <- function(y, sa, pi, pi2 = NULL, N = NULL, var_est = TRUE, var_method = "bootstrapSRS",
                       B = 100, fpc=TRUE, data){
+
+  if (var_method == "LinHT") warning("The estimated variance is not guaranteed to be greater than 0.")
+
 
   sa_name <- sa
   sa <- unique.numeric_version(data[[sa]])
@@ -81,4 +89,5 @@ direct_HT <- function(y, sa, pi, pi2 = NULL, N = NULL, var_est = TRUE, var_metho
   attr(results, "class") <- "saegamlss_class"
 
   return(results)
+
 }

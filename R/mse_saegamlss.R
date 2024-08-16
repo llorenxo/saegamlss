@@ -5,7 +5,6 @@
 #' @param loop Number of loop of bootstrap. Default is 200
 #' @param l A vector, of maximum length equal to 4, in which each space is a function (the inverse of the link-function) to be applied to the corresponding parameter, i.e. mu, sigma, nu and tau
 #' @param Iden  TRUE if the Identity link function is used for mu. Default is FALSE
-#' @param data A dataset. Mandatory columns: covariates and areas (named sa). Additional columns are admitted.
 #' @param cov1 A matrix or a data frame with covariates for the whole population used for mu. If an intercept is used the first columns have to be a vector of 1
 #' @param cov2 A matrix or a data frame with covariates for the whole population used for sigma. If an intercept is used the first columns have to be a vector of 1
 #' @param cov3 A matrix or a data frame with covariates for the whole population used for nu. If an intercept is used the first columns have to be a vector of 1
@@ -22,86 +21,82 @@
 #'
 #' @examples
 #'
-#' dep.y <- data_gen(
-#'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 4, b1 = 100,
-#'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
-#'   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
-#'   Dis, l = c(identity), sigma = 6, sigmah = NULL,
-#'   sigmae = 22, costh = NULL
-#' )
-#' data <- dep.y[[1]]
-#' #
-#' # sample data with a sample fraction of 0.5
-#' #
-#' library(splitstackshape)
-#' # sample data
-#' #
-#' sample <- stratified(data, "sa", size = 0.5)
-#' # nonsample data
-#' #
-#' nonsample <- subset(data, !(data$id%in%sample$id))
-#' # estimate
+#' ##################
+#' ###Using s_data###
+#' ##################
+#'
+#'
 #' est <- est_saegamlss(
-#'   sample = sample, nonsample = nonsample, y_dip="y", sa="sa",
-#'   Ni = rep(10, 4),  f1 = y ~ x1 + random(sa),
-#'   f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
-#'   R = 2, Dis = rNO, param = "both",
+#'   sample = s_data, nonsample = pop_data, y_dip="y",
+#'   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
+#'   f3 = NULL, f4 = NULL, fdis = NO, R = 20,
+#'   Dis = rNO,  param = "both",
 #'   tau.fix = NULL, nu.fix = NULL
 #' )
-#' #
-#' # covariates
-#' #
-#' x <- data.frame(rep(1, nrow(data)), "x1" = data$x1)
-#' #
-#' # compute the MSE
-#' #
+#'
+#' data <- rbind( est$input_var$origindata  %>%
+#'                dplyr::select( dplyr::all_of(colnames(est$input_var$nonsample))),
+#'                est$input_var$nonsample
+#'                )
+#'
+#' x <- data.frame(rep(1, nrow(data)), "x1" = data$x1,
+#'                 "x2" = data$x2)
+#'
+#'
 #' MSE <- mse_saegamlss(
 #'   est = est, loop = 2,
-#'   l = c(identity), Iden = TRUE,
-#'   data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
+#'   l = c(identity, exp), Iden = TRUE,
+#'   cov1 = x[,1:2], cov2 = x[,c(1,3)], cov3 = NULL,
 #'   cov4 = NULL
 #' )
+#'
 #' MSE$est_mse$MSE_mean
 #' MSE$est_mse$MSE_HCR
 #'
+#'
+#' # MSE for a self-defined parameter
+#'
 #' est <- est_saegamlss(
-#'   sample = sample, nonsample = nonsample, y_dip="y", sa="sa",
-#'   Ni = rep(10, 4),  f1 = y ~ x1 + random(sa),
-#'   f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
-#'   R = 2, Dis = rNO, param = function(x) (mean(x^2)),
+#'   sample = s_data, nonsample = pop_data, y_dip="y",
+#'   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
+#'   f3 = NULL, f4 = NULL, fdis = NO, R = 20,
+#'   Dis = rNO, param = function(x) (mean(x^2)),
 #'   tau.fix = NULL, nu.fix = NULL
-#' )
-#' #
-#' # covariates
-#' #
-#' x <- data.frame(rep(1, nrow(data)), "x1" = data$x1)
-#' #
-#' # compute the MSE
-#' #
+#'  )
+#'
+#'
 #' MSE <- mse_saegamlss(
 #'   est = est, loop = 2,
-#'   l = c(identity), Iden = TRUE,
-#'   data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
+#'   l = c(identity, exp), Iden = TRUE,
+#'   cov1 = x[,1:2], cov2 = x[,c(1,3)], cov3 = NULL,
 #'   cov4 = NULL
 #' )
+#'
+#'
 #' MSE$est_mse$MSE_param
 #'
 #' @references Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.
 #'  Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597.
 #' @author Lorenzo Mori and Maria Rosaria Ferrante
 
-mse_saegamlss <- function(est, loop = 200, l, Iden = F,
-                          data, cov1, cov2 = NULL, cov3 = NULL, cov4 = NULL, seed = 123) {
+mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
+                          cov1, cov2 = NULL, cov3 = NULL, cov4 = NULL, seed = 123) {
 
   set.seed(seed)
 
 
+  data <- rbind( est$input_var$origindata  %>%
+                 dplyr::select( dplyr::all_of(colnames(est$input_var$nonsample))),
+                 est$input_var$nonsample
+                 )
+  data <- data %>% dplyr::mutate(id = row_number())
 
   sa <- est$input_var$sa
-  samplesize <- est$input_var$origindata%>%dplyr::count(sa)%>%dplyr::pull()/ sum(est$input_var$Ni)
+  samplesize <- est$input_var$origindata %>% dplyr::count(sa )%>% dplyr::pull()/ sum(est$input_var$Ni)
   D <- est$input_var$D
   Dis <- est$input_var$Dis
   Ni <- est$input_var$Ni
+  Ni2 <- est$input_var$Ni + est$input_var$ni
   np <- count_arguments(Dis)-1
 
   param <- est$input_var$param
@@ -161,10 +156,10 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = F,
 
     ################### Error
 
-    sm <- rep(u1, Ni)
-    ss <- rep(u2, Ni)
-    sn <- rep(u3, Ni)
-    st <- rep(u4, Ni)
+    sm <- rep(u1, Ni2)
+    ss <- rep(u2, Ni2)
+    sn <- rep(u3, Ni2)
+    st <- rep(u4, Ni2)
 
 
 
@@ -214,6 +209,7 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = F,
 
       } else {
         if (Iden == TRUE) {
+
           if (is.na(as.character(gam$sigma.coefficients)[lls]) == TRUE) {
             sigma_star <- l2(as.matrix(ms) %*% as.vector(gam$sigma.coefficients[1:(lls - 1)]) + ss) * gamlss::getSmo(gam)$sige
           } else {
@@ -264,29 +260,29 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = F,
     ys1 <- array()
     if (np == 1) {
 
-      ys1 <- Dis(sum(Ni), mu = mu_star)
+      ys1 <- Dis(sum(Ni2), mu = mu_star)
 
     } else if (np == 2) {
 
-      ys1 <- Dis(sum(Ni), mu = mu_star, sigma = sigma_star)
+      ys1 <- Dis(sum(Ni2), mu = mu_star, sigma = sigma_star)
 
     } else if (np == 3) {
 
-      ys1 <- Dis(sum(Ni), mu = mu_star, sigma = sigma_star, nu = nu_star)
+      ys1 <- Dis(sum(Ni2), mu = mu_star, sigma = sigma_star, nu = nu_star)
 
     } else if (np == 4) {
 
       if (is.null(est$input_var$tau.fix) == TRUE && is.null(est$input_var$nu.fix) == TRUE) {
 
-        ys1 <- Dis(sum(Ni), mu = mu_star, sigma = sigma_star, nu = nu_star, tau = tau_star)
+        ys1 <- Dis(sum(Ni2), mu = mu_star, sigma = sigma_star, nu = nu_star, tau = tau_star)
 
       } else if (is.null(est$input_var$tau.fix) == TRUE) {
 
-        ys1 <- Dis(sum(Ni), mu = mu_star, sigma = sigma_star, nu = 1, tau = tau_star)
+        ys1 <- Dis(sum(Ni2), mu = mu_star, sigma = sigma_star, nu = 1, tau = tau_star)
 
       } else {
 
-        ys1 <- Dis(sum(Ni), mu = mu_star, sigma = sigma_star, nu = nu_star, tau = 1)
+        ys1 <- Dis(sum(Ni2), mu = mu_star, sigma = sigma_star, nu = nu_star, tau = 1)
 
       }
     }
@@ -306,7 +302,6 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = F,
       sample = s, nonsample = ns, y_dip=est$input_var$y,
       sa = est$input_var$sa,
       f1 = replace_term(est$input_var$f1, quote(y), quote(ys)),
-      Ni = est$input_var$Ni,
       f2 = replace_term(est$input_var$f2, quote(y), quote(ys)),
       f3 = replace_term(est$input_var$f3, quote(y), quote(ys)),
       f4 = replace_term(est$input_var$f4, quote(y), quote(ys)),
@@ -326,10 +321,10 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = F,
     for (t in 1:D) {
 
 
-      if ( !is.function(param) ) if (param == "both" | param == "mean") dif1[t] <- (media_boot1$ysm[t] - estMSE$est$ME[t])^2
+      if ( !is.function(param) ) if (param == "both" | param == "mean") dif1[t] <- (media_boot1$ysm[t] - estMSE$estimates$Mean[t])^2
 
 
-      if ( !is.function(param) ) if (param == "both" | param == "HCR")  dif2[t] <- (media_boot2$ysm[t] - estMSE$est$HCR[t])^2
+      if ( !is.function(param) ) if (param == "both" | param == "HCR")  dif2[t] <- (media_boot2$ysm[t] - estMSE$estimates$HCR[t])^2
 
       if ( is.function(param) ) dif3[t] <- (media_boot3$ysm[t] - estMSE$est$Parameter[t])^2
 

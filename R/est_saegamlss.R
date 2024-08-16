@@ -5,7 +5,6 @@
 #' @param nonsample  A dataset of non-sampled units. With covariates and small areas
 #' @param y_dip The dependent variable
 #' @param sa The name of the variable containing the areas
-#' @param Ni 1xD vector containing the number of units (in population) for each area
 #' @param f1 A formula object for fitting a model for the mu parameter, e.g.f1=y~x+random(sa)
 #' @param f2 A formula object for fitting a model for the sigma parameter, e.g.f2=y~x+random(sa)
 #' @param f3 A formula object for fitting a model for the nu parameter, e.g.f3=y~x+random(sa)
@@ -42,44 +41,27 @@
 #' @import dplyr
 #' @import splitstackshape
 #' @examples
-#' # Generate data
-#' #
-#' dep.y <- data_gen(
-#'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 1, b1 = 10,
-#'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
-#'   b4 = NULL, x4 = NULL, xh = NULL, Dis = NO,
-#'   l = c(identity), sigma = 6, sigmah = NULL,
-#'   sigmae = 2, costh = NULL
-#' )
 #'
-#' data <- dep.y[[1]]
-#' #
-#' # sample data with a sample fraction of 0.5
-#' #
-#' # sample data
-#' #
-#' sample <- stratified(data, "sa", size = 0.5)
-#' # nonsample data
-#' #
-#' nonsample <- subset(data, !(data$id%in%sample$id))
-#' # estimate
+#' ##################
+#' ###Using s_data###
+#' ##################
 #'
-#' est_saegamlss(
-#'   sample = sample, nonsample = nonsample, y_dip="y",
-#'   sa="sa", Ni = rep(10, 4),
-#'   f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
-#'   f4 = NULL, fdis = NO, R = 200,
-#'   Dis = rNO,  param = "both",
+#' est <- est_saegamlss(
+#'   sample = s_data, nonsample = pop_data, y_dip="y",
+#'   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
+#'   f3 = NULL, f4 = NULL, fdis = NO, R = 20,
+#'   Dis = rNO,  param = "mean",
 #'   tau.fix = NULL, nu.fix = NULL
 #' )
+#'
+#' est$estimates
 #'
 #' # Defining a new parameter to be estimated
 #'
 #' est <- est_saegamlss(
-#'   sample = sample, nonsample = nonsample, y_dip="y",
-#'   sa="sa", Ni = rep(10, 4),
-#'   f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
-#'   f4 = NULL, fdis = NO, R = 200,
+#'   sample = s_data, nonsample = pop_data, y_dip="y",
+#'   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
+#'   f3 = NULL, f4 = NULL, fdis = NO, R = 20,
 #'   Dis = rNO, param = function(x) (mean(x^2)),
 #'   tau.fix = NULL, nu.fix = NULL
 #'  )
@@ -91,15 +73,17 @@
 #' @note With "object"$input_var$fit is possible to use all the classical function used by gamlss
 #'  The Small Area have to be denoted with a number from 1 to D
 
-est_saegamlss <- function(sample, nonsample, y_dip, sa, Ni, f1, f2 = NULL,
+est_saegamlss <- function(sample, nonsample, y_dip, sa, f1, f2 = NULL,
                           f3 = NULL, f4 = NULL, fdis, R = 50, Dis,
                           param = "both",
                           tau.fix = NULL, nu.fix = NULL, z = NULL, seed = 123) {
 
   set.seed(seed)
 
+
+  Ni <- table(nonsample[[sa]]) %>% as.vector()
   np <- count_arguments(Dis)-1
-  ni <- table(sample[[sa]])
+  ni <- table(sample[[sa]]) %>% as.vector()
   y <- sample[[y_dip]]
   sa_n <- nonsample[[sa]]
   mixed <- NULL
@@ -295,11 +279,11 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, Ni, f1, f2 = NULL,
 
     if (param == "both") {
 
-      estim <- list("ME" = ME, "HCR" = HCR)
+      estim <- list("Mean" = ME, "HCR" = HCR)
 
     } else if (param == "mean") {
 
-      estim <- list("ME" = ME)
+      estim <- list("Mean" = ME)
 
     } else {
 
@@ -315,8 +299,8 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, Ni, f1, f2 = NULL,
   input_var <- list(y=y_dip, sa = sa_name,
                     "fit" = gam1, "f1" = f1, "f2" = f2, "f3" = f3, "f4" = f4, "fdis" = fdis, Dis = Dis,
                     "nRS" = 100, "nCG" = 100, "R" = R, "D" = D, "Ni" = Ni, "ni" = ni,
-                    "nu.fix" = nu.fix, "tau.fix" = tau.fix, "param" = param, "origindata" = sample, "z" = z
-
+                    "nu.fix" = nu.fix, "tau.fix" = tau.fix, "param" = param, "origindata" = sample, "z" = z,
+                    "nonsample" = nonsample
                     )
 
   result <- list("estimates" = estim, "input_var" = input_var)

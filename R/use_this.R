@@ -46,7 +46,6 @@ rmNullObs <- function(x) {
   lapply(x, function(x) if (is.list(x)) rmNullObs(x) else x)
 }
 
-
 # Count argoment for np in est_saegamlss
 # @param func a function
 

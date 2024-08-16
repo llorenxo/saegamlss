@@ -37,19 +37,19 @@ data_gen(
 
 \item{b1}{A vector of regression coefficients used for mu}
 
-\item{x1}{A matrix or a dataset where each column is a covariate used for mu}
+\item{x1}{A matrix/vector or a dataset where each column is a covariate used for mu}
 
 \item{b2}{A vector of regression coefficients used for sigma}
 
-\item{x2}{A matrix or a dataset where each column is a covariate used for sigma}
+\item{x2}{A matrix/vector or a dataset where each column is a covariate used for sigma}
 
 \item{b3}{A vector of regression coefficients used for nu}
 
-\item{x3}{A matrix or a dataset where each column is a covariate used for nu}
+\item{x3}{A matrix/vector or a dataset where each column is a covariate used for nu}
 
 \item{b4}{A vector of regression coefficients used for tau}
 
-\item{x4}{A matrix or a dataset where each column is a covariate used for tau}
+\item{x4}{A matrix/vector or a dataset where each column is a covariate used for tau}
 
 \item{xh}{A vector of covariate used to generate heteroschedasticity}
 
@@ -102,20 +102,7 @@ data_gen(
   Dis=rNO, l = c(identity), sigma = 6, sigmah = 1, sigmae = 22,
   costh = 0.1
 )
-#
-# Non-normal data:
-#
-# Dagum data
-#
-data_gen(
-  Ni = rep(10, 4), D = 4, ty = NULL,
-  k = c(3, log(3.4), -0.4, log(1)), b1 = 1.5,
-  x1 = rnorm(40, 0, 1), b2 = 0, x2 = NULL,
-  b3 = 0.1, x3 = rnorm(40, 0, 1), b4 = 0, x4 = NULL,
-  xh = NULL, Dis = rGB2, l = c(exp, exp, exp, exp),
-  sigma = c(0.15, 0, 0, 0), sigmah = NULL, sigmae = NULL,
-  costh = NULL
-)
+
 }
 \references{
 Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.

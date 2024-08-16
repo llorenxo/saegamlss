@@ -18,6 +18,7 @@
 #' #Using GB2 distribution
 #'
 #' data=rGB2(200, mu=5, sigma=2, nu=1, tau=1)
+#'
 #' p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Gini", epsilon=2)
 #' p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Theil", epsilon=2)
 #' p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Atkinson", epsilon=2)
@@ -74,7 +75,7 @@ p_index  <- function (mu, sigma, nu, tau, fdis, index="all", epsilon=1) {
 
     }
 
-    index <- list(Gini=gini, Theil=theil, Atkinson=atkinson)
+    index <- list(P_Gini=gini, P_Theil=theil, P_Atkinson=atkinson)
 
   } else if (index=="Gini"){
 
@@ -164,5 +165,18 @@ p_index  <- function (mu, sigma, nu, tau, fdis, index="all", epsilon=1) {
     index <- list(P_Atkinson=atkinson)
   }
 
+  if ("P_Atkinson" %in% names(index)) {
+
+  index = list(index = index, dist = fdis, Atkinson_parameter = epsilon)
+
+  } else {
+
+    index = list(index = index, dist = fdis)
+
+  }
+
+  attr(index, "class") <- "saegamlss_class"
+
   return(index)
+
 }

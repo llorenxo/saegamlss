@@ -166,7 +166,7 @@ plot.saegamlss_class <- function(x, compare.Gini = NULL,
 
 
     p1 <-  ggplot2::ggplot(data,  ggplot2::aes(y)) +
-      ggplot2::geom_histogram( ggplot2::aes(y = ..density..), fill = "lightblue", color = "black") +
+      ggplot2::geom_histogram( ggplot2::aes(y = ggplot2::after_stat(density)), fill = "lightblue", color = "black") +
       ggplot2::xlab("y") +
       ggplot2::ggtitle("")
 

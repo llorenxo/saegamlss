@@ -154,9 +154,54 @@ summary.saegamlss_class <- function(object, ...){
         } else {
           print("Not estimated")
         }, "\n\n")
-  } else if (names(object[1])=="Gini.MSE"
-             | names(object[1])=="Theil.MSE"
-             | names(object[1])=="Atkinson.MSE"){
+
+  } else if (names(object[[1]][1])=="P_Gini" |
+             names(object[[1]][1])=="P_Theil" |
+             names(object[[1]][1])=="P_Atkinson"){
+
+    cat("Assumed distribution: \n\n")
+
+    print(object[[2]])
+
+    cat("\n\n")
+
+    if("P_Gini" %in% names(object[[1]])){
+
+      cat("Estimated value of Gini index: \n\n")
+
+      print(object[[1]]$P_Gini)
+      cat("\n\n")
+
+      }
+
+    if("P_Theil" %in% names(object[[1]])){
+      cat("Estimated value of Theil index: \n\n")
+
+      print(object[[1]]$P_Theil)
+      cat("\n\n")
+
+      }
+
+    if("P_Atkinson" %in% names(object[[1]])){
+      cat("Estimated value of Atkinson index: \n\n")
+
+      print(object[[1]]$P_Atkinson)
+      cat("\n\n")
+
+
+      cat("Parameter: \n\n")
+
+
+      print(object[[3]])
+
+
+
+    }
+
+
+  }   else if (names(object[1])=="Gini.MSE"|
+               names(object[1])=="Theil.MSE"|
+               names(object[1])=="Atkinson.MSE"){
 
     cat("\n\n",
 

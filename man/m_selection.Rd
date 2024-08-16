@@ -53,8 +53,8 @@ The summary (Step2) do not reports results on the random effects as usual for GA
 \examples{
 
 sample_data=data_gen(
-  Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 100, b1 = 4,
-  x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
+  Ni = rep(10, 3), D = 3, M = 1, ty = "no", k = 100, b1 = 4,
+  x1 = rnorm(30, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
   Dis = rNO, l = c(identity), sigma = 6, sigmah = NULL,
   sigmae = 22, costh = NULL
@@ -63,9 +63,9 @@ sample_data=data_gen(
 #Adding x2
 set.seed(1234)
 sample_data=as.data.frame(sample_data[[1]])
-sample_data$x2=rnorm(40, 0, 1)
+sample_data$x2=rnorm(30, 0, 1)
 
-m_selection(sample_data=sample_data, y = sample_data$y,
+sel <- m_selection(sample_data=sample_data, y = sample_data$y,
             f_cov= ~x1+x2+random(sa), ndis=1,
             R=2, k=1, type="A", fix_dis="NO")
 }

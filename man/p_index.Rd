@@ -33,6 +33,7 @@ Provide the estimated values for Gini, Theil, and Atkinson indices using the clo
 #Using GB2 distribution
 
 data=rGB2(200, mu=5, sigma=2, nu=1, tau=1)
+
 p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Gini", epsilon=2)
 p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Theil", epsilon=2)
 p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Atkinson", epsilon=2)

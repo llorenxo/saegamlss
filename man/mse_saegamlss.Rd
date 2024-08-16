@@ -8,8 +8,7 @@ mse_saegamlss(
   est,
   loop = 200,
   l,
-  Iden = F,
-  data,
+  Iden = FALSE,
   cov1,
   cov2 = NULL,
   cov3 = NULL,
@@ -25,8 +24,6 @@ mse_saegamlss(
 \item{l}{A vector, of maximum length equal to 4, in which each space is a function (the inverse of the link-function) to be applied to the corresponding parameter, i.e. mu, sigma, nu and tau}
 
 \item{Iden}{TRUE if the Identity link function is used for mu. Default is FALSE}
-
-\item{data}{A dataset. Mandatory columns: covariates and areas (named sa). Additional columns are admitted.}
 
 \item{cov1}{A matrix or a data frame with covariates for the whole population used for mu. If an intercept is used the first columns have to be a vector of 1}
 
@@ -47,68 +44,58 @@ Compute the bootstrap MSE for the estimation of the mean and the HCR
 }
 \examples{
 
-dep.y <- data_gen(
-  Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 4, b1 = 100,
-  x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
-  x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
-  Dis, l = c(identity), sigma = 6, sigmah = NULL,
-  sigmae = 22, costh = NULL
-)
-data <- dep.y[[1]]
-#
-# sample data with a sample fraction of 0.5
-#
-library(splitstackshape)
-# sample data
-#
-sample <- stratified(data, "sa", size = 0.5)
-# nonsample data
-#
-nonsample <- subset(data, !(data$id\%in\%sample$id))
-# estimate
+##################
+###Using s_data###
+##################
+
+
 est <- est_saegamlss(
-  sample = sample, nonsample = nonsample, y_dip="y", sa="sa",
-  Ni = rep(10, 4),  f1 = y ~ x1 + random(sa),
-  f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
-  R = 2, Dis = rNO, param = "both",
+  sample = s_data, nonsample = pop_data, y_dip="y",
+  sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
+  f3 = NULL, f4 = NULL, fdis = NO, R = 20,
+  Dis = rNO,  param = "both",
   tau.fix = NULL, nu.fix = NULL
 )
-#
-# covariates
-#
-x <- data.frame(rep(1, nrow(data)), "x1" = data$x1)
-#
-# compute the MSE
-#
+
+data <- rbind( est$input_var$origindata  \%>\%
+               dplyr::select( dplyr::all_of(colnames(est$input_var$nonsample))),
+               est$input_var$nonsample
+               )
+
+x <- data.frame(rep(1, nrow(data)), "x1" = data$x1,
+                "x2" = data$x2)
+
+
 MSE <- mse_saegamlss(
   est = est, loop = 2,
-  l = c(identity), Iden = TRUE,
-  data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
+  l = c(identity, exp), Iden = TRUE,
+  cov1 = x[,1:2], cov2 = x[,c(1,3)], cov3 = NULL,
   cov4 = NULL
 )
+
 MSE$est_mse$MSE_mean
 MSE$est_mse$MSE_HCR
 
+
+# MSE for a self-defined parameter
+
 est <- est_saegamlss(
-  sample = sample, nonsample = nonsample, y_dip="y", sa="sa",
-  Ni = rep(10, 4),  f1 = y ~ x1 + random(sa),
-  f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
-  R = 2, Dis = rNO, param = function(x) (mean(x^2)),
+  sample = s_data, nonsample = pop_data, y_dip="y",
+  sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
+  f3 = NULL, f4 = NULL, fdis = NO, R = 20,
+  Dis = rNO, param = function(x) (mean(x^2)),
   tau.fix = NULL, nu.fix = NULL
-)
-#
-# covariates
-#
-x <- data.frame(rep(1, nrow(data)), "x1" = data$x1)
-#
-# compute the MSE
-#
+ )
+
+
 MSE <- mse_saegamlss(
   est = est, loop = 2,
-  l = c(identity), Iden = TRUE,
-  data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
+  l = c(identity, exp), Iden = TRUE,
+  cov1 = x[,1:2], cov2 = x[,c(1,3)], cov3 = NULL,
   cov4 = NULL
 )
+
+
 MSE$est_mse$MSE_param
 
 }

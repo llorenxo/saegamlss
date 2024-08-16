@@ -8,6 +8,7 @@
 #' @importFrom ggplot2 ggplot
 #' @importFrom methods new
 #' @importFrom stats cor
+#' @importFrom stats density
 #' @importFrom stats fitted
 #' @importFrom stats median
 #' @importFrom stats rnorm

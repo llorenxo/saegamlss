@@ -31,8 +31,29 @@ print.saegamlss_class <- function(x, ...){
 
 
   } else if (names(x[1])=="Gini" | names(x[1])=="Theil" | names(x[1])=="Atkinson"){
+
     print("ok")
-  } else if (names(x[1])=="Gini.MSE"
+
+  } else if (names(x[[1]][1])=="P_Gini" | names(x[[1]][1])=="P_Theil" | names(x[[1]][1])=="P_Atkinson"){
+
+    cat("Estimated index:", "\n\n")
+
+    print(x[[1]])
+
+    cat("\n\n","Assumed distribution:", "\n\n")
+
+    print(x[[2]])
+
+    if ("P_Atkinson" %in% names(x[[1]])) {
+
+      cat("\n\n","Atkinson parameter:", "\n\n")
+
+      print(x[[3]])
+
+
+    }
+
+    } else if (names(x[1])=="Gini.MSE"
              | names(x[1])=="Theil.MSE"
              | names(x[1])=="Atkinson.MSE"){
     print("ok")
@@ -48,23 +69,31 @@ print.saegamlss_class <- function(x, ...){
       print(x$step1[i])
 
       if (as.character(eval(parse(text = deparse(x$step2[i])))[[1]][2])=="NULL"){
+
         mu_f <- as.character(eval(parse(text = deparse(x$step2[i])))[[1]][1])
         cat(paste("mu_f=", mu_f, "\n "))
+
       } else if (as.character(eval(parse(text = deparse(x$step2[i])))[[1]][3])=="NULL"){
+
         mu_f <- as.character(eval(parse(text = deparse(x$step2[i])))[[1]][1])
         sigma_f <- as.character(eval(parse(text = deparse(x$step2[i])))[[1]][2])
         cat(paste("mu_f=", mu_f, " sigma_f=", sigma_f, "\n "))
+
       } else if (as.character(eval(parse(text = deparse(x$step2[i])))[[1]][2])=="NULL"){
+
         mu_f <- as.character(eval(parse(text = deparse(x$step2[i])))[[1]][1])
         sigma_f <- as.character(eval(parse(text = deparse(x$step2[i])))[[1]][2])
         nu_f <- as.character(eval(parse(text = deparse(x$step2[i])))[[1]][3])
         cat(paste("mu_f=", mu_f, " sigma_f=", sigma_f, " nu_f=", nu_f, "\n "))
+
       } else {
+
         mu_f <- as.character(eval(parse(text = deparse(x$step2[i])))[[1]][1])
         sigma_f <- as.character(eval(parse(text = deparse(x$step2[i])))[[1]][2])
         nu_f <- as.character(eval(parse(text = deparse(x$step2[i])))[[1]][3])
         tau_f <- as.character(eval(parse(text = deparse(x$step2[i])))[[1]][4])
         cat(paste("mu_f=", mu_f, " sigma_f=", sigma_f, " nu_f=", nu_f, " tau_f=", tau_f, "\n "))
+
       }
     }
 
@@ -73,18 +102,24 @@ print.saegamlss_class <- function(x, ...){
     x$step3
 
   } else if (names(x[1])=="dataset 1") {
+
     cat("\n\n")
     for (i in 1:min(length(x), 5)) {
+
       print(paste("Print of population",i))
       print(((x[i])))
+
     }
     if(length(x)>5) print(paste("Omitted", length(x)-5, "populations"))
 
 
   } else if (names(x[1]) == "results_HT") {
+
     cat("\n\n")
     print("ok")
+
   } else {
+
     cat("MSE values based on:", x$replicates, "replicates", "\n\n")
     if (!is.null(x$est_mse$MSE_mean)) cat("Mean MSE for the Mean:",mean(x$est_mse$MSE_mean), "\n\n")
     if (!is.null(x$est_mse$MSE_HCR)) cat("Mean MSE for the HCR:",mean(x$est_mse$MSE_HCR), "\n\n")

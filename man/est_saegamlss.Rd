@@ -9,7 +9,6 @@ est_saegamlss(
   nonsample,
   y_dip,
   sa,
-  Ni,
   f1,
   f2 = NULL,
   f3 = NULL,
@@ -32,8 +31,6 @@ est_saegamlss(
 \item{y_dip}{The dependent variable}
 
 \item{sa}{The name of the variable containing the areas}
-
-\item{Ni}{1xD vector containing the number of units (in population) for each area}
 
 \item{f1}{A formula object for fitting a model for the mu parameter, e.g.f1=y~x+random(sa)}
 
@@ -86,44 +83,27 @@ With "object"$input_var$fit is possible to use all the classical function used b
  The Small Area have to be denoted with a number from 1 to D
 }
 \examples{
-# Generate data
-#
-dep.y <- data_gen(
-  Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 1, b1 = 10,
-  x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
-  b4 = NULL, x4 = NULL, xh = NULL, Dis = NO,
-  l = c(identity), sigma = 6, sigmah = NULL,
-  sigmae = 2, costh = NULL
-)
 
-data <- dep.y[[1]]
-#
-# sample data with a sample fraction of 0.5
-#
-# sample data
-#
-sample <- stratified(data, "sa", size = 0.5)
-# nonsample data
-#
-nonsample <- subset(data, !(data$id\%in\%sample$id))
-# estimate
+##################
+###Using s_data###
+##################
 
-est_saegamlss(
-  sample = sample, nonsample = nonsample, y_dip="y",
-  sa="sa", Ni = rep(10, 4),
-  f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
-  f4 = NULL, fdis = NO, R = 200,
-  Dis = rNO,  param = "both",
+est <- est_saegamlss(
+  sample = s_data, nonsample = pop_data, y_dip="y",
+  sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
+  f3 = NULL, f4 = NULL, fdis = NO, R = 20,
+  Dis = rNO,  param = "mean",
   tau.fix = NULL, nu.fix = NULL
 )
+
+est$estimates
 
 # Defining a new parameter to be estimated
 
 est <- est_saegamlss(
-  sample = sample, nonsample = nonsample, y_dip="y",
-  sa="sa", Ni = rep(10, 4),
-  f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
-  f4 = NULL, fdis = NO, R = 200,
+  sample = s_data, nonsample = pop_data, y_dip="y",
+  sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
+  f3 = NULL, f4 = NULL, fdis = NO, R = 20,
   Dis = rNO, param = function(x) (mean(x^2)),
   tau.fix = NULL, nu.fix = NULL
  )

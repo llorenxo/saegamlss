@@ -33,7 +33,7 @@ sa_p_index(
 
 \item{w}{Sample weights}
 
-\item{fdis}{The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EXP (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)}
+\item{fdis}{The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GAMMA (Gamma), EXP (Exponential), LOGNO (Log-Normal), PARETO (Pareto), WEI (Weibull)}
 
 \item{index}{The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is all}
 
@@ -50,13 +50,17 @@ Estimate the values of poverty indicators in small areas using the simplified SA
 }
 \examples{
 
-
-data <- data.frame("y"= rLOGNO(1000, mu=10, sigma=0.8),
-                   "sa" = as.factor(rep(c(1,2,3,4,5),200)))
-
-sa_p_index(data=data, y=data$y, sa = data$sa, fdis="LOGNO", index="Gini")
+##################
+###Using s_data###
+##################
 
 
+index_est <- sa_p_index(data = s_data, y = s_data$y,
+                        sa = data$sa, fdis = "LOGNO",
+                        sigma.f = TRUE, index = "Gini")
+
+index_est$estimates_par
+index_est$Gini
 
 }
 \author{

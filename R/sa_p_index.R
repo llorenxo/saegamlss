@@ -2,7 +2,7 @@
 #'
 #' @description Estimate the values of poverty indicators in small areas using the simplified SAE-GAMLSS.
 #'
-#' @param fdis The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EXP (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)
+#' @param fdis The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GAMMA (Gamma), EXP (Exponential), LOGNO (Log-Normal), PARETO (Pareto), WEI (Weibull)
 #' @param index The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is all
 #' @param epsilon The value for the poverty aversion parameter. Default value is set to 1
 #' @param sa The name of the variable to be used as "small area"
@@ -21,17 +21,21 @@
 #' @author Lorenzo Mori and Maria Rosaria Ferrante
 #' @examples
 #'
-#'
-#' data <- data.frame("y"= rLOGNO(1000, mu=10, sigma=0.8),
-#'                    "sa" = as.factor(rep(c(1,2,3,4,5),200)))
-#'
-#' sa_p_index(data=data, y=data$y, sa = data$sa, fdis="LOGNO", index="Gini")
+#' ##################
+#' ###Using s_data###
+#' ##################
 #'
 #'
+#' index_est <- sa_p_index(data = s_data, y = s_data$y,
+#'                         sa = data$sa, fdis = "LOGNO",
+#'                         sigma.f = TRUE, index = "Gini")
+#'
+#' index_est$estimates_par
+#' index_est$Gini
 #'
 
-sa_p_index <- function (data, y, sigma.f=TRUE, nu.f=TRUE, tau.f=TRUE,  sa, w=NULL, fdis,
-                        index="all", epsilon=1, seed = 123){
+sa_p_index <- function (data, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  sa, w = NULL, fdis,
+                        index = "all", epsilon = 1, seed = 123){
 
 
 
@@ -73,12 +77,20 @@ sa_p_index <- function (data, y, sigma.f=TRUE, nu.f=TRUE, tau.f=TRUE,  sa, w=NUL
 
     for (i in 1:l_sa) {
       a <- subset(data, sa==i)
+
+      if (index == "all" | index =="Gini"){
       gini_gamlss <- rbind(gini_gamlss, p_index(mu=a$mu_d[1], sigma=a$sigma_d[1],
-                                             nu=a$nu_d[1], tau=a$tau_d[1], fdis= fdis, index="Gini", epsilon = epsilon ))
+                                                nu=a$nu_d[1], tau=a$tau_d[1], fdis= fdis,
+                                                index="Gini", epsilon = epsilon )$index$P_Gini)
+      } else if (index == "all" | index =="Theil"){
       theil_gamlss <- rbind(theil_gamlss, p_index(mu=a$mu_d[1], sigma=a$sigma_d[1],
-                                               nu=a$nu_d[1], tau=a$tau_d[1], fdis=fdis, index="Theil", epsilon = epsilon ))
+                                               nu=a$nu_d[1], tau=a$tau_d[1], fdis=fdis,
+                                               index="Theil", epsilon = epsilon )$index$P_Theil)
+      } else if (index == "all" | index =="Atkinson"){
       atkinson_gamlss <- rbind(atkinson_gamlss, p_index(mu=a$mu_d[1], sigma=a$sigma_d[1],
-                                                     nu=a$nu_d[1], tau=a$tau_d[1], fdis=fdis, index="Atkinson", epsilon = epsilon ))
+                                                     nu=a$nu_d[1], tau=a$tau_d[1], fdis=fdis,
+                                                     index="Atkinson", epsilon = epsilon )$index$P_Atkinson)
+      }
 
       if (!is.null(a$mu_d[1]))est_gamlss[i,2]=a$mu_d[1]
       if (!is.null(a$sigma_d[1]))est_gamlss[i,3]=a$sigma_d[1]
@@ -87,6 +99,8 @@ sa_p_index <- function (data, y, sigma.f=TRUE, nu.f=TRUE, tau.f=TRUE,  sa, w=NUL
 
     }
      est_gamlss <- est_gamlss[, colSums(is.na(est_gamlss)) < nrow(est_gamlss)]
+
+
 
     if (index=="all"){
 
@@ -108,8 +122,8 @@ sa_p_index <- function (data, y, sigma.f=TRUE, nu.f=TRUE, tau.f=TRUE,  sa, w=NUL
 
      attr(result, "class") <- "saegamlss_class"
      return(result)
-
 }
+
 
 
 
