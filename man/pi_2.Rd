@@ -3,9 +3,9 @@
 \docType{data}
 \name{pi_2}
 \alias{pi_2}
-\title{second order inclusion probability data}
+\title{Second Order Inclusion Probability Data}
 \format{
-An object of class \code{"data.frame"}
+An object of class \code{"data.frame"} with the following columns:
 }
 \source{
 {Created by authors following the Household Budget Survey structure}
@@ -14,6 +14,6 @@ An object of class \code{"data.frame"}
 data(pi_2)
 }
 \description{
-second order inclusion probability data
+A data set containing second order inclusion probabilities. The main diagonal holds the first order inclusion probabilities. This dataset can be used, for example, in the function \code{direct_HT()}.
 }
 \keyword{datasets}

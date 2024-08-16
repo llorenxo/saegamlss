@@ -1,5 +1,7 @@
 #' Population data
 #'
+#' @description A data set of a simulated population. Contains the covariates and the small areas information
+#'
 #' @name pop_data
 #' @docType data
 #'

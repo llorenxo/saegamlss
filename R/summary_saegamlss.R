@@ -33,8 +33,7 @@
 #' # estimate
 #' est <- est_saegamlss(
 #'   sample = sample, nonsample = nonsample,  y_dip="y",
-#'   sa="sa", Ni = rep(10, 4),
-#'   f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
+#'   sa="sa", f1 = y ~ mu_x1 + random(sa), f2 = NULL, f3 = NULL,
 #'   f4 = NULL, fdis = NO, R = 200,
 #'   Dis = rNO, param = "Mean",
 #'   tau.fix = NULL, nu.fix = NULL
@@ -64,7 +63,7 @@
 #' # estimate
 #' est <- est_saegamlss(
 #'   sample = sample, nonsample = nonsample, y_dip="y",  sa="sa",
-#'   Ni = rep(10, 4), f1 = y ~ x1 + random(sa),
+#'   f1 = y ~ mu_x1 + random(sa),
 #'   f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
 #'   R = 2, Dis = rNO, param = "Mean",
 #'   tau.fix = NULL, nu.fix = NULL
@@ -72,14 +71,14 @@
 #' #
 #' # covariates
 #' #
-#' x <- data.frame(rep(1, nrow(data)), "x1" = data$x1)
+#' x <- data.frame(rep(1, nrow(data)), "x1" = data$mu_x1)
 #' #
 #' # compute the MSE
 #' #
 #' MSE <- mse_saegamlss(
 #'   est = est, loop = 2,
 #'   l = c(identity), Iden = TRUE,
-#'   data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
+#'   cov1 = x, cov2 = NULL, cov3 = NULL,
 #'   cov4 = NULL
 #' )
 #' summary(MSE)

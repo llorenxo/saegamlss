@@ -52,22 +52,19 @@ The summary (Step2) do not reports results on the random effects as usual for GA
 }
 \examples{
 
-sample_data=data_gen(
-  Ni = rep(10, 3), D = 3, M = 1, ty = "no", k = 100, b1 = 4,
-  x1 = rnorm(30, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
-  x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
-  Dis = rNO, l = c(identity), sigma = 6, sigmah = NULL,
-  sigmae = 22, costh = NULL
-)
+set.seed(123)
 
-#Adding x2
-set.seed(1234)
-sample_data=as.data.frame(sample_data[[1]])
-sample_data$x2=rnorm(30, 0, 1)
+data(s_data)
 
-sel <- m_selection(sample_data=sample_data, y = sample_data$y,
-            f_cov= ~x1+x2+random(sa), ndis=1,
-            R=2, k=1, type="A", fix_dis="NO")
+
+sel <- m_selection(sample_data = s_data, y = s_data$y,
+                   f_cov = ~x1+x2+x3+random(sa), ndis = 1,
+                   R = 2, k = 2, type = "A", fix_dis = "NO",
+                   seed = 123, kp = 2)
+
+sel$step3
+
+
 }
 \references{
 Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.

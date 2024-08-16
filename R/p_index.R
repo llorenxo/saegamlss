@@ -5,7 +5,7 @@
 #' @param sigma The estimated value of sigma
 #' @param nu The estimated value of nu
 #' @param tau The estimated value of tau
-#' @param fdis The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EXP (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)
+#' @param fdis The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GAMMA (Gamma), EXP (Exponential), LOGNO (Log-Normal), PARETO (Pareto), WEI (Weibull)
 #' @param index The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is all
 #' @param epsilon The value for the poverty aversion parameter. Default is  1
 #'
@@ -17,8 +17,6 @@
 #'
 #' #Using GB2 distribution
 #'
-#' data=rGB2(200, mu=5, sigma=2, nu=1, tau=1)
-#'
 #' p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Gini", epsilon=2)
 #' p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Theil", epsilon=2)
 #' p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Atkinson", epsilon=2)
@@ -26,7 +24,6 @@
 #'
 #' #Using Log-Normal distribution
 #'
-#' data=rLOGNO(200, mu=1000, sigma=0.8)
 #' p_index(sigma=0.8, fdis="LOGNO", index="Gini", epsilon=2)
 #' p_index(sigma=0.8, fdis="LOGNO", index="Theil", epsilon=2)
 #' p_index(sigma=0.8, fdis="LOGNO", index="Atkinson", epsilon=2)

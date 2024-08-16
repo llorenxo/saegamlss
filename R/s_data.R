@@ -1,5 +1,6 @@
-#' sample data
+#' Sample data
 #'
+#' @description A data set of a simulated sample survey. Contains the dependent variable (y), the covariates and design information
 #' @name s_data
 #' @docType data
 #'

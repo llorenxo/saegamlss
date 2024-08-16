@@ -25,22 +25,19 @@
 #'
 #' @examples
 #'
-#' sample_data=data_gen(
-#'   Ni = rep(10, 3), D = 3, M = 1, ty = "no", k = 100, b1 = 4,
-#'   x1 = rnorm(30, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
-#'   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
-#'   Dis = rNO, l = c(identity), sigma = 6, sigmah = NULL,
-#'   sigmae = 22, costh = NULL
-#' )
+#' set.seed(123)
 #'
-#' #Adding x2
-#' set.seed(1234)
-#' sample_data=as.data.frame(sample_data[[1]])
-#' sample_data$x2=rnorm(30, 0, 1)
+#' data(s_data)
 #'
-#' sel <- m_selection(sample_data=sample_data, y = sample_data$y,
-#'             f_cov= ~x1+x2+random(sa), ndis=1,
-#'             R=2, k=2, type="A", fix_dis="NO")
+#'
+#' sel <- m_selection(sample_data = s_data, y = s_data$y,
+#'                    f_cov = ~x1+x2+x3+random(sa), ndis = 1,
+#'                    R = 2, k = 2, type = "A", fix_dis = "NO",
+#'                    seed = 123, kp = 2)
+#'
+#' sel$step3
+#'
+#'
 
 m_selection <- function(sample_data, y, f_cov, kp=2,
                         ndis=3, R=200, k=7, type=NULL, fix_dis=NULL,
@@ -71,7 +68,7 @@ m_selection <- function(sample_data, y, f_cov, kp=2,
 
     sel2 <<- sel[[j]]
 
-    if ( type=="B"){
+    if ( type=="B" ){
 
     mod0 <- gamlss::gamlss(y~1, data=as.data.frame(sample_data), family=sel2)
 
@@ -116,7 +113,9 @@ m_selection <- function(sample_data, y, f_cov, kp=2,
 
 
     select_v[[j]] <-  list(mu_f, sigma_f, nu_f, tau_f)
+
     } else {
+
       mod0 <- gamlss::gamlss(y ~1 , data=sample_data , family=sel2)
 
       a <- gamlss::stepGAICAll.B(mod0,
@@ -169,8 +168,11 @@ m_selection <- function(sample_data, y, f_cov, kp=2,
   a=matrix(ncol=length(sel), nrow=R)
 
   for (i in 1:R){
+
         rand_i <- sample (k , nrow(sample_data), replace=TRUE)
-      for (j  in 1:length(sel)) {
+
+
+    for (j  in 1:length(sel)) {
         f1=stats::as.formula(select_v[[j]][[1]])
         f2=stats::as.formula(select_v[[j]][[2]])
         f3=stats::as.formula(select_v[[j]][[3]])
@@ -191,18 +193,34 @@ m_selection <- function(sample_data, y, f_cov, kp=2,
     }
   }
 
+  a <- a %>% as.data.frame()
+  #a[is.nan.data.frame(a)] <- NA
+
   step3=as.data.frame(colMeans(a, na.rm=TRUE))
+
+  step3[is.na(step3)] <- "No conversion(s) in k-fold cross validation"
+
+
   colnames(step3) = "Values"
+
   step3$Dist <- as.vector(sel)
+
   rm(sel2, envir = .GlobalEnv)
+
   names(select_v)=sel
+
   for (i in 1:length(names(select_v))) {
     names(select_v[[i]])=c("mu_f", "sigma_f", "nu_f", "tau_f")
 
   }
+
   select_v <- rmNullObs(select_v)
+
+
+
   results=list("step1"=sel, "step2"=select_v, "step3"=step3, "GAIC values"=res_step1,
-               "sample_data"=sample_data,"y"=y)
+               "sample_data"=sample_data, "y"=y)
+
   attr(results, "class") <- "saegamlss_class"
 
   return(results)

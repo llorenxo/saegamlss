@@ -22,6 +22,6 @@ An object of class \code{"data.frame"}
 data(pop_data)
 }
 \description{
-Population data
+A data set of a simulated population. Contains the covariates and the small areas information
 }
 \keyword{datasets}

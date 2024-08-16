@@ -33,63 +33,26 @@
 #' # sample data
 #' #
 #' sample <- stratified(data, "sa", size = 0.1)
+#'
 #' # nonsample data
 #' #
 #' nonsample <- subset(data, !(data$id%in%sample$id))
+#'
 #' # estimate
+#'
 #' est <- est_saegamlss(
 #'   sample = sample, nonsample = nonsample, y_dip="y",
-#'   sa="sa", Ni = rep(10, 4),
-#'   f1 = y ~ x1 + random(sa), f2 = NULL, f3 = NULL,
+#'   sa="sa", f1 = y ~ mu_x1 + random(sa),
+#'   f2 = NULL, f3 = NULL,
 #'   f4 = NULL, fdis = NO, R = 200,
 #'   Dis = rNO, param = "Mean",
 #'   tau.fix = NULL, nu.fix = NULL
 #' )
+#'
 #' plot(est)
 #'
-#' #mse_saegamlss
 #'
-#' dep.y <- data_gen(
-#'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 4, b1 = 100,
-#'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
-#'   x3 = NULL, b4 = NULL, x4 = NULL, xh = NULL,
-#'   Dis, l = c(identity), sigma = 6, sigmah = NULL,
-#'   sigmae = 22, costh = NULL
-#' )
-#' data <- dep.y[[1]]
-#' #
-#' # sample data with a sample fraction of 0.5
-#' #
-#' library(splitstackshape)
-#' # sample data
-#' #
-#' sample <- stratified(data, "sa", size = 0.5)
-#' # nonsample data
-#' #
-#' nonsample <- subset(data, !(data$id%in%sample$id))
-#' # estimate
-#' est <- est_saegamlss(
-#'   sample = sample, nonsample = nonsample, y_dip="y", sa="sa",
-#'   Ni = rep(10, 4),  f1 = y ~ x1 + random(sa),
-#'   f2 = NULL, f3 = NULL, f4 = NULL, fdis = NO,
-#'   R = 2, Dis = rNO, param = "Mean",
-#'   tau.fix = NULL, nu.fix = NULL
-#' )
-#' #
-#' # covariates
-#' #
-#' x <- data.frame(rep(1, nrow(data)), "x1" = data$x1)
-#' #
-#' # compute the MSE
-#' #
-#' MSE <- mse_saegamlss(
-#'   est = est, loop = 2,
-#'   l = c(identity), Iden = TRUE,
-#'   data = data, cov1 = x, cov2 = NULL, cov3 = NULL,
-#'   cov4 = NULL
-#' )
 #'
-#' plot(MSE, compare.Mean= runif(4,0, 2), compare.HCR= runif(4,2, 4))
 
 plot.saegamlss_class <- function(x, compare.Gini = NULL,
                                  compare.Theil = NULL,

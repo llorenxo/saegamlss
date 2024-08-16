@@ -116,7 +116,8 @@ print.saegamlss_class <- function(x, ...){
   } else if (names(x[1]) == "results_HT") {
 
     cat("\n\n")
-    print("ok")
+
+    print(x)
 
   } else {
 

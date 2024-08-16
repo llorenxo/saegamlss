@@ -12,6 +12,7 @@
 #' @importFrom stats fitted
 #' @importFrom stats median
 #' @importFrom stats rnorm
+#' @importFrom stats setNames
 #' @importFrom tidyr pivot_longer
 ## usethis namespace: end
 NULL

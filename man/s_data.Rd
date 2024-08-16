@@ -3,7 +3,7 @@
 \docType{data}
 \name{s_data}
 \alias{s_data}
-\title{sample data}
+\title{Sample data}
 \format{
 An object of class \code{"data.frame"}
 
@@ -25,6 +25,6 @@ An object of class \code{"data.frame"}
 data(s_data)
 }
 \description{
-sample data
+A data set of a simulated sample survey. Contains the dependent variable (y), the covariates and design information
 }
 \keyword{datasets}
