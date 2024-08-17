@@ -2,7 +2,7 @@
 #'
 #' @description The function select the final SAE-GAMLSS model following three steps as described by Mori and Ferrante (2023)
 #'
-#' @param sample_data The dataset with sampled units
+#' @param s_data The dataset with sampled units
 #' @param y The dependent variable
 #' @param kp the penalty for the GAIC (Step 1) with default values kp=2 the standard AIC.
 #' @param ndis Number of distribution to be consider at the first step. Default is 3
@@ -30,26 +30,30 @@
 #' data(s_data)
 #'
 #'
-#' sel <- m_selection(sample_data = s_data, y = s_data$y,
+#' sol <- m_selection(s_data = s_data, y = s_data$y,
 #'                    f_cov = ~x1+x2+x3+random(sa), ndis = 1,
 #'                    R = 2, k = 2, type = "A", fix_dis = "NO",
 #'                    seed = 123, kp = 2)
 #'
-#' sel$step3
+#' sol$step3
 #'
 #'
 
-m_selection <- function(sample_data, y, f_cov, kp=2,
-                        ndis=3, R=200, k=7, type=NULL, fix_dis=NULL,
-                        supp=TRUE, seed = 123) {
+m_selection <- function(s_data, y, f_cov, kp = 2,
+                        ndis = 3, R = 200, k = 7, type = NULL, fix_dis = NULL,
+                        supp = TRUE, seed = 123) {
 
   set.seed(seed)
 
   sel2 <- NULL
 
+  #s_data <<- s_data
+
   if(isTRUE(supp)) options(warn=-1)
 
-  sample_data$y = sample_data %>% dplyr::select(y) %>% dplyr::pull()
+ #s_data$y = s_data %>% dplyr::select(y) %>% dplyr::pull()
+
+  s_data <- modify_data(data = s_data, y = y)
 
 #step 1
   res_step1 <- gamlss::fitDist(y, k=kp)
@@ -70,7 +74,7 @@ m_selection <- function(sample_data, y, f_cov, kp=2,
 
     if ( type=="B" ){
 
-    mod0 <- gamlss::gamlss(y~1, data=as.data.frame(sample_data), family=sel2)
+    mod0 <- gamlss::gamlss(y~1, data=s_data, family=sel2)
 
     a <- gamlss::stepGAICAll.B(mod0,
                                scope=list(lower=y~1,upper=f_cov))
@@ -116,7 +120,7 @@ m_selection <- function(sample_data, y, f_cov, kp=2,
 
     } else {
 
-      mod0 <- gamlss::gamlss(y ~1 , data=sample_data , family=sel2)
+      mod0 <- gamlss::gamlss(y ~1 , data=s_data , family=sel2)
 
       a <- gamlss::stepGAICAll.B(mod0,
                                  scope=list(lower=y~1,upper=f_cov))
@@ -169,26 +173,34 @@ m_selection <- function(sample_data, y, f_cov, kp=2,
 
   for (i in 1:R){
 
-        rand_i <- sample (k , nrow(sample_data), replace=TRUE)
+        rand_i <- sample (k , nrow(s_data), replace=TRUE)
 
 
     for (j  in 1:length(sel)) {
+
         f1=stats::as.formula(select_v[[j]][[1]])
         f2=stats::as.formula(select_v[[j]][[2]])
         f3=stats::as.formula(select_v[[j]][[3]])
         f4=stats::as.formula(select_v[[j]][[4]])
+
       g3 <-tryCatch({
+
         gamlss::gamlssCV(formula=f1, sigma.fo=f2,
                          nu.fo=f3, tau.fo=f4,
-                         data=as.data.frame(sample_data),
+                         data=as.data.frame(s_data),
                          method = mixed(100, 100),
                          family=substitute(sel[j]),  rand=rand_i)
+
       }, error = function(e) {
+
         cat("Error in iteration", j, "\n")
+
         })
 
       if (inherits(g3, "gamlssCV", which = FALSE)){
+
         a[[i, j]] <- c(CV(g3))
+
       }
     }
   }
@@ -219,7 +231,7 @@ m_selection <- function(sample_data, y, f_cov, kp=2,
 
 
   results=list("step1"=sel, "step2"=select_v, "step3"=step3, "GAIC values"=res_step1,
-               "sample_data"=sample_data, "y"=y)
+               "s_data"=s_data, "y"=y)
 
   attr(results, "class") <- "saegamlss_class"
 

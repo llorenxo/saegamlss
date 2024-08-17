@@ -57,6 +57,25 @@ count_arguments <- function(func) {
 }
 
 
+##Functions to avoid <<- in m_selection
+#data = dataset
+# y = selected y
+
+
+modify_data <- function(data, y) {
+
+
+  s_data = data %>% dplyr::mutate ( y =  data %>% dplyr::select( y ) %>% dplyr::pull()
+  )
+
+  return(s_data)
+}
+
+
+assign_sel2 <- function(sel, j) {
+  sel2 <- sel[j]
+  return(sel2)
+}
 
 
 
