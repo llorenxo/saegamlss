@@ -21,7 +21,7 @@ np_mse(
 )
 }
 \arguments{
-\item{data}{A dataset containing household values}
+\item{data}{A dataset containing sampled household values}
 
 \item{y}{The dependent variable}
 
@@ -41,7 +41,7 @@ np_mse(
 
 \item{fdis}{The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EX (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)}
 
-\item{index}{The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is all}
+\item{index}{The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is "all"}
 
 \item{epsilon}{The value for the poverty aversion parameter. Default value is set to 1}
 
@@ -58,17 +58,15 @@ indicators (Gini, Theil, Atkinson)
 
 set.seed(124)
 
-data <- data.frame("y"=rLOGNO(20, mu=3, sigma=0.8),
-                   "sa" =  as.factor(rep(c(1,2,3,4,5),4)),
-                   "ncomp"=rep(c(2,1,3,4), 5),
-                   "w"=rep(2,20))
 
-np <- np_mse(data=data, y=data$y, sa = data$sa,
-                       ncomp=data$ncomp, fdis="LOGNO",
+np <- np_mse(data = s_data, y = s_data$y, sa = s_data$sa,
+                       ncomp = s_datac$ncomp, fdis="LOGNO",
                        index="Gini", seed = 124,
                        R=2)
 
 np$Gini.MSE
+
+
 
 }
 \author{

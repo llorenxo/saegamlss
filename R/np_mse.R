@@ -11,7 +11,7 @@
 #' @param nu.f Logical value if TRUE (default) a random effect is used for nu
 #' @param tau.f Logical value if TRUE (default) a random effect is used for tau
 #' @param w Sample weights
-#' @param index The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is "all"
+#' @param index One index to be estimated ("Gini", "Theil" or "Atkinson"). Default is "all"
 #' @param epsilon The value for the poverty aversion parameter. Default value is set to 1
 #' @param fdis The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EX (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)
 #' @param seed The seed. Default is 123
@@ -29,7 +29,7 @@
 #'
 #'
 #' np <- np_mse(data = s_data, y = s_data$y, sa = s_data$sa,
-#'                        ncomp = s_datac$ncomp, fdis="LOGNO",
+#'                        ncomp = s_data$ncomp, fdis="LOGNO",
 #'                        index="Gini", seed = 124,
 #'                        R=2)
 #'
@@ -141,15 +141,21 @@ for (t2 in 1:R){
     a <- subset(data, sa==i)
 
 
-    if (index == "all" | index == "Gini") { gini_gamlss_boot <- rbind(gini_gamlss_boot, p_index(mu=s1$mu_d[1], sigma=s1$sigma_d[1],
+    if (index == "all" | index == "Gini") {
+
+      gini_gamlss_boot <- rbind(gini_gamlss_boot, p_index(mu=s1$mu_d[1], sigma=s1$sigma_d[1],
                                            nu=s1$nu_d[1], tau=s1$tau_d[1], fdis= fdis, index="Gini", epsilon = epsilon )$index$P_Gini)
 
-     } else if (index == "all" | index == "Theil" ){
+     }
 
-    theil_gamlss_boot <- rbind(theil_gamlss_boot, p_index(mu=s1$mu_d[1], sigma=s1$sigma_d[1],
+    if (index == "all" | index == "Theil"){
+
+       theil_gamlss_boot <- rbind(theil_gamlss_boot, p_index(mu=s1$mu_d[1], sigma=s1$sigma_d[1],
                                              nu=s1$nu_d[1], tau=s1$tau_d[1], fdis=fdis, index="Theil", epsilon = epsilon )$index$P_Theil)
 
-     } else {
+    }
+
+    if (index == "all" | index == "Atkinson"){
 
     atkinson_gamlss_boot <- rbind(atkinson_gamlss_boot, p_index(mu=s1$mu_d[1], sigma=s1$sigma_d[1],
                                                    nu=s1$nu_d[1], tau=s1$tau_d[1], fdis=fdis, index="Atkinson", epsilon = epsilon )$index$P_Atkinson)
@@ -168,7 +174,7 @@ for (t2 in 1:R){
   dif5 <- as.data.frame(lapply(as.data.frame(dif5), as.numeric))
 
 
-  if (is.null(index)){
+  if (index == "all"){
 
   result <- list("Gini.MSE"=colMeans(dif4[-1,]), "Theil.MSE"=colMeans(dif5[-1,]), "Atkinson.MSE"=colMeans(dif3[-1,]))
 
@@ -186,6 +192,13 @@ for (t2 in 1:R){
 
   }
 
+
+  result <- lapply(result, function(x) {
+    names(x) <- levels(sa)
+    return(x)
+  })
+
   attr(result, "class") <- "saegamlss_class"
   return(result)
+
 }

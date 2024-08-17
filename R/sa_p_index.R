@@ -82,11 +82,15 @@ sa_p_index <- function (data, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  sa,
       gini_gamlss <- rbind(gini_gamlss, p_index(mu=a$mu_d[1], sigma=a$sigma_d[1],
                                                 nu=a$nu_d[1], tau=a$tau_d[1], fdis= fdis,
                                                 index="Gini", epsilon = epsilon )$index$P_Gini)
-      } else if (index == "all" | index =="Theil"){
+      }
+
+      if (index == "all" | index =="Theil"){
       theil_gamlss <- rbind(theil_gamlss, p_index(mu=a$mu_d[1], sigma=a$sigma_d[1],
                                                nu=a$nu_d[1], tau=a$tau_d[1], fdis=fdis,
                                                index="Theil", epsilon = epsilon )$index$P_Theil)
-      } else if (index == "all" | index =="Atkinson"){
+      }
+
+      if (index == "all" | index =="Atkinson"){
       atkinson_gamlss <- rbind(atkinson_gamlss, p_index(mu=a$mu_d[1], sigma=a$sigma_d[1],
                                                      nu=a$nu_d[1], tau=a$tau_d[1], fdis=fdis,
                                                      index="Atkinson", epsilon = epsilon )$index$P_Atkinson)
