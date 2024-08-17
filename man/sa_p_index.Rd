@@ -55,9 +55,9 @@ Estimate the values of poverty indicators in small areas using the simplified SA
 ##################
 
 
-index_est <- sa_p_index(data = s_data, y = s_data$y,
-                        sa = data$sa, fdis = "LOGNO",
-                        sigma.f = TRUE, index = "Gini")
+index_est <- sa_p_index(data = s_data, y = "y",
+                        sa = "sa", fdis = "LOGNO",
+                        sigma.f = TRUE, index = "all")
 
 index_est$estimates_par
 index_est$Gini

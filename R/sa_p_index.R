@@ -26,9 +26,9 @@
 #' ##################
 #'
 #'
-#' index_est <- sa_p_index(data = s_data, y = s_data$y,
-#'                         sa = data$sa, fdis = "LOGNO",
-#'                         sigma.f = TRUE, index = "Gini")
+#' index_est <- sa_p_index(data = s_data, y = "y",
+#'                         sa = "sa", fdis = "LOGNO",
+#'                         sigma.f = TRUE, index = "all")
 #'
 #' index_est$estimates_par
 #' index_est$Gini
@@ -38,10 +38,10 @@ sa_p_index <- function (data, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  sa,
                         index = "all", epsilon = 1, seed = 123){
 
 
-
-  f1 <- y ~1 + random(as.factor(sa))
+  sa <- data[[sa]] %>% as.factor()
+  y <- data[[y]]
+  f1 <- y ~1 + random(sa)
   f2 <- f3 <- f4 <- y ~1
-
 
   if(isTRUE(sigma.f)) f2 <- f1
   if(isTRUE(nu.f)) f3 <- f1
@@ -55,8 +55,6 @@ sa_p_index <- function (data, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  sa,
                               method = mixed(100,100))
 
 
-
-
   data$mu_d <- predictAll(gamlss_reg, data=data, newdata=data)$mu
   data$sigma_d <- predictAll(gamlss_reg, data=data, newdata=data)$sigma
   data$nu_d <- predictAll(gamlss_reg, data=data, newdata=data)$nu
@@ -64,7 +62,6 @@ sa_p_index <- function (data, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  sa,
 
 
 
-   sa <- data %>% dplyr::pull(sa)
    l_sa <- length(data %>% dplyr::distinct(sa) %>% dplyr::pull())
    gini_gamlss <- array()
    theil_gamlss <- array()
@@ -122,7 +119,7 @@ sa_p_index <- function (data, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  sa,
 
               result <- list("Atkinson"=atkinson_gamlss[-1], "estimates_par"=est_gamlss, "model"=gamlss_reg)
 
-              }
+            }
 
      attr(result, "class") <- "saegamlss_class"
      return(result)

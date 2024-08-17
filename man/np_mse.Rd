@@ -41,7 +41,7 @@ np_mse(
 
 \item{fdis}{The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EX (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)}
 
-\item{index}{The index to be estimated ("Gini", "Theil" or "Atkinson"). Default is "all"}
+\item{index}{One index to be estimated ("Gini", "Theil" or "Atkinson"). Default is "all"}
 
 \item{epsilon}{The value for the poverty aversion parameter. Default value is set to 1}
 
@@ -60,7 +60,7 @@ set.seed(124)
 
 
 np <- np_mse(data = s_data, y = s_data$y, sa = s_data$sa,
-                       ncomp = s_datac$ncomp, fdis="LOGNO",
+                       ncomp = s_data$ncomp, fdis="LOGNO",
                        index="Gini", seed = 124,
                        R=2)
 
