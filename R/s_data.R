@@ -15,6 +15,7 @@
 #'  \item{id}{The Id of the units}
 #'  \item{pi}{Inclusion probability of the first order}
 #'  \item{s_weights}{Sample weights}
+#'  \item{ncomp}{Number of components of the household}
 #' }
 #'
 #' @source {Created by authors following the Household Budget Survey structure}
