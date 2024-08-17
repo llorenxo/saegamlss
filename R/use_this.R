@@ -72,10 +72,5 @@ modify_data <- function(data, y) {
 }
 
 
-assign_sel2 <- function(sel, j) {
-  sel2 <- sel[j]
-  return(sel2)
-}
-
 
 
