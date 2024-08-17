@@ -38,9 +38,9 @@
 #'
 #'
 
-np_mse <- function(data, y, sa, ncomp,  R=200, sigma.f=TRUE, nu.f=TRUE,
-                               tau.f=TRUE, w=NULL, fdis,
-                               index="all", epsilon=1, seed=123){
+np_mse <- function(data, y, sa, ncomp,  R = 200, sigma.f = TRUE, nu.f = TRUE,
+                               tau.f = TRUE, w = NULL, fdis,
+                               index = "all", epsilon = 1, seed = 123){
   set.seed(seed)
 
   f1 <- y ~1 + random(as.factor(sa))
