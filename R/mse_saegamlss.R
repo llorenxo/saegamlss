@@ -50,10 +50,10 @@
 #'   cov4 = NULL
 #' )
 #'
-#' MSE$
+#' MSE$est_mse
 #'
 #'
-#' # MSE for a self-defined parameter
+#' #MSE for a self-defined parameter
 #'
 #' est <- est_saegamlss(
 #'   sample = s_data, nonsample = pop_data, y_dip = "y",
@@ -72,7 +72,7 @@
 #' )
 #'
 #'
-#' MSE$est_mse$MSE_param
+#' MSE$est_mse
 #'
 #' @references Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.
 #'  Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597.

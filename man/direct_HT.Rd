@@ -51,16 +51,16 @@ collected from a complex sampling design for Small Area.
 ###Using s_data###
 ##################
 
-
+#Using the default bootstrap
 
 dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = s_data)
 
 dir$results_HT
 
+#Using HH linearization
 dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = s_data,
-          var_method = "LinHH")
+                var_method = "LinHH")
 
 dir$results_HT
-
 
 }

@@ -53,13 +53,13 @@ est <- est_saegamlss(
   sample = s_data, nonsample = pop_data, y_dip="y",
   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
   f3 = NULL, f4 = NULL, fdis = NO, R = 20,
-  Dis = rNO,  param = "both",
+  Dis = rNO,  param = "mean",
   tau.fix = NULL, nu.fix = NULL
 )
 
-data <- rbind( est$input_var$origindata  \%>\%
-               dplyr::select( dplyr::all_of(colnames(est$input_var$nonsample))),
-               est$input_var$nonsample
+data <- rbind(est$input_var$origindata  \%>\%
+              dplyr::select( dplyr::all_of(colnames(est$input_var$nonsample))),
+              est$input_var$nonsample
                )
 
 x <- data.frame(rep(1, nrow(data)), "x1" = data$x1,
@@ -73,15 +73,14 @@ MSE <- mse_saegamlss(
   cov4 = NULL
 )
 
-MSE$est_mse$MSE_mean
-MSE$est_mse$MSE_HCR
+MSE$est_mse
 
 
-# MSE for a self-defined parameter
+#MSE for a self-defined parameter
 
 est <- est_saegamlss(
-  sample = s_data, nonsample = pop_data, y_dip="y",
-  sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
+  sample = s_data, nonsample = pop_data, y_dip = "y",
+  sa = "sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
   f3 = NULL, f4 = NULL, fdis = NO, R = 20,
   Dis = rNO, param = function(x) (mean(x^2)),
   tau.fix = NULL, nu.fix = NULL
@@ -96,7 +95,7 @@ MSE <- mse_saegamlss(
 )
 
 
-MSE$est_mse$MSE_param
+MSE$est_mse
 
 }
 \references{

@@ -36,6 +36,7 @@
 #'  originaldata The dataset of sampled-units
 #'  fids The distribution used for the estimation
 #'  z The poverty line
+#'
 #' @export
 #' @import gamlss
 #' @import dplyr

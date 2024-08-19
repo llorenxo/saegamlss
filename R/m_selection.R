@@ -39,6 +39,16 @@
 #'                    R = 2, k = 2, type = "A", fix_dis = "NO",
 #'                    seed = 123, kp = 2)
 #'
+#' #Step 1
+#'
+#' sol$step1
+#'
+#' #Step 2
+#'
+#' sol$step2
+#'
+#' #Step 3
+#'
 #' sol$step3
 #'
 #'
@@ -219,6 +229,7 @@ m_selection <- function(s_data, y, f_cov, kp = 2,
 
 
   colnames(step3) = "Values"
+  rownames(step3) <- NULL
 
   step3$Dist <- as.vector(sel)
 

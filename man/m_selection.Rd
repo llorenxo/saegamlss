@@ -52,15 +52,29 @@ The summary (Step2) do not reports results on the random effects as usual for GA
 }
 \examples{
 
+
+##################
+###Using s_data###
+##################
+
 set.seed(123)
 
-data(s_data)
 
 
 sol <- m_selection(s_data = s_data, y = "y",
                    f_cov = ~x1+x2+x3+random(sa), ndis = 1,
                    R = 2, k = 2, type = "A", fix_dis = "NO",
                    seed = 123, kp = 2)
+
+#Step 1
+
+sol$step1
+
+#Step 2
+
+sol$step2
+
+#Step 3
 
 sol$step3
 

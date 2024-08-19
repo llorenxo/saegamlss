@@ -3,8 +3,8 @@
 #' indicators (Gini, Theil, Atkinson)
 #'
 #' @param data A dataset containing sampled household values
-#' @param y The dependent variable
-#' @param sa The Small Area domains
+#' @param y The dependent variable name
+#' @param sa The Small Area domains name
 #' @param ncomp The number of components of each household
 #' @param R The number of loops to be performed. Default is 200
 #' @param sigma.f Logical value if TRUE (default) a random effect is used for sigma
@@ -25,11 +25,15 @@
 #'
 #' @examples
 #'
+#' ##################
+#' ###Using s_data###
+#' ##################
+#'
 #' set.seed(124)
 #'
 #'
-#' np <- np_mse(data = s_data, y = s_data$y, sa = s_data$sa,
-#'                        ncomp = s_data$ncomp, fdis="LOGNO",
+#' np <- np_mse(data = s_data, y = "y", sa = "sa",
+#'                        ncomp = "ncomp", fdis="LOGNO",
 #'                        index="Gini", seed = 124,
 #'                        R=2)
 #'
@@ -42,7 +46,9 @@ np_mse <- function(data, y, sa, ncomp,  R = 200, sigma.f = TRUE, nu.f = TRUE,
                                tau.f = TRUE, w = NULL, fdis,
                                index = "all", epsilon = 1, seed = 123){
   set.seed(seed)
-
+  y <- data[[y]]
+  sa <- data[[sa]]
+  ncomp <- data[[ncomp]]
   f1 <- y ~1 + random(as.factor(sa))
   f2 <- f3 <- f4 <- y ~1
 
