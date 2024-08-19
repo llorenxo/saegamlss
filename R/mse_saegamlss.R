@@ -30,13 +30,13 @@
 #'   sample = s_data, nonsample = pop_data, y_dip="y",
 #'   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
 #'   f3 = NULL, f4 = NULL, fdis = NO, R = 20,
-#'   Dis = rNO,  param = "both",
+#'   Dis = rNO,  param = "mean",
 #'   tau.fix = NULL, nu.fix = NULL
 #' )
 #'
-#' data <- rbind( est$input_var$origindata  %>%
-#'                dplyr::select( dplyr::all_of(colnames(est$input_var$nonsample))),
-#'                est$input_var$nonsample
+#' data <- rbind(est$input_var$origindata  %>%
+#'               dplyr::select( dplyr::all_of(colnames(est$input_var$nonsample))),
+#'               est$input_var$nonsample
 #'                )
 #'
 #' x <- data.frame(rep(1, nrow(data)), "x1" = data$x1,
@@ -50,15 +50,14 @@
 #'   cov4 = NULL
 #' )
 #'
-#' MSE$est_mse$MSE_mean
-#' MSE$est_mse$MSE_HCR
+#' MSE$
 #'
 #'
 #' # MSE for a self-defined parameter
 #'
 #' est <- est_saegamlss(
-#'   sample = s_data, nonsample = pop_data, y_dip="y",
-#'   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
+#'   sample = s_data, nonsample = pop_data, y_dip = "y",
+#'   sa = "sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
 #'   f3 = NULL, f4 = NULL, fdis = NO, R = 20,
 #'   Dis = rNO, param = function(x) (mean(x^2)),
 #'   tau.fix = NULL, nu.fix = NULL
@@ -352,22 +351,44 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
   if (!is.function(param)){
   if (est$input_var$param == "both") {
 
-    est_mse <- list("MSE_mean" = MSE, "MSE_HCR" = mse)
+    est_mse <- data.frame("Est_mean" = est$estimates$Mean,
+                          "Est_HCR" = est$estimates$HCR,
+                          "MSE_mean" = MSE, "MSE_HCR" = mse,
+                          "Est_mean_SD" =  sqrt(MSE),
+                          "Est_HCR_SD" =  sqrt(mse),
+                          "CV_mean" =  sqrt(MSE) / abs(est$estimates$Mean),
+                          "CV_HCR" = sqrt(mse)/  abs(est$estimates$HCR)
+                          )
+
 
   } else if (est$input_var$param == "mean") {
 
-    est_mse <- list("MSE_mean" = MSE)
+    est_mse <-  data.frame("Est_mean" = est$estimates$Mean,
+                           "MSE_mean" = MSE,
+                           "Est_mean_SD" =  sqrt(MSE),
+                           "CV_mean" =  sqrt(MSE) / abs(est$estimates$Mean)
+                           )
 
   } else {
 
-    est_mse <- list("MSE_HCR" = mse)
+    est_mse <-  data.frame("Est_HCR" = est$estimates$HCR,
+                           "MSE_HCR" = mse,
+                           "Est_HCR_SD" =  sqrt(mse),
+                           "CV_HCR" = sqrt(mse)/  abs(est$estimates$HCR)
+                           )
 
   }
     } else{
 
-    est_mse <- list("MSE_param" = mse_p)
+    est_mse <-  data.frame("Est_param" = est$estimates$Parameter,
+                           "MSE_param" = mse_p,
+                           "Est_param_SD" =  sqrt(mse_p),
+                           "CV_param" =  sqrt(mse_p) / abs(est$estimates$Parameter)
+                            )
 
   }
+
+
 
   #rm(fdis, envir = .GlobalEnv)
   result <- list("est_mse" = est_mse, "estimates" = est, "replicates"=loop)

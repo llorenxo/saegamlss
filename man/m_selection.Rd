@@ -21,7 +21,7 @@ m_selection(
 \arguments{
 \item{s_data}{The dataset with sampled units}
 
-\item{y}{The dependent variable}
+\item{y}{The name of dependent variable}
 
 \item{f_cov}{A formula containing all the possible covariates and/or additive terms (i.e. x1+x2+x3+random(x4))}
 
@@ -57,7 +57,7 @@ set.seed(123)
 data(s_data)
 
 
-sol <- m_selection(s_data = s_data, y = s_data$y,
+sol <- m_selection(s_data = s_data, y = "y",
                    f_cov = ~x1+x2+x3+random(sa), ndis = 1,
                    R = 2, k = 2, type = "A", fix_dis = "NO",
                    seed = 123, kp = 2)

@@ -28,25 +28,26 @@
 #' ###Using s_data###
 #' ##################
 #'
-#'
+#' #Using the default bootstrap
 #'
 #' dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = s_data)
 #'
 #' dir$results_HT
 #'
+#' #Using HH linearization
 #' dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = s_data,
-#'           var_method = "LinHH")
+#'                 var_method = "LinHH")
 #'
 #' dir$results_HT
 #'
-#'
+
 
 
 
 direct_HT <- function(y, sa, pi, pi2 = NULL, N = NULL, var_est = TRUE, var_method = "bootstrapSRS",
                       B = 100, fpc=TRUE, data){
 
-  if (var_method == "LinHT") warning("The estimated variance is not guaranteed to be greater than 0.")
+  if (var_method == "LinHT") print("With LinHT option the estimated variance is not guaranteed to be greater than 0.")
 
 
   sa_name <- sa
@@ -74,7 +75,7 @@ direct_HT <- function(y, sa, pi, pi2 = NULL, N = NULL, var_est = TRUE, var_metho
 
     } else{
 
-    results <- rbind(results, c(d$pop_mean, d$pop_mean_var, sqrt(d$pop_mean_var),  sqrt(d$pop_mean_var)/d$pop_mean ))
+    results <- rbind(results, c(d$pop_mean, d$pop_mean_var, sqrt(d$pop_mean_var),  sqrt(d$pop_mean_var)/abs(d$pop_mean )))
 
     }
 

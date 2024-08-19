@@ -13,6 +13,7 @@ An object of class \code{"data.frame"}
  \item{x3}{A continous covariate knwon in population}
  \item{sa}{The Small Areas}
  \item{id}{The Id of the units}
+ \item{ncomp}{Number of components of the household}
 }
 }
 \source{

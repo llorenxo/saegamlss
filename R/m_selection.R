@@ -3,7 +3,7 @@
 #' @description The function select the final SAE-GAMLSS model following three steps as described by Mori and Ferrante (2023)
 #'
 #' @param s_data The dataset with sampled units
-#' @param y The dependent variable
+#' @param y The name of dependent variable
 #' @param kp the penalty for the GAIC (Step 1) with default values kp=2 the standard AIC.
 #' @param ndis Number of distribution to be consider at the first step. Default is 3
 #' @param R Number of loop to be done within the k-fold cross validation
@@ -25,12 +25,16 @@
 #'
 #' @examples
 #'
+#'
+#' ##################
+#' ###Using s_data###
+#' ##################
+#'
 #' set.seed(123)
 #'
-#' data(s_data)
 #'
 #'
-#' sol <- m_selection(s_data = s_data, y = s_data$y,
+#' sol <- m_selection(s_data = s_data, y = "y",
 #'                    f_cov = ~x1+x2+x3+random(sa), ndis = 1,
 #'                    R = 2, k = 2, type = "A", fix_dis = "NO",
 #'                    seed = 123, kp = 2)
@@ -51,6 +55,7 @@ m_selection <- function(s_data, y, f_cov, kp = 2,
 
   if(isTRUE(supp)) options(warn=-1)
 
+  y = s_data[[y]]
  #s_data$y = s_data %>% dplyr::select(y) %>% dplyr::pull()
 
   s_data <- modify_data(data = s_data, y = y)

@@ -65,8 +65,7 @@ count_arguments <- function(func) {
 modify_data <- function(data, y) {
 
 
-  s_data = data %>% dplyr::mutate ( y =  data %>% dplyr::select( y ) %>% dplyr::pull()
-  )
+  s_data = data %>% dplyr::mutate ( y =  data %>% dplyr::select( y ) %>% dplyr::pull())
 
   return(s_data)
 }
