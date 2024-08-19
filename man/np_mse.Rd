@@ -4,48 +4,14 @@
 \alias{np_mse}
 \title{Non-parametric MSE for simplified SAE-GAMLSS}
 \usage{
-np_mse(
-  data,
-  y,
-  sa,
-  ncomp,
-  R = 200,
-  sigma.f = TRUE,
-  nu.f = TRUE,
-  tau.f = TRUE,
-  w = NULL,
-  fdis,
-  index = "all",
-  epsilon = 1,
-  seed = 123
-)
+np_mse(est, ncomp, R = 200)
 }
 \arguments{
-\item{data}{A dataset containing sampled household values}
-
-\item{y}{The dependent variable}
-
-\item{sa}{The Small Area domains}
+\item{est}{An object of class "saegamlss_class" obtained with \code{sa_p_index}}
 
 \item{ncomp}{The number of components of each household}
 
 \item{R}{The number of loops to be performed. Default is 200}
-
-\item{sigma.f}{Logical value if TRUE (default) a random effect is used for sigma}
-
-\item{nu.f}{Logical value if TRUE (default) a random effect is used for nu}
-
-\item{tau.f}{Logical value if TRUE (default) a random effect is used for tau}
-
-\item{w}{Sample weights}
-
-\item{fdis}{The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EX (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)}
-
-\item{index}{One index to be estimated ("Gini", "Theil" or "Atkinson"). Default is "all"}
-
-\item{epsilon}{The value for the poverty aversion parameter. Default value is set to 1}
-
-\item{seed}{The seed. Default is 123}
 }
 \value{
 An object of class "saegamlss_class" containing the values of the MSE for each area and for each index
@@ -56,17 +22,18 @@ indicators (Gini, Theil, Atkinson)
 }
 \examples{
 
-set.seed(124)
+##################
+###Using s_data###
+##################
+
+index_est <- sa_p_index(data = s_data, y = "y",
+                        sa = "sa", fdis = "LOGNO",
+                        sigma.f = TRUE, index = "all")
 
 
-np <- np_mse(data = s_data, y = s_data$y, sa = s_data$sa,
-                       ncomp = s_data$ncomp, fdis="LOGNO",
-                       index="Gini", seed = 124,
-                       R=2)
+np <- np_mse(est = index_est, ncomp = "ncomp", R = 2)
 
 np$Gini.MSE
-
-
 
 }
 \author{

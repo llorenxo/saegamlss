@@ -31,7 +31,7 @@ sa_p_index(
 
 \item{sa}{The name of the variable to be used as "small area"}
 
-\item{w}{Sample weights}
+\item{w}{Sample weights. Default is null}
 
 \item{fdis}{The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GAMMA (Gamma), EXP (Exponential), LOGNO (Log-Normal), PARETO (Pareto), WEI (Weibull)}
 

@@ -43,6 +43,7 @@ p_index(sigma=0.8, fdis="LOGNO", index="Gini", epsilon=2)
 p_index(sigma=0.8, fdis="LOGNO", index="Theil", epsilon=2)
 p_index(sigma=0.8, fdis="LOGNO", index="Atkinson", epsilon=2)
 p_index(sigma=0.8, fdis="LOGNO", index="all", epsilon=2)
+
 }
 \author{
 Lorenzo Mori and Maria Rosaria Ferrante

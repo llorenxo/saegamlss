@@ -2,19 +2,9 @@
 #' @description Compute the Non-parametric MSE for simplified SAE-GAMLSS for three possible different
 #' indicators (Gini, Theil, Atkinson)
 #'
-#' @param data A dataset containing sampled household values
-#' @param y The dependent variable name
-#' @param sa The Small Area domains name
+#' @param est An object of class "saegamlss_class" obtained with \code{sa_p_index}
 #' @param ncomp The number of components of each household
 #' @param R The number of loops to be performed. Default is 200
-#' @param sigma.f Logical value if TRUE (default) a random effect is used for sigma
-#' @param nu.f Logical value if TRUE (default) a random effect is used for nu
-#' @param tau.f Logical value if TRUE (default) a random effect is used for tau
-#' @param w Sample weights
-#' @param index One index to be estimated ("Gini", "Theil" or "Atkinson"). Default is "all"
-#' @param epsilon The value for the poverty aversion parameter. Default value is set to 1
-#' @param fdis The assumed distribution. Options are: GB2 (Generalized Beta of 2-type), GA (Gamma), EX (Exponential), LOGNO (Log-Normal), PA (Pareto), WE (Weibull)
-#' @param seed The seed. Default is 123
 #'
 #'
 #'
@@ -29,34 +19,40 @@
 #' ###Using s_data###
 #' ##################
 #'
-#' set.seed(124)
+#' index_est <- sa_p_index(data = s_data, y = "y",
+#'                         sa = "sa", fdis = "LOGNO",
+#'                         sigma.f = TRUE, index = "all")
 #'
 #'
-#' np <- np_mse(data = s_data, y = "y", sa = "sa",
-#'                        ncomp = "ncomp", fdis="LOGNO",
-#'                        index="Gini", seed = 124,
-#'                        R=2)
+#' np <- np_mse(est = index_est, ncomp = "ncomp", R = 2)
 #'
 #' np$Gini.MSE
 #'
-#'
-#'
 
-np_mse <- function(data, y, sa, ncomp,  R = 200, sigma.f = TRUE, nu.f = TRUE,
-                               tau.f = TRUE, w = NULL, fdis,
-                               index = "all", epsilon = 1, seed = 123){
-  set.seed(seed)
-  y <- data[[y]]
-  sa <- data[[sa]]
+
+np_mse <- function(est, ncomp,  R = 200){
+
+
+  set.seed(est$index_est$seed)
+
+  data <- est$input_var$data
+  y <- est$index_est$y
+  sa <- est$index_est$sa
   ncomp <- data[[ncomp]]
+  fdis <- est$input_var$fdis
+  index <- est$input_var$index
+  epsilon <- est$input_var$epsilon
+
   f1 <- y ~1 + random(as.factor(sa))
   f2 <- f3 <- f4 <- y ~1
 
-  if(isTRUE(sigma.f))f2 <- f1
-  if(isTRUE(nu.f))f3 <- f1
-  if(isTRUE(tau.f))f4 <- f1
+  if(isTRUE(est$index_est$sigma.f))f2 <- f1
+  if(isTRUE(est$index_est$nu.f))f3 <- f1
+  if(isTRUE(est$index_est$tau.f))f4 <- f1
 
-  if (is.null(w)) data <- data %>% mutate(w = rep(1:nrow(data)))
+  if (is.null(est$index_est$w)) data <- data %>% mutate(w = rep(1:nrow(data)))
+
+
 
   s2 <- data %>% dplyr::select("y", "sa", "ncomp", "w")
 
@@ -112,7 +108,7 @@ for (t2 in 1:R){
                       tau.step = 1, gd.tol = Inf, iter = 0, trace = F, autostep = TRUE)
 
 
-    ga<-gamlss::gamlss(f1, sigma.fo=f2, nu.fo=f3, tau.fo=f4, weights = w,
+  ga<-gamlss::gamlss(f1, sigma.fo=f2, nu.fo=f3, tau.fo=f4, weights = w,
                       trace = FALSE, family = substitute(fdis), data = as.data.frame(s1),
                       method = RS(100))
 
@@ -182,27 +178,52 @@ for (t2 in 1:R){
 
   if (index == "all"){
 
-  result <- list("Gini.MSE"=colMeans(dif4[-1,]), "Theil.MSE"=colMeans(dif5[-1,]), "Atkinson.MSE"=colMeans(dif3[-1,]))
+  result <- data.frame("Gini.Est" = est$Gini,
+                       "Gini.MSE" = colMeans(dif4[-1,]),
+                       "Gini.SD" = sqrt(colMeans(dif4[-1,])),
+                       "Gini.CV" = sqrt(colMeans(dif4[-1,]))/abs(est$Gini),
+                       "Theil.Est" = est$Theil,
+                       "Theil.MSE" = colMeans(dif5[-1,]),
+                       "Theil.SD" = sqrt(colMeans(dif5[-1,])),
+                       "Theil.CV" = sqrt(colMeans(dif5[-1,]))/abs(est$Theil),
+                       "Atkinson.Est" = est$Atkinson,
+                       "Atkinson.MSE" = colMeans(dif3[-1,]),
+                       "Atkinson.SD" = sqrt(colMeans(dif3[-1,])),
+                       "Atkinson.CV" = sqrt(colMeans(dif3[-1,]))/abs(est$Atkinson)
+                       )
 
   } else if (index=="Gini"){
 
-  result <- list("Gini.MSE"=colMeans(dif4[-1,]))
+  result <- data.frame("Gini.Est" = est$Gini,
+                       "Gini.MSE" = colMeans(dif4[-1,]),
+                       "Gini.SD" = sqrt(colMeans(dif4[-1,])),
+                       "Gini.CV" = sqrt(colMeans(dif4[-1,]))/abs(est$Gini),
+                      )
 
   } else if (index=="Theil"){
 
-  result <- list("Theil.MSE"=colMeans(dif5[-1,]))
+  result <- data.frame("Theil.Est" = est$Theil,
+                        "Theil.MSE" = colMeans(dif5[-1,]),
+                        "Theil.SD" = sqrt(colMeans(dif5[-1,])),
+                        "Theil.CV" = sqrt(colMeans(dif5[-1,]))/abs(est$Theil),
+                        )
 
   } else {
 
-  result <- list("Atkinson.MSE"=colMeans(dif3[-1,]))
+  result <- data.frame("Atkinson.Est" = est$Atkinson,
+                       "Atkinson.MSE" = colMeans(dif3[-1,]),
+                       "Atkinson.SD" = sqrt(colMeans(dif3[-1,])),
+                       "Atkinson.CV" = sqrt(colMeans(dif3[-1,]))/abs(est$Atkinson)
+                        )
 
   }
 
 
-  result <- lapply(result, function(x) {
-    names(x) <- levels(sa)
-    return(x)
-  })
+  rownames(result) <- levels(sa)
+
+  result = list("est_mse" = result, "input_var" = est$input_var,
+                "model" = est$model, "estimates_par" = est$estimates_par,
+                "R" = R)
 
   attr(result, "class") <- "saegamlss_class"
   return(result)

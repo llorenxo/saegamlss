@@ -52,7 +52,7 @@ Compute the bootstrap MSE for the estimation of the mean and the HCR
 est <- est_saegamlss(
   sample = s_data, nonsample = pop_data, y_dip="y",
   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
-  f3 = NULL, f4 = NULL, fdis = NO, R = 20,
+  f3 = NULL, f4 = NULL, fdis = NO, R = 2,
   Dis = rNO,  param = "mean",
   tau.fix = NULL, nu.fix = NULL
 )
@@ -81,7 +81,7 @@ MSE$est_mse
 est <- est_saegamlss(
   sample = s_data, nonsample = pop_data, y_dip = "y",
   sa = "sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
-  f3 = NULL, f4 = NULL, fdis = NO, R = 20,
+  f3 = NULL, f4 = NULL, fdis = NO, R = 2,
   Dis = rNO, param = function(x) (mean(x^2)),
   tau.fix = NULL, nu.fix = NULL
  )

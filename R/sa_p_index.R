@@ -11,7 +11,7 @@
 #' @param sigma.f Logical value if TRUE (default) a random effect is used for sigma
 #' @param nu.f Logical value if TRUE (default) a random effect is used for nu
 #' @param tau.f Logical value if TRUE (default) a random effect is used for tau
-#' @param w Sample weights
+#' @param w Sample weights. Default is null
 #' @param seed The seed. Default is 123
 #'
 #' @return An object of class "saegamlss_class" with the estimated indicators and the value of
@@ -38,6 +38,20 @@ sa_p_index <- function (data, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  sa,
                         index = "all", epsilon = 1, seed = 123){
 
 
+  input_var <- list("data" = data,
+                    "y" = y,
+                    "sa" = sa,
+                    "sigma.f" = sigma.f,
+                    "nu.f" = nu.f,
+                    "tau.f" = tau.f,
+                    "sa" = sa,
+                    "w" = w,
+                    "fdis" = fdis,
+                    "index" =  index,
+                    "epsilon" = epsilon,
+                    "seed" = seed
+                     )
+
   sa <- data[[sa]] %>% as.factor()
   y <- data[[y]]
   f1 <- y ~1 + random(sa)
@@ -46,6 +60,15 @@ sa_p_index <- function (data, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  sa,
   if(isTRUE(sigma.f)) f2 <- f1
   if(isTRUE(nu.f)) f3 <- f1
   if(isTRUE(tau.f)) f4 <- f1
+
+  if (is.null(w)) data <- {
+
+    data <- data %>% mutate(w = rep(1:nrow(data)))
+
+  } else {
+
+    data <- data %>% mutate(w = (data %>% dplyr::select(w) %>% dplyr::pull()))
+  }
 
 
   set.seed(seed)
@@ -120,6 +143,8 @@ sa_p_index <- function (data, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  sa,
               result <- list("Atkinson"=atkinson_gamlss[-1], "estimates_par"=est_gamlss, "model"=gamlss_reg)
 
             }
+
+    result$input_var =input_var
 
      attr(result, "class") <- "saegamlss_class"
      return(result)

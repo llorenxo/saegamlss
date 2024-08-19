@@ -29,7 +29,7 @@
 #' est <- est_saegamlss(
 #'   sample = s_data, nonsample = pop_data, y_dip="y",
 #'   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
-#'   f3 = NULL, f4 = NULL, fdis = NO, R = 20,
+#'   f3 = NULL, f4 = NULL, fdis = NO, R = 2,
 #'   Dis = rNO,  param = "mean",
 #'   tau.fix = NULL, nu.fix = NULL
 #' )
@@ -58,7 +58,7 @@
 #' est <- est_saegamlss(
 #'   sample = s_data, nonsample = pop_data, y_dip = "y",
 #'   sa = "sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
-#'   f3 = NULL, f4 = NULL, fdis = NO, R = 20,
+#'   f3 = NULL, f4 = NULL, fdis = NO, R = 2,
 #'   Dis = rNO, param = function(x) (mean(x^2)),
 #'   tau.fix = NULL, nu.fix = NULL
 #'  )
@@ -359,6 +359,8 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
                           "CV_mean" =  sqrt(MSE) / abs(est$estimates$Mean),
                           "CV_HCR" = sqrt(mse)/  abs(est$estimates$HCR)
                           )
+    rownames(est_mse) <- levels(sa)
+
 
 
   } else if (est$input_var$param == "mean") {
@@ -368,6 +370,8 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
                            "Est_mean_SD" =  sqrt(MSE),
                            "CV_mean" =  sqrt(MSE) / abs(est$estimates$Mean)
                            )
+    rownames(est_mse) <- levels(sa)
+
 
   } else {
 
@@ -376,6 +380,7 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
                            "Est_HCR_SD" =  sqrt(mse),
                            "CV_HCR" = sqrt(mse)/  abs(est$estimates$HCR)
                            )
+    rownames(est_mse) <- levels(sa)
 
   }
     } else{
@@ -385,7 +390,7 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
                            "Est_param_SD" =  sqrt(mse_p),
                            "CV_param" =  sqrt(mse_p) / abs(est$estimates$Parameter)
                             )
-
+    rownames(est_mse) <- levels(sa)
   }
 
 
