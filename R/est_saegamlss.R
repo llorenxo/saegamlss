@@ -51,7 +51,7 @@
 #'   sample = s_data, nonsample = pop_data, y_dip="y",
 #'   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
 #'   f3 = NULL, f4 = NULL, fdis = NO, R = 20,
-#'   Dis = rNO,  param = "mean",
+#'   Dis = rNO,  param = "both",
 #'   tau.fix = NULL, nu.fix = NULL
 #' )
 #'
@@ -87,6 +87,7 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, f1, f2 = NULL,
   ni <- table(sample[[sa]]) %>% as.vector()
   y <- sample[[y_dip]]
   sa_n <- nonsample[[sa]]
+  n_sa <-  levels (sample[[sa]] %>% as.vector())
   mixed <- NULL
   D <- length(Ni)
   sa_name = "sa"
@@ -280,19 +281,31 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, f1, f2 = NULL,
 
     if (param == "both") {
 
-      estim <- list("Mean" = ME, "HCR" = HCR)
+      estim <- data.frame("Mean" = ME, "HCR" = HCR)
+
+      rownames(estim) <- n_sa
 
     } else if (param == "mean") {
 
-      estim <- list("Mean" = ME)
+      estim <- data.frame("Mean" = ME)
+
+      rownames(estim) <- n_sa
+
 
     } else {
 
-      estim <- list("HCR" = HCR)
+      estim <- data.frame("HCR" = HCR)
+
+      rownames(estim) <- n_sa
+
 
     }
+
     } else {
-      estim <- list("Parameter" = P)
+
+      estim <- data.frame("Parameter" = P)
+
+      rownames(estim) <- n_sa
 
     }
 
