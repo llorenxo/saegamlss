@@ -35,7 +35,7 @@ np_mse <- function(est, ncomp,  R = 200){
 
   set.seed(est$index_est$seed)
 
-  data <- est$input_var$data
+  data <- est$input_var$sample
   y <- est$index_est$y
   sa <- est$index_est$sa
   ncomp <- data[[ncomp]]

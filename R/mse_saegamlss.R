@@ -1,6 +1,7 @@
 #' Bootstrap Mean Square Error for SAE GAMLSS
 #'
 #' @description Compute the bootstrap MSE for the estimation of the mean and the HCR
+#'
 #' @param est An object obtained with est_saegamlss()
 #' @param loop Number of loop of bootstrap. Default is 200
 #' @param l A vector, of maximum length equal to 4, in which each space is a function (the inverse of the link-function) to be applied to the corresponding parameter, i.e. mu, sigma, nu and tau
