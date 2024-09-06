@@ -24,6 +24,8 @@
 #' @param costh A constant used to generate heteroschedasticity
 #' @param id Unit id
 #' @param M Number of replicates. Default is 1
+#' @param seed The seed. Default is 123
+#'
 #' @import gamlss
 #' @import dplyr
 #' @import splitstackshape
@@ -57,7 +59,10 @@
 
 data_gen <- function(Ni, D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NULL, x3 = NULL, b4 = NULL, x4 = NULL,
                      xh = NULL, Dis, l, sigma = NULL, sigmah = NULL, sigmae = NULL, ty = NULL, costh = NULL,
-                     id = NULL, M = NULL) {
+                     id = NULL, M = NULL, seed = 123) {
+
+  set.seed(seed)
+
   list.data <- list()
 
 

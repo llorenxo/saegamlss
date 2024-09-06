@@ -352,13 +352,13 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
   if (!is.function(param)){
   if (est$input_var$param == "both") {
 
-    est_mse <- data.frame("Est_mean" = est$estimates$Mean,
-                          "Est_HCR" = est$estimates$HCR,
-                          "MSE_mean" = MSE, "MSE_HCR" = mse,
-                          "Est_mean_SD" =  sqrt(MSE),
-                          "Est_HCR_SD" =  sqrt(mse),
-                          "CV_mean" =  sqrt(MSE) / abs(est$estimates$Mean),
-                          "CV_HCR" = sqrt(mse)/  abs(est$estimates$HCR)
+    est_mse <- data.frame("Mean.Est" = est$estimates$Mean,
+                          "HCR.Est" = est$estimates$HCR,
+                          "Mean.Est" = MSE, "HCR.MSE" = mse,
+                          "Mean.SD" =  sqrt(MSE),
+                          "HCR.SD" =  sqrt(mse),
+                          "Mean.CV" =  sqrt(MSE) / abs(est$estimates$Mean),
+                          "HCR.CV" = sqrt(mse)/  abs(est$estimates$HCR)
                           )
     rownames(est_mse) <- levels(sa)
 
@@ -366,30 +366,30 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
 
   } else if (est$input_var$param == "mean") {
 
-    est_mse <-  data.frame("Est_mean" = est$estimates$Mean,
-                           "MSE_mean" = MSE,
-                           "Est_mean_SD" =  sqrt(MSE),
-                           "CV_mean" =  sqrt(MSE) / abs(est$estimates$Mean)
+    est_mse <-  data.frame("Mean.Est" = est$estimates$Mean,
+                           "Mean.MSE" = MSE,
+                           "Mean.SD" =  sqrt(MSE),
+                           "Mean.CV" =  sqrt(MSE) / abs(est$estimates$Mean)
                            )
     rownames(est_mse) <- levels(sa)
 
 
   } else {
 
-    est_mse <-  data.frame("Est_HCR" = est$estimates$HCR,
-                           "MSE_HCR" = mse,
-                           "Est_HCR_SD" =  sqrt(mse),
-                           "CV_HCR" = sqrt(mse)/  abs(est$estimates$HCR)
+    est_mse <-  data.frame("HCR.Est" = est$estimates$HCR,
+                           "HCR.MSE" = mse,
+                           "HCR.SD" =  sqrt(mse),
+                           "HCR.CV" = sqrt(mse)/  abs(est$estimates$HCR)
                            )
     rownames(est_mse) <- levels(sa)
 
   }
     } else{
 
-    est_mse <-  data.frame("Est_param" = est$estimates$Parameter,
-                           "MSE_param" = mse_p,
-                           "Est_param_SD" =  sqrt(mse_p),
-                           "CV_param" =  sqrt(mse_p) / abs(est$estimates$Parameter)
+    est_mse <-  data.frame("Param.Est" = est$estimates$Parameter,
+                           "Param.MSE" = mse_p,
+                           "Param.SD" =  sqrt(mse_p),
+                           "Param.CV" =  sqrt(mse_p) / abs(est$estimates$Parameter)
                             )
     rownames(est_mse) <- levels(sa)
   }

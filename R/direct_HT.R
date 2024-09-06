@@ -5,7 +5,7 @@
 #' Compute the the Horvitz-Thompson Estimator for a finite population mean/proportion based on sample data
 #' collected from a complex sampling design for Small Area.
 #'
-#'
+#' @param sample The data-set of sampled units containing y, sa, and pi
 #' @param y The name of the responde variable
 #' @param sa The name of the Small Areas
 #' @param pi The name of the first order inclusion probability
@@ -15,7 +15,6 @@
 #' @param var_method The method to use when computing the variance estimator. Options are a Taylor linearized technique: "LinHB"= Hajek-Berger estimator, "LinHH" = Hansen-Hurwitz estimator, "LinHTSRS" = Horvitz-Thompson estimator under simple random sampling without replacement, and "LinHT" = Horvitz-Thompson estimator or a resampling technique: "bootstrapSRS" = bootstrap variance estimator under simple random sampling without replacement. The default is "bootstrapSRS"
 #' @param B The number of bootstrap samples if computing the bootstrap variance estimator. Default is 100
 #' @param fpc Default to TRUE, logical for whether or not the variance calculation should include a finite population correction when calculating the "LinHTSRS" or the "SRSbootstrap" variance estimator
-#' @param data The data-set containing y, sa, and pi
 #'
 #' @importFrom mase horvitzThompson
 #'
@@ -30,12 +29,12 @@
 #'
 #' #Using the default bootstrap
 #'
-#' dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = s_data)
+#' dir = direct_HT(y = "y", sa = "sa", pi = "pi", sample = s_data)
 #'
 #' dir$results_HT
 #'
 #' #Using HH linearization
-#' dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = s_data,
+#' dir = direct_HT(y = "y", sa = "sa", pi = "pi", sample = s_data,
 #'                 var_method = "LinHH")
 #'
 #' dir$results_HT
@@ -44,20 +43,20 @@
 
 
 
-direct_HT <- function(y, sa, pi, pi2 = NULL, N = NULL, var_est = TRUE, var_method = "bootstrapSRS",
-                      B = 100, fpc=TRUE, data){
+direct_HT <- function(sample, y, sa, pi, pi2 = NULL, N = NULL, var_est = TRUE, var_method = "bootstrapSRS",
+                      B = 100, fpc=TRUE){
 
   if (var_method == "LinHT") print("With LinHT option the estimated variance is not guaranteed to be greater than 0.")
 
 
   sa_name <- sa
-  sa <- unique.numeric_version(data[[sa]])
+  sa <- unique.numeric_version(sample[[sa]])
   D <- length(unique.numeric_version(sa))
-  if (is.null(N)) N = by(1/data[[pi]], data[[sa_name]], sum)
+  if (is.null(N)) N = by(1/sample[[pi]], sample[[sa_name]], sum)
 
  for (i in 1:D) {
 
-  df3 <- subset(data, data[[sa_name]] == sa[i])
+  df3 <- subset(sample, sample[[sa_name]] == sa[i])
 
   d <- mase::horvitzThompson(y = as.vector(df3[[y]]),
                             pi =  as.vector(df3[[pi]]),
