@@ -3,7 +3,7 @@
 ##################################
 
 # All those functions are used in the package. It is not necessary to export them.
-# The description is commented due to not expoted files
+# The description is commented due to not exported files
 
 # Replace term in functions
 #
@@ -57,8 +57,8 @@ count_arguments <- function(func) {
 }
 
 
-##Functions to avoid <<- in m_selection
-#data = dataset
+# Function to avoid <<- in m_selection
+# data = dataset
 # y = selected y
 
 

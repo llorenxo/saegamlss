@@ -19,7 +19,7 @@
 #' ###Using s_data###
 #' ##################
 #'
-#' index_est <- sa_p_index(data = s_data, y = "y",
+#' index_est <- sa_p_index(sample = s_data, y = "y",
 #'                         sa = "sa", fdis = "LOGNO",
 #'                         sigma.f = TRUE, index = "all")
 #'
@@ -192,6 +192,7 @@ for (t2 in 1:R){
                        "Atkinson.CV" = sqrt(colMeans(dif3[-1,]))/abs(est$Atkinson)
                        )
 
+
   } else if (index=="Gini"){
 
   result <- data.frame("Gini.Est" = est$Gini,
@@ -199,6 +200,7 @@ for (t2 in 1:R){
                        "Gini.SD" = sqrt(colMeans(dif4[-1,])),
                        "Gini.CV" = sqrt(colMeans(dif4[-1,]))/abs(est$Gini),
                       )
+
 
   } else if (index=="Theil"){
 
@@ -208,6 +210,7 @@ for (t2 in 1:R){
                         "Theil.CV" = sqrt(colMeans(dif5[-1,]))/abs(est$Theil),
                         )
 
+
   } else {
 
   result <- data.frame("Atkinson.Est" = est$Atkinson,
@@ -216,14 +219,19 @@ for (t2 in 1:R){
                        "Atkinson.CV" = sqrt(colMeans(dif3[-1,]))/abs(est$Atkinson)
                         )
 
+
   }
 
 
   rownames(result) <- levels(sa)
 
+
+
   result = list("est_mse" = result, "input_var" = est$input_var,
                 "model" = est$model, "estimates_par" = est$estimates_par,
                 "R" = R)
+
+
 
   attr(result, "class") <- "saegamlss_class"
   return(result)
