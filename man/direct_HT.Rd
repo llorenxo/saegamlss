@@ -5,6 +5,7 @@
 \title{Direct Horvitz-Thompson estimatorof the mean}
 \usage{
 direct_HT(
+  sample,
   y,
   sa,
   pi,
@@ -13,11 +14,12 @@ direct_HT(
   var_est = TRUE,
   var_method = "bootstrapSRS",
   B = 100,
-  fpc = TRUE,
-  data
+  fpc = TRUE
 )
 }
 \arguments{
+\item{sample}{The data-set of sampled units containing y, sa, and pi}
+
 \item{y}{The name of the responde variable}
 
 \item{sa}{The name of the Small Areas}
@@ -35,8 +37,6 @@ direct_HT(
 \item{B}{The number of bootstrap samples if computing the bootstrap variance estimator. Default is 100}
 
 \item{fpc}{Default to TRUE, logical for whether or not the variance calculation should include a finite population correction when calculating the "LinHTSRS" or the "SRSbootstrap" variance estimator}
-
-\item{data}{The data-set containing y, sa, and pi}
 }
 \value{
 A list with the Horvitz-Thompson estimate of the mean, the variance, the Standard Deviation and the Coefficient of Variation for each Area
@@ -53,12 +53,12 @@ collected from a complex sampling design for Small Area.
 
 #Using the default bootstrap
 
-dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = s_data)
+dir = direct_HT(y = "y", sa = "sa", pi = "pi", sample = s_data)
 
 dir$results_HT
 
 #Using HH linearization
-dir = direct_HT(y = "y", sa = "sa", pi = "pi", data = s_data,
+dir = direct_HT(y = "y", sa = "sa", pi = "pi", sample = s_data,
                 var_method = "LinHH")
 
 dir$results_HT

@@ -63,7 +63,7 @@ sample <- stratified(data, "sa", size = 0.1)
 #
 nonsample <- subset(data, !(data$id\%in\%sample$id))
 
-# estimate
+#estimate
 
 est <- est_saegamlss(
   sample = sample, nonsample = nonsample, y_dip="y",

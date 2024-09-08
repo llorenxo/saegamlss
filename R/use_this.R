@@ -70,12 +70,6 @@ modify_data <- function(data, y) {
   return(s_data)
 }
 
-dis <- function(fdis){
-
-  fdis <- fdis
-  return(fdis)
-}
-
 
 
 

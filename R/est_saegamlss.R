@@ -1,5 +1,5 @@
 #' Monte Carlo estimation of mean and HCR based on SAE GAMLSS
-#' @description A function to estimate the mean or/and the HCR     derived from unit-level small area estimation based on generalized additive models for location, scale and shape
+#' @description A function to estimate the mean or/and the HCR derived from unit-level small area estimation based on generalized additive models for location, scale and shape
 #'
 #' @param sample A dataset of sampled units.
 #' @param nonsample  A dataset of non-sampled units. With covariates and small areas

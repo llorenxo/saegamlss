@@ -25,7 +25,8 @@ data_gen(
   ty = NULL,
   costh = NULL,
   id = NULL,
-  M = NULL
+  M = NULL,
+  seed = 123
 )
 }
 \arguments{
@@ -70,6 +71,8 @@ data_gen(
 \item{id}{Unit id}
 
 \item{M}{Number of replicates. Default is 1}
+
+\item{seed}{The seed. Default is 123}
 }
 \value{
 An object of class "saegamlss_class" of length M. Each element of this list is a data frame that has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)

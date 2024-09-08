@@ -4,11 +4,11 @@ Title: Unit-Level small area estimation using Generalized Additive Models for Lo
 Version: 1.1.1
 Author: Lorenzo Mori \email{lorenzo.mori7@unibo.it} and Maria Rosaria Ferrante
 Maintainer: Lorenzo Mori <lorenzo.mori7@unibo.it>
-Description: A set of functions to estimate Small Area Unit Level based on Generalized Additive Models for Location, Scale and Shape, including functions for mean squared error estimation. 
+Description: A set of functions to estimate Small Area Unit Level based on Generalized Additive Models for Location, Scale and Shape. Include functions for mean squared error estimation. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.5.0), gamlss, dplyr, splitstackshape, mase
+Depends: R (>= 4.4.0), gamlss, dplyr, splitstackshape, mase
 RoxygenNote: 7.3.1
 Suggests: 
     knitr,
@@ -24,8 +24,7 @@ Imports:
     ggplot2, 
     ggcorrplot, 
     gridExtra, 
-    grid, 
-    corrplot
+    grid
 Config/testthat/edition: 3
 URL: https://github.com/llorenxo/saegamlss
 BugReports: https://github.com/llorenxo/saegamlss/issues

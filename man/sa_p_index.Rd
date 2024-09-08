@@ -5,7 +5,7 @@
 \title{Estimation of poverty indicators with simplified SAE-GAMLSS}
 \usage{
 sa_p_index(
-  data,
+  sample,
   y,
   sigma.f = TRUE,
   nu.f = TRUE,
@@ -19,7 +19,7 @@ sa_p_index(
 )
 }
 \arguments{
-\item{data}{The dataset with sampled data}
+\item{sample}{A dataset with sampled units}
 
 \item{y}{The dependent variable}
 
@@ -55,7 +55,7 @@ Estimate the values of poverty indicators in small areas using the simplified SA
 ##################
 
 
-index_est <- sa_p_index(data = s_data, y = "y",
+index_est <- sa_p_index(sample = s_data, y = "y",
                         sa = "sa", fdis = "LOGNO",
                         sigma.f = TRUE, index = "all")
 

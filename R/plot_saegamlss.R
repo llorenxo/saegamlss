@@ -15,7 +15,7 @@
 #' @export
 #' @examples
 #'
-#' #est_saegamlss
+#'#est_saegamlss
 #'
 #'dep.y <- data_gen(
 #'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 1, b1 = 10,
@@ -38,7 +38,7 @@
 #' #
 #' nonsample <- subset(data, !(data$id%in%sample$id))
 #'
-#' # estimate
+#'#estimate
 #'
 #' est <- est_saegamlss(
 #'   sample = sample, nonsample = nonsample, y_dip="y",

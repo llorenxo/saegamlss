@@ -76,7 +76,7 @@ an object of class "saegamlss_class" which contains two list. The first list, na
  z The poverty line
 }
 \description{
-A function to estimate the mean or/and the HCR     derived from unit-level small area estimation based on generalized additive models for location, scale and shape
+A function to estimate the mean or/and the HCR derived from unit-level small area estimation based on generalized additive models for location, scale and shape
 }
 \note{
 With "object"$input_var$fit is possible to use all the classical function used by gamlss
@@ -91,8 +91,8 @@ With "object"$input_var$fit is possible to use all the classical function used b
 est <- est_saegamlss(
   sample = s_data, nonsample = pop_data, y_dip="y",
   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
-  f3 = NULL, f4 = NULL, fdis = NO, R = 20,
-  Dis = rNO,  param = "mean",
+  f3 = NULL, f4 = NULL, fdis = NO, R = 2,
+  Dis = rNO,  param = "both",
   tau.fix = NULL, nu.fix = NULL
 )
 
@@ -103,7 +103,7 @@ est$estimates
 est <- est_saegamlss(
   sample = s_data, nonsample = pop_data, y_dip="y",
   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
-  f3 = NULL, f4 = NULL, fdis = NO, R = 20,
+  f3 = NULL, f4 = NULL, fdis = NO, R = 2,
   Dis = rNO, param = function(x) (mean(x^2)),
   tau.fix = NULL, nu.fix = NULL
  )

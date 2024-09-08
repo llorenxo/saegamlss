@@ -26,7 +26,7 @@ indicators (Gini, Theil, Atkinson)
 ###Using s_data###
 ##################
 
-index_est <- sa_p_index(data = s_data, y = "y",
+index_est <- sa_p_index(sample = s_data, y = "y",
                         sa = "sa", fdis = "LOGNO",
                         sigma.f = TRUE, index = "all")
 
