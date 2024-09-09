@@ -36,11 +36,11 @@ mse_saegamlss(
 \item{seed}{The seed. Default is 123}
 }
 \value{
-an object of class "saegamlss_class" containing the MSE of the mean or/and HCR for each area
- and all the values returned by est_saegamlss()
+an object of class "saegamlss_class" containing the MSE of the estimated parameter for each area
+        and all the values returned by est_saegamlss()
 }
 \description{
-Compute the bootstrap MSE for the estimation of the mean and the HCR
+Compute the parametric bootstrap MSE for the estimation of the mean and the HCR or a self-defined parameter.
 }
 \examples{
 
@@ -99,8 +99,8 @@ MSE$est_mse
 
 }
 \references{
-Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.
- Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597.
+Mori, L., & Ferrante, M. R. (2024). Small area estimation under unit-level generalized additive models for location, scale and shape. Journal of Survey Statistics and Methodology, 1–37
+ Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597
 }
 \author{
 Lorenzo Mori and Maria Rosaria Ferrante

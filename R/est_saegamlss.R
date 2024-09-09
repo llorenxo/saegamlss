@@ -1,7 +1,8 @@
-#' Monte Carlo estimation of mean and HCR based on SAE GAMLSS
-#' @description A function to estimate the mean or/and the HCR derived from unit-level small area estimation based on generalized additive models for location, scale and shape
+#' Estimation of mean and HCR based on SAE-GAMLSS
 #'
-#' @param sample A dataset of sampled units.
+#' @description A function to estimate the mean and/or the HCR or a self-defined parameter derived from unit-level small area estimation using generalized additive models for location, scale, and shape.
+#'
+#' @param sample A dataset of sampled units
 #' @param nonsample  A dataset of non-sampled units. With covariates and small areas
 #' @param y_dip The dependent variable
 #' @param sa The name of the variable containing the areas
@@ -38,9 +39,7 @@
 #'  z The poverty line
 #'
 #' @export
-#' @import gamlss
-#' @import dplyr
-#' @import splitstackshape
+#'
 #' @examples
 #'
 #' ##################
@@ -51,7 +50,7 @@
 #'   sample = s_data, nonsample = pop_data, y_dip="y",
 #'   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
 #'   f3 = NULL, f4 = NULL, fdis = NO, R = 2,
-#'   Dis = rNO,  param = "both",
+#'   Dis = rNO, param = "both",
 #'   tau.fix = NULL, nu.fix = NULL
 #' )
 #'
@@ -68,11 +67,10 @@
 #'  )
 #' est$estimates
 #'
-#' @references Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.
+#' @references Mori, L., & Ferrante, M. R. (2024). Small area estimation under unit-level generalized additive models for location, scale and shape. Journal of Survey Statistics and Methodology, 1–37
 #'  Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597.
 #' @author Lorenzo Mori and Maria Rosaria Ferrante
 #' @note With "object"$input_var$fit is possible to use all the classical function used by gamlss
-#'  The Small Area have to be denoted with a number from 1 to D
 
 est_saegamlss <- function(sample, nonsample, y_dip, sa, f1, f2 = NULL,
                           f3 = NULL, f4 = NULL, fdis, R = 50, Dis,
@@ -81,16 +79,16 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, f1, f2 = NULL,
 
   set.seed(seed)
 
-
+  sample[[sa]] = sample[[sa]] %>% as.factor()
+  sa_name = sa
   Ni <- table(nonsample[[sa]]) %>% as.vector()
   np <- count_arguments(Dis)-1
   ni <- table(sample[[sa]]) %>% as.vector()
   y <- sample[[y_dip]]
   sa_n <- nonsample[[sa]]
-  n_sa <-  levels (sample[[sa]] %>% as.vector())
+  n_sa <-  levels (sample[[sa]])
   mixed <- NULL
   D <- length(Ni)
-  sa_name = "sa"
   sa <- unique.numeric_version(sample[[sa]])
 
   #if (is.null(nRS)) nRS <- 150
@@ -310,8 +308,8 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, f1, f2 = NULL,
     }
 
 
-  input_var <- list(y=y_dip, sa = sa_name,
-                    "fit" = gam1, "f1" = f1, "f2" = f2, "f3" = f3, "f4" = f4, "fdis" = fdis, Dis = Dis,
+  input_var <- list("y" = y_dip, "sa" = sa_name,
+                    "fit" = gam1, "f1" = f1, "f2" = f2, "f3" = f3, "f4" = f4, "fdis" = fdis, "Dis" = Dis,
                     "nRS" = 100, "nCG" = 100, "R" = R, "D" = D, "Ni" = Ni, "ni" = ni,
                     "nu.fix" = nu.fix, "tau.fix" = tau.fix, "param" = param, "origindata" = sample, "z" = z,
                     "nonsample" = nonsample

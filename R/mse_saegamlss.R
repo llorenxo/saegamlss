@@ -1,6 +1,6 @@
 #' Bootstrap Mean Square Error for SAE GAMLSS
 #'
-#' @description Compute the bootstrap MSE for the estimation of the mean and the HCR
+#' @description Compute the parametric bootstrap MSE for the estimation of the mean and the HCR or a self-defined parameter.
 #'
 #' @param est An object obtained with est_saegamlss()
 #' @param loop Number of loop of bootstrap. Default is 200
@@ -12,13 +12,9 @@
 #' @param cov4 A matrix or a data frame with covariates for the whole population used for tau. If an intercept is used the first columns have to be a vector of 1
 #' @param seed The seed. Default is 123
 #'
-#' @return an object of class "saegamlss_class" containing the MSE of the mean or/and HCR for each area
-#'  and all the values returned by est_saegamlss()
+#' @return an object of class "saegamlss_class" containing the MSE of the estimated parameter for each area
+#'         and all the values returned by est_saegamlss()
 #' @export
-#' @import gamlss
-#' @import dplyr
-#' @import splitstackshape
-#' @import utils
 #'
 #' @examples
 #'
@@ -75,8 +71,8 @@
 #'
 #' MSE$est_mse
 #'
-#' @references Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.
-#'  Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597.
+#' @references Mori, L., & Ferrante, M. R. (2024). Small area estimation under unit-level generalized additive models for location, scale and shape. Journal of Survey Statistics and Methodology, 1–37
+#'  Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597
 #' @author Lorenzo Mori and Maria Rosaria Ferrante
 
 mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
@@ -88,11 +84,13 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
   data <- rbind( est$input_var$origindata  %>%
                  dplyr::select( dplyr::all_of(colnames(est$input_var$nonsample))),
                  est$input_var$nonsample
+
                  )
   data <- data %>% dplyr::mutate(id = row_number())
 
   sa <- est$input_var$sa
-  samplesize <- est$input_var$origindata %>% dplyr::count(sa )%>% dplyr::pull()/ sum(est$input_var$Ni)
+  n_sa <-  levels (est$input_var$origindata[[sa]])
+  samplesize <- est$input_var$origindata %>% dplyr::count( sa )%>% dplyr::pull()/ sum(est$input_var$Ni)
   D <- est$input_var$D
   Dis <- est$input_var$Dis
   Ni <- est$input_var$Ni
@@ -360,7 +358,7 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
                           "Mean.CV" =  sqrt(MSE) / abs(est$estimates$Mean),
                           "HCR.CV" = sqrt(mse)/  abs(est$estimates$HCR)
                           )
-    rownames(est_mse) <- levels(sa)
+    rownames(est_mse) <- n_sa
 
 
 
@@ -371,7 +369,7 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
                            "Mean.SD" =  sqrt(MSE),
                            "Mean.CV" =  sqrt(MSE) / abs(est$estimates$Mean)
                            )
-    rownames(est_mse) <- levels(sa)
+    rownames(est_mse) <- n_sa
 
 
   } else {
@@ -381,7 +379,7 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
                            "HCR.SD" =  sqrt(mse),
                            "HCR.CV" = sqrt(mse)/  abs(est$estimates$HCR)
                            )
-    rownames(est_mse) <- levels(sa)
+    rownames(est_mse) <- n_sa
 
   }
     } else{
@@ -391,13 +389,14 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
                            "Param.SD" =  sqrt(mse_p),
                            "Param.CV" =  sqrt(mse_p) / abs(est$estimates$Parameter)
                             )
-    rownames(est_mse) <- levels(sa)
+    rownames(est_mse) <- n_sa
   }
 
 
 
   #rm(fdis, envir = .GlobalEnv)
-  result <- list("est_mse" = est_mse, "estimates" = est, "replicates"=loop)
+  result <- list("est_mse" = est_mse, "estimates" = est$estimates, "replicates"=loop,
+                 "input_var" = est$input_var)
   attr(result, "class") <- "saegamlss_class"
 
   return(result)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/direct_HT.R
 \name{direct_HT}
 \alias{direct_HT}
-\title{Direct Horvitz-Thompson estimatorof the mean}
+\title{Direct Horvitz-Thompson estimator of the mean}
 \usage{
 direct_HT(
   sample,
@@ -20,7 +20,7 @@ direct_HT(
 \arguments{
 \item{sample}{The data-set of sampled units containing y, sa, and pi}
 
-\item{y}{The name of the responde variable}
+\item{y}{The name of the  variable of interest}
 
 \item{sa}{The name of the Small Areas}
 
@@ -39,11 +39,10 @@ direct_HT(
 \item{fpc}{Default to TRUE, logical for whether or not the variance calculation should include a finite population correction when calculating the "LinHTSRS" or the "SRSbootstrap" variance estimator}
 }
 \value{
-A list with the Horvitz-Thompson estimate of the mean, the variance, the Standard Deviation and the Coefficient of Variation for each Area
+An object of class "saegamlss_class" with the Horvitz-Thompson estimate of the mean, the variance, the Standard Deviation and the Coefficient of Variation for each Area
 }
 \description{
-Compute the the Horvitz-Thompson Estimator for a finite population mean/proportion based on sample data
-collected from a complex sampling design for Small Area.
+Compute the Horvitz-Thompson estimator for a finite population mean or proportion based on sample data collected from a complex sampling design for small areas.
 }
 \examples{
 
@@ -63,4 +62,10 @@ dir = direct_HT(y = "y", sa = "sa", pi = "pi", sample = s_data,
 
 dir$results_HT
 
+}
+\references{
+Wolter, Kirk M., and Kirk M. Wolter. Introduction to variance estimation. Vol. 53. New York: Springer, 2007.
+}
+\author{
+Lorenzo Mori and Maria Rosaria Ferrante
 }

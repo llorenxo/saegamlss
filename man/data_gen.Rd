@@ -56,7 +56,7 @@ data_gen(
 
 \item{Dis}{Type of distribution in form of rDis where Dis is one of the distribution allowed by GAMLSS.}
 
-\item{l}{A vector,  of maximum length equal to 4, in which each space is a function (the inverse of the link-function) to be applied to the corresponding parameter, i.e. mu, sigma, nu and tau.}
+\item{l}{A vector,  of maximum length equal to 4, in which each space is a function (the inverse of the link-function) to be applied to the corresponding parameter, i.e. mu, sigma, nu and tau}
 
 \item{sigma}{A vector,  of maximum length equal to 4, of standard deviation used to generate random effects}
 
@@ -78,9 +78,9 @@ data_gen(
 An object of class "saegamlss_class" of length M. Each element of this list is a data frame that has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)
 }
 \description{
-A tool to generate a population with the dependent variable that is defined in terms of a given distribution and a set of (fixed) covariates.
- The dependent variable could be generated for more than 100 distributions which have at maximum 4 parameters. Each parameter could be defined in terms of covariates and random-effects.
- The dependent variable when the link function is the Identity one could include  an additional error-term. For the Normal distribution is possible to add heteroschedasticity.
+A tool to generate a population with a dependent variable defined in terms of a given distribution and a set of (fixed) covariates.
+The dependent variable can be generated for more than 100 distributions, each with a maximum of 4 parameters. Each parameter can be defined in terms of covariates and random effects.
+When the link function is the identity function, the dependent variable may include an additional error term. For the normal distribution, it is possible to add heteroscedasticity.
 }
 \note{
 The definition of the heteroschedastic term follows Ramirez-Aldana, R., & Naranjo, L. (2021).
@@ -108,7 +108,7 @@ data_gen(
 
 }
 \references{
-Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.
+Mori, L., & Ferrante, M. R. (2024). Small area estimation under unit-level generalized additive models for location, scale and shape. Journal of Survey Statistics and Methodology, 1–37
  Ramirez-Aldana, R., & Naranjo, L. (2021). Random intercept and linear mixed models including heteroscedasticity in a logarithmic scale: Correction terms and prediction in the original scale. PloS one, 16(4), e0249910.
  Rigby, R. A., & Stasinopoulos, D. M. (2005). Generalized additive models for location, scale and shape. Journal of the Royal Statistical Society: Series C (Applied Statistics), 54(3), 507–554.
 }

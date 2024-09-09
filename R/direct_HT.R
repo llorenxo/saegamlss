@@ -1,12 +1,10 @@
-
-#' Direct Horvitz-Thompson estimatorof the mean
+#' Direct Horvitz-Thompson estimator of the mean
 #'
 #' @description
-#' Compute the the Horvitz-Thompson Estimator for a finite population mean/proportion based on sample data
-#' collected from a complex sampling design for Small Area.
+#' Compute the Horvitz-Thompson estimator for a finite population mean or proportion based on sample data collected from a complex sampling design for small areas.
 #'
 #' @param sample The data-set of sampled units containing y, sa, and pi
-#' @param y The name of the responde variable
+#' @param y The name of the  variable of interest
 #' @param sa The name of the Small Areas
 #' @param pi The name of the first order inclusion probability
 #' @param pi2 A square matrix of the joint inclusion probabilities. Needed for the "LinHT" variance estimator
@@ -18,7 +16,7 @@
 #'
 #' @importFrom mase horvitzThompson
 #'
-#' @return A list with the Horvitz-Thompson estimate of the mean, the variance, the Standard Deviation and the Coefficient of Variation for each Area
+#' @return An object of class "saegamlss_class" with the Horvitz-Thompson estimate of the mean, the variance, the Standard Deviation and the Coefficient of Variation for each Area
 #' @export
 #'
 #' @examples
@@ -39,6 +37,9 @@
 #'
 #' dir$results_HT
 #'
+#' @references Wolter, Kirk M., and Kirk M. Wolter. Introduction to variance estimation. Vol. 53. New York: Springer, 2007.
+#'
+#' @author Lorenzo Mori and Maria Rosaria Ferrante
 
 
 

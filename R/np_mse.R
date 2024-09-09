@@ -1,6 +1,6 @@
 #' Non-parametric MSE for simplified SAE-GAMLSS
 #' @description Compute the Non-parametric MSE for simplified SAE-GAMLSS for three possible different
-#' indicators (Gini, Theil, Atkinson)
+#' indicators (Gini, Theil, Atkinson).
 #'
 #' @param est An object of class "saegamlss_class" obtained with \code{sa_p_index}
 #' @param ncomp The number of components of each household
@@ -10,7 +10,6 @@
 #'
 #' @return An object of class "saegamlss_class" containing the values of the MSE for each area and for each index
 #'
-#' @author Lorenzo Mori and Maria Rosaria Ferrante
 #' @export
 #'
 #' @examples
@@ -26,31 +25,31 @@
 #'
 #' np <- np_mse(est = index_est, ncomp = "ncomp", R = 2)
 #'
-#' np$Gini.MSE
+#' np$est_mse
 #'
-
+#' @author Lorenzo Mori and Maria Rosaria Ferrante
 
 np_mse <- function(est, ncomp,  R = 200){
 
 
-  set.seed(est$index_est$seed)
+  set.seed(est$input_var$seed)
 
   data <- est$input_var$sample
-  y <- est$index_est$y
-  sa <- est$index_est$sa
+  y <- est$input_var$y
+  sa <- est$input_var$sa
   ncomp <- data[[ncomp]]
   fdis <- est$input_var$fdis
   index <- est$input_var$index
   epsilon <- est$input_var$epsilon
-
+  sa_names <- est$input_var$sa_names
   f1 <- y ~1 + random(as.factor(sa))
   f2 <- f3 <- f4 <- y ~1
 
-  if(isTRUE(est$index_est$sigma.f))f2 <- f1
-  if(isTRUE(est$index_est$nu.f))f3 <- f1
-  if(isTRUE(est$index_est$tau.f))f4 <- f1
+  if(isTRUE(est$input_var$sigma.f))f2 <- f1
+  if(isTRUE(est$input_var$nu.f))f3 <- f1
+  if(isTRUE(est$input_var$tau.f))f4 <- f1
 
-  if (is.null(est$index_est$w)) data <- data %>% mutate(w = rep(1:nrow(data)))
+  if (is.null(est$input_var$w)) data <- data %>% mutate(w = rep(1:nrow(data)))
 
 
 
@@ -73,7 +72,7 @@ for (t2 in 1:R){
   s_b <- s2[1,]
   ss <- s2
 
-  for (i in 1:l_sa){
+  for (i in sa_names){
 
     s_b_sa1 <- subset(ss, sa==i)
     s_b_sa1$id <- c(1: nrow(s_b_sa1))
@@ -223,7 +222,7 @@ for (t2 in 1:R){
   }
 
 
-  rownames(result) <- levels(sa)
+  rownames(result) <- levels(sa_names)
 
 
 

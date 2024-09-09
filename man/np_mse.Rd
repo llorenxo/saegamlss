@@ -18,7 +18,7 @@ An object of class "saegamlss_class" containing the values of the MSE for each a
 }
 \description{
 Compute the Non-parametric MSE for simplified SAE-GAMLSS for three possible different
-indicators (Gini, Theil, Atkinson)
+indicators (Gini, Theil, Atkinson).
 }
 \examples{
 

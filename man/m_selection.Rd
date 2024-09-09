@@ -5,7 +5,7 @@
 \title{Small area model selection within GAMLSS}
 \usage{
 m_selection(
-  s_data,
+  sample,
   y,
   f_cov,
   kp = 2,
@@ -19,13 +19,13 @@ m_selection(
 )
 }
 \arguments{
-\item{s_data}{The dataset with sampled units}
+\item{sample}{The dataset with sampled units}
 
 \item{y}{The name of dependent variable}
 
 \item{f_cov}{A formula containing all the possible covariates and/or additive terms (i.e. x1+x2+x3+random(x4))}
 
-\item{kp}{the penalty for the GAIC (Step 1) with default values kp=2 the standard AIC.}
+\item{kp}{the penalty for the GAIC (Step 1) with default values kp = 2 the standard AIC}
 
 \item{ndis}{Number of distribution to be consider at the first step. Default is 3}
 
@@ -45,10 +45,7 @@ m_selection(
 An object of class "saegamlss_class", named results, with the results of each steps and the GAIC of all the tested distributions at step 1.
 }
 \description{
-The function select the final SAE-GAMLSS model following three steps as described by Mori and Ferrante (2023)
-}
-\note{
-The summary (Step2) do not reports results on the random effects as usual for GAMLSS. See Step2 select_v for the random effects
+The function selects the final SAE-GAMLSS model following three steps as described by Mori and Ferrante (2024).
 }
 \examples{
 
@@ -57,13 +54,10 @@ The summary (Step2) do not reports results on the random effects as usual for GA
 ###Using s_data###
 ##################
 
-set.seed(123)
 
-
-
-sol <- m_selection(s_data = s_data, y = "y",
+sol <- m_selection(sample = s_data, y = "y",
                    f_cov = ~x1+x2+x3+random(sa), ndis = 1,
-                   R = 2, k = 2, type = "A", fix_dis = "NO",
+                   R = 2, k = 2, type = "B", fix_dis = "NO",
                    seed = 123, kp = 2)
 
 #Step 1
@@ -78,11 +72,9 @@ sol$step2
 
 sol$step3
 
-
 }
 \references{
-Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.
- Stasinopoulus et al. (2019). Flexible regression and smoothing using GAMLSS in R.
+Mori, L., & Ferrante, M. R. (2024). Small area estimation under unit-level generalized additive models for location, scale and shape. Journal of Survey Statistics and Methodology, 1–37
  Rigby, R. A., & Stasinopoulos, D. M. (2005). Generalized additive models for location, scale and shape. Journal of the Royal Statistical Society: Series C (Applied Statistics), 54(3), 507–554.
 }
 \author{

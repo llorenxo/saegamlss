@@ -60,7 +60,7 @@ index_est <- sa_p_index(sample = s_data, y = "y",
                         sigma.f = TRUE, index = "all")
 
 index_est$estimates_par
-index_est$Gini
+index_est
 
 }
 \author{

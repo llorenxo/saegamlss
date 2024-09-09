@@ -18,7 +18,6 @@
 #' the estimated distribution parameters for each area
 #' @export
 #'
-#' @author Lorenzo Mori and Maria Rosaria Ferrante
 #' @examples
 #'
 #' ##################
@@ -31,8 +30,9 @@
 #'                         sigma.f = TRUE, index = "all")
 #'
 #' index_est$estimates_par
-#' index_est$Gini
+#' index_est
 #'
+#' @author Lorenzo Mori and Maria Rosaria Ferrante
 
 sa_p_index <- function (sample, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  sa, w = NULL, fdis,
                         index = "all", epsilon = 1, seed = 123){
@@ -53,6 +53,7 @@ sa_p_index <- function (sample, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  s
                      )
 
   sa <- sample[[sa]] %>% as.factor()
+  sa_names <- unique(sa)
   y <- sample[[y]]
   f1 <- y ~1 + random(sa)
   f2 <- f3 <- f4 <- y ~1
@@ -94,59 +95,80 @@ sa_p_index <- function (sample, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  s
                             "sigma_est"=rep(NA_integer_, l_sa),
                             "nu_est"=rep(NA_integer_, l_sa),
                             "tau_est"=rep(NA_integer_, l_sa))
+    con = 0
 
-    for (i in 1:l_sa) {
+    for (i in sa_names) {
+
+      con = con + 1
+
       a <- subset(sample, sa==i)
 
       if (index == "all" | index =="Gini"){
+
+
       gini_gamlss <- rbind(gini_gamlss, p_index(mu=a$mu_d[1], sigma=a$sigma_d[1],
                                                 nu=a$nu_d[1], tau=a$tau_d[1], fdis= fdis,
                                                 index="Gini", epsilon = epsilon )$index$P_Gini)
+
       }
 
       if (index == "all" | index =="Theil"){
+
+
       theil_gamlss <- rbind(theil_gamlss, p_index(mu=a$mu_d[1], sigma=a$sigma_d[1],
                                                nu=a$nu_d[1], tau=a$tau_d[1], fdis=fdis,
                                                index="Theil", epsilon = epsilon )$index$P_Theil)
       }
 
       if (index == "all" | index =="Atkinson"){
+
+
       atkinson_gamlss <- rbind(atkinson_gamlss, p_index(mu=a$mu_d[1], sigma=a$sigma_d[1],
                                                      nu=a$nu_d[1], tau=a$tau_d[1], fdis=fdis,
                                                      index="Atkinson", epsilon = epsilon )$index$P_Atkinson)
+
       }
 
-      if (!is.null(a$mu_d[1]))est_gamlss[i,2]=a$mu_d[1]
-      if (!is.null(a$sigma_d[1]))est_gamlss[i,3]=a$sigma_d[1]
-      if (!is.null(a$nu_d[1]))est_gamlss[i,4]=a$nu_d[1]
-      if (!is.null(a$tau_d[1]))est_gamlss[i,5]=a$tau_d[1]
+      if (!is.null(a$mu_d[1])) est_gamlss[con,2]=a$mu_d[1]
+      if (!is.null(a$sigma_d[1])) est_gamlss[con,3]=a$sigma_d[1]
+      if (!is.null(a$nu_d[1])) est_gamlss[con,4]=a$nu_d[1]
+      if (!is.null(a$tau_d[1])) est_gamlss[con,5]=a$tau_d[1]
 
     }
-     est_gamlss <- est_gamlss[, colSums(is.na(est_gamlss)) < nrow(est_gamlss)]
 
+    est_gamlss <- est_gamlss[, colSums(is.na(est_gamlss)) < nrow(est_gamlss)]
+    rownames(est_gamlss) <- levels(sa)
 
 
     if (index=="all"){
 
-      result <- list("Gini"=gini_gamlss[-1], "Theil"=theil_gamlss[-1], "Atkinson"=atkinson_gamlss[-1], "estimates_par"=est_gamlss, "model"=gamlss_reg)
+      result <- list("Gini"=gini_gamlss[-1] %>% magrittr::set_names(levels(sa)) ,
+                     "Theil"=theil_gamlss[-1] %>% magrittr::set_names(levels(sa)),
+                     "Atkinson"=atkinson_gamlss[-1] %>% magrittr::set_names(levels(sa)),
+                     "estimates_par"=est_gamlss)
 
       } else if (index=="Gini"){
 
-         result <- list("Gini"=gini_gamlss[-1], "estimates_par"=est_gamlss, "model"=gamlss_reg)
+         result <- list("Gini"=gini_gamlss[-1]  %>% magrittr::set_names(levels(sa)),
+                        "estimates_par"=est_gamlss)
 
          } else if (index=="Theil"){
 
-            result <- list("Theil"=theil_gamlss[-1], "estimates_par"=est_gamlss, "model"=gamlss_reg)
+            result <- list("Theil"=theil_gamlss[-1] %>% magrittr::set_names(levels(sa)),
+                           "estimates_par"=est_gamlss)
 
             } else {
 
-              result <- list("Atkinson"=atkinson_gamlss[-1], "estimates_par"=est_gamlss, "model"=gamlss_reg)
+              result <- list("Atkinson"=atkinson_gamlss[-1] %>% magrittr::set_names(levels(sa)),
+                             "estimates_par"=est_gamlss)
 
             }
 
-    result$input_var =input_var
+    input_var$fit = gamlss_reg
+    input_var$sa_names = sa_names
+    result$input_var <- input_var
 
-     attr(result, "class") <- "saegamlss_class"
+    attr(result, "class") <- "saegamlss_class"
      return(result)
 }
 

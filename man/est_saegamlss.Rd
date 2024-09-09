@@ -2,7 +2,7 @@
 % Please edit documentation in R/est_saegamlss.R
 \name{est_saegamlss}
 \alias{est_saegamlss}
-\title{Monte Carlo estimation of mean and HCR based on SAE GAMLSS}
+\title{Estimation of mean and HCR based on SAE-GAMLSS}
 \usage{
 est_saegamlss(
   sample,
@@ -24,7 +24,7 @@ est_saegamlss(
 )
 }
 \arguments{
-\item{sample}{A dataset of sampled units.}
+\item{sample}{A dataset of sampled units}
 
 \item{nonsample}{A dataset of non-sampled units. With covariates and small areas}
 
@@ -76,11 +76,10 @@ an object of class "saegamlss_class" which contains two list. The first list, na
  z The poverty line
 }
 \description{
-A function to estimate the mean or/and the HCR derived from unit-level small area estimation based on generalized additive models for location, scale and shape
+A function to estimate the mean and/or the HCR or a self-defined parameter derived from unit-level small area estimation using generalized additive models for location, scale, and shape.
 }
 \note{
 With "object"$input_var$fit is possible to use all the classical function used by gamlss
- The Small Area have to be denoted with a number from 1 to D
 }
 \examples{
 
@@ -111,7 +110,7 @@ est$estimates
 
 }
 \references{
-Mori, L., & Ferrante, M. R. (2023). Small area estimation under unit-level generalized additive models for location, scale and shape. arXiv e-prints, arXiv-2302.
+Mori, L., & Ferrante, M. R. (2024). Small area estimation under unit-level generalized additive models for location, scale and shape. Journal of Survey Statistics and Methodology, 1–37
  Graf, M., Marin, J. M., & Molina, I. (2019). A generalized mixed model for skewed distributions applied to small area estimation. Test, 28(2), 565–597.
 }
 \author{

@@ -11,7 +11,6 @@
 #'
 #' @return The estimated index (indicators)
 #' @export
-#' @author Lorenzo Mori and Maria Rosaria Ferrante
 #' @examples
 #'
 #'
@@ -29,6 +28,7 @@
 #' p_index(sigma=0.8, fdis="LOGNO", index="Atkinson", epsilon=2)
 #' p_index(sigma=0.8, fdis="LOGNO", index="all", epsilon=2)
 #'
+#' @author Lorenzo Mori and Maria Rosaria Ferrante
 
 p_index  <- function (mu, sigma, nu, tau, fdis, index="all", epsilon=1) {
 
