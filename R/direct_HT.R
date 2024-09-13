@@ -16,7 +16,7 @@
 #'
 #' @importFrom mase horvitzThompson
 #'
-#' @return An object of class "saegamlss_class" with the Horvitz-Thompson estimate of the mean, the variance, the Standard Deviation and the Coefficient of Variation for each Area
+#' @return An object of class "saegamlss" with the Horvitz-Thompson estimate of the mean, the variance, the Standard Deviation and the Coefficient of Variation for each Area
 #' @export
 #'
 #' @examples
@@ -87,7 +87,7 @@ direct_HT <- function(sample, y, sa, pi, pi2 = NULL, N = NULL, var_est = TRUE, v
 
   results = list("results_HT" = results, "type" = var_method, "B" = B)
 
-  attr(results, "class") <- "saegamlss_class"
+  attr(results, "class") <- "saegamlss"
 
   return(results)
 

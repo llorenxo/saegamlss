@@ -20,7 +20,7 @@
 #' @param seed The seed. Default is 123
 #'
 #'
-#' @return an object of class "saegamlss_class" which contains two list. The first list, named est has:
+#' @return an object of class "saegamlss" which contains two list. The first list, named est has:
 #'  ME 1xD vector with the estimate of the mean and
 #'  HCR 1xD vector with the estimate of the HCR.
 #'  The second, named input_var has:
@@ -317,7 +317,7 @@ est_saegamlss <- function(sample, nonsample, y_dip, sa, f1, f2 = NULL,
 
   result <- list("estimates" = estim, "input_var" = input_var)
 
-  attr(result, "class") <- "saegamlss_class"
+  attr(result, "class") <- "saegamlss"
 
   return(result)
 }

@@ -75,7 +75,7 @@ data_gen(
 \item{seed}{The seed. Default is 123}
 }
 \value{
-An object of class "saegamlss_class" of length M. Each element of this list is a data frame that has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)
+An object of class "saegamlss" of length M. Each element of this list is a data frame that has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)
 }
 \description{
 A tool to generate a population with a dependent variable defined in terms of a given distribution and a set of (fixed) covariates.
@@ -95,9 +95,9 @@ data_gen(
   Dis=rNO, l = c(identity), sigma = 6, sigmah = NULL,
   sigmae = 22, costh = NULL, M = 2
 )
-#
+
 # Heteroschedastic Normal data
-#
+
 data_gen(
   Ni = rep(10, 4), D = 4, ty = "het", k = 100, b1 = 4,
   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,

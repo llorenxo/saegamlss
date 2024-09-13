@@ -14,7 +14,7 @@
 #' @param w Sample weights. Default is null
 #' @param seed The seed. Default is 123
 #'
-#' @return An object of class "saegamlss_class" with the estimated indicators and the value of
+#' @return An object of class "saegamlss" with the estimated indicators and the value of
 #' the estimated distribution parameters for each area
 #' @export
 #'
@@ -142,24 +142,24 @@ sa_p_index <- function (sample, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  s
 
     if (index=="all"){
 
-      result <- list("Gini"=gini_gamlss[-1] %>% magrittr::set_names(levels(sa)) ,
-                     "Theil"=theil_gamlss[-1] %>% magrittr::set_names(levels(sa)),
-                     "Atkinson"=atkinson_gamlss[-1] %>% magrittr::set_names(levels(sa)),
+      result <- list("Gini"=gini_gamlss[-1] %>% setNames(levels(sa)) ,
+                     "Theil"=theil_gamlss[-1] %>% setNames(levels(sa)),
+                     "Atkinson"=atkinson_gamlss[-1] %>% setNames(levels(sa)),
                      "estimates_par"=est_gamlss)
 
       } else if (index=="Gini"){
 
-         result <- list("Gini"=gini_gamlss[-1]  %>% magrittr::set_names(levels(sa)),
+         result <- list("Gini"=gini_gamlss[-1]  %>% setNames(levels(sa)),
                         "estimates_par"=est_gamlss)
 
          } else if (index=="Theil"){
 
-            result <- list("Theil"=theil_gamlss[-1] %>% magrittr::set_names(levels(sa)),
+            result <- list("Theil"=theil_gamlss[-1] %>% setNames(levels(sa)),
                            "estimates_par"=est_gamlss)
 
             } else {
 
-              result <- list("Atkinson"=atkinson_gamlss[-1] %>% magrittr::set_names(levels(sa)),
+              result <- list("Atkinson"=atkinson_gamlss[-1] %>% setNames(levels(sa)),
                              "estimates_par"=est_gamlss)
 
             }
@@ -168,7 +168,7 @@ sa_p_index <- function (sample, y, sigma.f = TRUE, nu.f = TRUE, tau.f = TRUE,  s
     input_var$sa_names = sa_names
     result$input_var <- input_var
 
-    attr(result, "class") <- "saegamlss_class"
+    attr(result, "class") <- "saegamlss"
      return(result)
 }
 

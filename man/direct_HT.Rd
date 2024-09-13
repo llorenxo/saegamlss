@@ -39,7 +39,7 @@ direct_HT(
 \item{fpc}{Default to TRUE, logical for whether or not the variance calculation should include a finite population correction when calculating the "LinHTSRS" or the "SRSbootstrap" variance estimator}
 }
 \value{
-An object of class "saegamlss_class" with the Horvitz-Thompson estimate of the mean, the variance, the Standard Deviation and the Coefficient of Variation for each Area
+An object of class "saegamlss" with the Horvitz-Thompson estimate of the mean, the variance, the Standard Deviation and the Coefficient of Variation for each Area
 }
 \description{
 Compute the Horvitz-Thompson estimator for a finite population mean or proportion based on sample data collected from a complex sampling design for small areas.

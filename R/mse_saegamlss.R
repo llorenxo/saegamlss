@@ -12,7 +12,7 @@
 #' @param cov4 A matrix or a data frame with covariates for the whole population used for tau. If an intercept is used the first columns have to be a vector of 1
 #' @param seed The seed. Default is 123
 #'
-#' @return an object of class "saegamlss_class" containing the MSE of the estimated parameter for each area
+#' @return an object of class "saegamlss" containing the MSE of the estimated parameter for each area
 #'         and all the values returned by est_saegamlss()
 #' @export
 #'
@@ -44,7 +44,7 @@
 #'   est = est, loop = 2,
 #'   l = c(identity, exp), Iden = TRUE,
 #'   cov1 = x[,1:2], cov2 = x[,c(1,3)], cov3 = NULL,
-#'   cov4 = NULL
+#'   cov4 = NULL, seed = 124
 #' )
 #'
 #' MSE$est_mse
@@ -352,7 +352,7 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
 
     est_mse <- data.frame("Mean.Est" = est$estimates$Mean,
                           "HCR.Est" = est$estimates$HCR,
-                          "Mean.Est" = MSE, "HCR.MSE" = mse,
+                          "Mean.MSE" = MSE, "HCR.MSE" = mse,
                           "Mean.SD" =  sqrt(MSE),
                           "HCR.SD" =  sqrt(mse),
                           "Mean.CV" =  sqrt(MSE) / abs(est$estimates$Mean),
@@ -397,7 +397,7 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
   #rm(fdis, envir = .GlobalEnv)
   result <- list("est_mse" = est_mse, "estimates" = est$estimates, "replicates"=loop,
                  "input_var" = est$input_var)
-  attr(result, "class") <- "saegamlss_class"
+  attr(result, "class") <- "saegamlss"
 
   return(result)
 }

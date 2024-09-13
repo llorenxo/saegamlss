@@ -57,7 +57,7 @@ est_saegamlss(
 \item{seed}{The seed. Default is 123}
 }
 \value{
-an object of class "saegamlss_class" which contains two list. The first list, named est has:
+an object of class "saegamlss" which contains two list. The first list, named est has:
  ME 1xD vector with the estimate of the mean and
  HCR 1xD vector with the estimate of the HCR.
  The second, named input_var has:
@@ -91,7 +91,7 @@ est <- est_saegamlss(
   sample = s_data, nonsample = pop_data, y_dip="y",
   sa="sa", f1 = y ~ x1 + random(sa), f2 = y ~ x2 + random(sa),
   f3 = NULL, f4 = NULL, fdis = NO, R = 2,
-  Dis = rNO,  param = "both",
+  Dis = rNO, param = "both",
   tau.fix = NULL, nu.fix = NULL
 )
 

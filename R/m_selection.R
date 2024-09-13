@@ -14,7 +14,7 @@
 #' @param supp Suppress the warning in the three step. Default is TRUE
 #' @param seed The seed. Default is 123
 #'
-#' @return An object of class "saegamlss_class", named results, with the results of each steps and the GAIC of all the tested distributions at step 1.
+#' @return An object of class "saegamlss", named results, with the results of each steps and the GAIC of all the tested distributions at step 1.
 #' @export
 #'
 #'
@@ -53,6 +53,7 @@ m_selection <- function(sample, y, f_cov, kp = 2,
 
   set.seed(seed)
 
+  sel2 <- NULL
 
   if(isTRUE(supp)) options(warn=-1)
 
@@ -238,7 +239,7 @@ m_selection <- function(sample, y, f_cov, kp = 2,
   results=list("step1"=sel, "step2"=select_v, "step3"=step3, "GAIC values"=res_step1,
                "sample"=s_data, "y"=y)
 
-  attr(results, "class") <- "saegamlss_class"
+  attr(results, "class") <- "saegamlss"
 
   return(results)
 }

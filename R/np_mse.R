@@ -2,13 +2,13 @@
 #' @description Compute the Non-parametric MSE for simplified SAE-GAMLSS for three possible different
 #' indicators (Gini, Theil, Atkinson).
 #'
-#' @param est An object of class "saegamlss_class" obtained with \code{sa_p_index}
+#' @param est An object of class "saegamlss" obtained with \code{sa_p_index}
 #' @param ncomp The number of components of each household
 #' @param R The number of loops to be performed. Default is 200
 #'
 #'
 #'
-#' @return An object of class "saegamlss_class" containing the values of the MSE for each area and for each index
+#' @return An object of class "saegamlss" containing the values of the MSE for each area and for each index
 #'
 #' @export
 #'
@@ -232,7 +232,7 @@ for (t2 in 1:R){
 
 
 
-  attr(result, "class") <- "saegamlss_class"
+  attr(result, "class") <- "saegamlss"
   return(result)
 
 }

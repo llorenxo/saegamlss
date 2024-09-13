@@ -1,15 +1,15 @@
-#' Summary of object of class "saegamlss_class"
+#' Summary of object of class "saegamlss"
 #' @description
-#' Summary for an object of class "saegamlss_class"
+#' Summary for an object of class "saegamlss"
 #'
-#' @param object An object of class "saegamlss_class"
+#' @param object An object of class "saegamlss"
 #' @param ... Additional parameters
 #'
-#' @return The summary of object of class "saegamlss_class"
+#' @return The summary of object of class "saegamlss"
 #' @export
 #' @examples
 #'
-#' #est_saegamlss
+#'#est_saegamlss
 #'
 #'dep.y <- data_gen(
 #'   Ni = rep(10, 4), D = 4, M = 1, ty = "no", k = 1, b1 = 10,
@@ -83,7 +83,7 @@
 #' )
 #' summary(MSE)
 
-summary.saegamlss_class <- function(object, ...){
+summary.saegamlss <- function(object, ...){
 
   if (names(object[1])=="estimates"){
 
@@ -91,17 +91,16 @@ summary.saegamlss_class <- function(object, ...){
 
     cat("\n\n",
 
-        "Estimated random-effect(s): \n\n")
-
-        print(getSmo(object$input_var$fit)$coef)
-        cat("\n\n")
+        "Estimated random-effect(s): \n\n",
+        "Mean:", mean(getSmo(object$input_var$fit)$coef), "\n",
+        "Variance:", getSmo(object$input_var$fit)$sigb2, "\n\n")
 
 
         if (!is.null(object$estimates$ME)){
 
-        cat("\n\n Estimated values of the Mean: \n\n")
+        cat("\n\n Summary of estimated values of the Mean: \n\n")
 
-        print(object$estimates$ME)
+          print( summary(object$estimates$ME) )
 
         cat("\n\n")
 
@@ -110,121 +109,72 @@ summary.saegamlss_class <- function(object, ...){
 
         if (!is.null(object$estimates$HCR)){
 
-          cat("Estimated values of the HCR: \n\n")
+          cat("Summary of estimated values of the HCR: \n\n")
 
-          print(object$estimates$HCR)
+          print(  summary(object$estimates$HCR) )
           cat("\n\n")
 
         }
 
 
         if (!is.null(object$estimates$Parameter)){
-          cat("Estimated values of the self-defined parameter: \n\n")
-         print(object$estimates$Parameter)
+          cat("Summary of estimated values of the self-defined parameter: \n\n")
+          print( summary(object$estimates$Parameter) )
 
         }
 
-  } else if (names(object[1])=="Gini" | names(object[1])=="Theil" | names(object[1])=="Atkinson"){
+  } else if (names(object[1])=="Gini" |
+             names(object[1])=="Theil" |
+             names(object[1])=="Atkinson"){
 
-    summary(object$model)
+    summary(object$input_var$fit)
 
     cat("\n\n",
         "Estimated random-effect(s): \n\n",
-        getSmo(object$model)$coef, "\n\n",
+        "Mean:", mean(getSmo(object$input_var$fit)$coef), "\n",
+        "Variance:", getSmo(object$input_var$fit)$sigb2, "\n\n",
 
-        "Estimated values of the Gini: \n\n",
+        "Summary of estimated values of the Gini index: \n\n",
 
         if (!is.null(object$Gini)){
-          object$Gini
+          print( summary(object$Gini) )
+
         }else {
+
           print("Not estimated")
+
         }, "\n\n",
-        "Estimated values of the Theil: \n\n",
+        "Summary of estimated values of the Theil index: \n\n",
 
         if (!is.null(object$Theil)){
-          object$Theil
+
+         print( summary(object$Theil) )
+
         } else {
+
           print("Not estimated")
+
         }, "\n\n",
-        "Estimated values of the Atkinson: \n\n",
+
+        "Summary of estimated values of the Atkinson index: \n\n",
 
         if (!is.null(object$Atkinson)){
-          object$Atkinson
+
+          print( summary(object$Atkinson) )
+
         } else {
+
           print("Not estimated")
+
         }, "\n\n")
 
-  } else if (names(object[[1]][1])=="P_Gini" |
-             names(object[[1]][1])=="P_Theil" |
-             names(object[[1]][1])=="P_Atkinson"){
+  }   else if ("Gini.MSE" %in% names(object[[1]]) |
+               "Theil.MSE" %in% names(object[[1]])|
+               "Atkinson.MSE" %in% names(object[[1]])){
+    cat("Summary of estimated MSE: \n\n")
 
-    cat("Assumed distribution: \n\n")
+    print( summary(object$est_mse) )
 
-    print(object[[2]])
-
-    cat("\n\n")
-
-    if("P_Gini" %in% names(object[[1]])){
-
-      cat("Estimated value of Gini index: \n\n")
-
-      print(object[[1]]$P_Gini)
-      cat("\n\n")
-
-      }
-
-    if("P_Theil" %in% names(object[[1]])){
-      cat("Estimated value of Theil index: \n\n")
-
-      print(object[[1]]$P_Theil)
-      cat("\n\n")
-
-      }
-
-    if("P_Atkinson" %in% names(object[[1]])){
-      cat("Estimated value of Atkinson index: \n\n")
-
-      print(object[[1]]$P_Atkinson)
-      cat("\n\n")
-
-
-      cat("Parameter: \n\n")
-
-
-      print(object[[3]])
-
-
-
-    }
-
-
-  }   else if (names(object[1])=="Gini.MSE"|
-               names(object[1])=="Theil.MSE"|
-               names(object[1])=="Atkinson.MSE"){
-
-    cat("\n\n",
-
-        "Estimated MSE for Gini index: \n\n",
-
-        if (!is.null(object$Gini.MSE)){
-          object$Gini.MSE
-        }else {
-          print("Not estimated")
-        }, "\n\n",
-        "Estimated MSE for Theil index: \n\n",
-
-        if (!is.null(object$Theil)){
-          object$Theil.MSE
-        } else {
-          print("Not estimated")
-        }, "\n\n",
-        "Estimated MSE for Atkinson index: \n\n",
-
-        if (!is.null(object$Atkinson)){
-          object$Atkinson.MSE
-        } else {
-          print("Not estimated")
-        }, "\n\n")
   } else if (names(object[1])=="step1") {
 
     cat("\n\n",
@@ -233,6 +183,7 @@ summary.saegamlss_class <- function(object, ...){
         "Step 2 variable selection: \n\n")
 
     for (i in 1:length(object$step1)) {
+
       print(object$step1[i])
 
       if (as.character(eval(parse(text = deparse(object$step2[i])))[[1]][2])=="NULL"){
@@ -260,6 +211,50 @@ summary.saegamlss_class <- function(object, ...){
         "Step 3 k-fold cross-validation: \n\n")
     object$step3
 
+  } else if (names(object[[1]][1])=="P_Gini" |
+             names(object[[1]][1])=="P_Theil" |
+             names(object[[1]][1])=="P_Atkinson"){
+
+    cat("Assumed distribution: \n\n")
+
+    print(object[[2]])
+
+    cat("\n\n")
+
+    if("P_Gini" %in% names(object[[1]])){
+
+      cat("Estimated value of Gini index: \n\n")
+
+      print(object[[1]]$P_Gini)
+      cat("\n\n")
+
+    }
+
+    if("P_Theil" %in% names(object[[1]])){
+      cat("Estimated value of Theil index: \n\n")
+
+      print(object[[1]]$P_Theil)
+      cat("\n\n")
+
+    }
+
+    if("P_Atkinson" %in% names(object[[1]])){
+      cat("Estimated value of Atkinson index: \n\n")
+
+      print(object[[1]]$P_Atkinson)
+      cat("\n\n")
+
+
+      cat("Avversion to inequality parameter: \n\n")
+
+
+      print(object[[3]])
+
+
+
+    }
+
+
   } else if (names(object[1])=="dataset 1") {
     cat("\n\n")
     for (i in 1:length(object)) {
@@ -272,23 +267,7 @@ summary.saegamlss_class <- function(object, ...){
 
     cat("Summary of estimated MSE: \n\n")
 
-
-        if (!is.null(object$est_mse$MSE_mean)){
-          cat("Mean:  \n\n")
-          print(summary(object$est_mse$MSE_mean))
-          cat("\n\n")
-        }
-
-        if (!is.null(object$est_mse$MSE_HCR)){
-          cat("HCR:  \n\n")
-          print(summary(object$est_mse$MSE_HCR))
-          cat("\n\n")
-        }
-    if (!is.null(object$est_mse$MSE_param)){
-      cat("Self-defined parameter:  \n\n")
-      print(summary(object$est_mse$MSE_param))
-      cat("\n\n")
-    }
+    print( summary(object$est_mse) )
 
   }
 }

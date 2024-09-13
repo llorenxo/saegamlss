@@ -9,10 +9,13 @@
 #' @importFrom stats cor
 #' @importFrom purrr pluck
 #' @importFrom stats density
+#' @importFrom nlme ranef
+#' @importFrom stats na.omit
 #' @importFrom stats fitted
 #' @importFrom stats median
 #' @importFrom stats rnorm
 #' @importFrom stats setNames
 #' @importFrom tidyr pivot_longer
+#' @importFrom xtable xtable
 ## usethis namespace: end
 NULL

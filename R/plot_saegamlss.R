@@ -1,8 +1,8 @@
-#' Plot of object of class "saegamlss_class"
+#' Plot of object of class "saegamlss"
 #' @description
-#' Function to Plot object of class "saegamlss_class"
+#' Function to Plot object of class "saegamlss"
 #'
-#' @param x An object of class "saegamlss_class"
+#' @param x An object of class "saegamlss"
 #' @param compare.Gini The MSE of a second estimator to be compared for the Gini index
 #' @param compare.Theil The MSE of a second estimator to be compared for the Theil index
 #' @param compare.Atkinson The MSE of a second estimator to be compared for the Atkinson index
@@ -11,7 +11,7 @@
 #' @param compare.param The MSE of a second estimator to be compared for the self-defined parameter
 #' @param ... Additional parameters
 #'
-#' @return Return a plot for object of class "saegamlss_class"
+#' @return Return a plot for object of class "saegamlss"
 #' @export
 #' @examples
 #'
@@ -54,7 +54,7 @@
 #'
 #'
 
-plot.saegamlss_class <- function(x, compare.Gini = NULL,
+plot.saegamlss <- function(x, compare.Gini = NULL,
                                  compare.Theil = NULL,
                                  compare.Atkinson = NULL,
                                  compare.Mean = NULL,

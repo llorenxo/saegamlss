@@ -7,14 +7,14 @@
 np_mse(est, ncomp, R = 200)
 }
 \arguments{
-\item{est}{An object of class "saegamlss_class" obtained with \code{sa_p_index}}
+\item{est}{An object of class "saegamlss" obtained with \code{sa_p_index}}
 
 \item{ncomp}{The number of components of each household}
 
 \item{R}{The number of loops to be performed. Default is 200}
 }
 \value{
-An object of class "saegamlss_class" containing the values of the MSE for each area and for each index
+An object of class "saegamlss" containing the values of the MSE for each area and for each index
 }
 \description{
 Compute the Non-parametric MSE for simplified SAE-GAMLSS for three possible different
@@ -33,7 +33,7 @@ index_est <- sa_p_index(sample = s_data, y = "y",
 
 np <- np_mse(est = index_est, ncomp = "ncomp", R = 2)
 
-np$Gini.MSE
+np$est_mse
 
 }
 \author{

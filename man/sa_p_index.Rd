@@ -42,7 +42,7 @@ sa_p_index(
 \item{seed}{The seed. Default is 123}
 }
 \value{
-An object of class "saegamlss_class" with the estimated indicators and the value of
+An object of class "saegamlss" with the estimated indicators and the value of
 the estimated distribution parameters for each area
 }
 \description{

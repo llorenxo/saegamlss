@@ -36,7 +36,7 @@ mse_saegamlss(
 \item{seed}{The seed. Default is 123}
 }
 \value{
-an object of class "saegamlss_class" containing the MSE of the estimated parameter for each area
+an object of class "saegamlss" containing the MSE of the estimated parameter for each area
         and all the values returned by est_saegamlss()
 }
 \description{
@@ -70,7 +70,7 @@ MSE <- mse_saegamlss(
   est = est, loop = 2,
   l = c(identity, exp), Iden = TRUE,
   cov1 = x[,1:2], cov2 = x[,c(1,3)], cov3 = NULL,
-  cov4 = NULL
+  cov4 = NULL, seed = 124
 )
 
 MSE$est_mse

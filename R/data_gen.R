@@ -30,7 +30,7 @@
 #' @import gamlss
 #' @import dplyr
 #' @import splitstackshape
-#' @return An object of class "saegamlss_class" of length M. Each element of this list is a data frame that has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)
+#' @return An object of class "saegamlss" of length M. Each element of this list is a data frame that has: the dependent variable y, a set of fixed covariates, the small area column (sa) and the id column (id)
 #' @export
 #' @note The definition of the heteroschedastic term follows Ramirez-Aldana, R., & Naranjo, L. (2021).
 #' @examples # Normal data (2 populations)
@@ -42,9 +42,9 @@
 #'   Dis=rNO, l = c(identity), sigma = 6, sigmah = NULL,
 #'   sigmae = 22, costh = NULL, M = 2
 #' )
-#' #
+#'
 #' # Heteroschedastic Normal data
-#' #
+#'
 #' data_gen(
 #'   Ni = rep(10, 4), D = 4, ty = "het", k = 100, b1 = 4,
 #'   x1 = rnorm(40, 0, 1), b2 = NULL, x2 = NULL, b3 = NULL,
@@ -119,6 +119,7 @@ data_gen <- function(Ni, D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NULL, x3 = NUL
   ym <- matrix(nrow = sum(Ni), ncol = M)
 
   for (i in 1:M) {
+
     message("Generating ", i, " of ", M)
     if (ty == "no") {
       sigma1 <- sigma[1]
@@ -278,7 +279,7 @@ data_gen <- function(Ni, D, k, b1, x1, b2 = NULL, x2 = NULL, b3 = NULL, x3 = NUL
     names(list.data)[i] <- paste("dataset", i)
   }
 
-  attr(list.data, "class") <- "saegamlss_class"
+  attr(list.data, "class") <- "saegamlss"
 
   return(list.data)
 }

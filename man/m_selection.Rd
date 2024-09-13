@@ -42,7 +42,7 @@ m_selection(
 \item{seed}{The seed. Default is 123}
 }
 \value{
-An object of class "saegamlss_class", named results, with the results of each steps and the GAIC of all the tested distributions at step 1.
+An object of class "saegamlss", named results, with the results of each steps and the GAIC of all the tested distributions at step 1.
 }
 \description{
 The function selects the final SAE-GAMLSS model following three steps as described by Mori and Ferrante (2024).

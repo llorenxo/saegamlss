@@ -173,7 +173,7 @@ p_index  <- function (mu, sigma, nu, tau, fdis, index="all", epsilon=1) {
 
   }
 
-  attr(index, "class") <- "saegamlss_class"
+  attr(index, "class") <- "saegamlss"
 
   return(index)
 
