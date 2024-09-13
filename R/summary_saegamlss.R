@@ -96,11 +96,11 @@ summary.saegamlss <- function(object, ...){
         "Variance:", getSmo(object$input_var$fit)$sigb2, "\n\n")
 
 
-        if (!is.null(object$estimates$ME)){
+        if (!is.null(object$estimates$Mean)){
 
         cat("\n\n Summary of estimated values of the Mean: \n\n")
 
-          print( summary(object$estimates$ME) )
+          print( summary(object$estimates$Mean) )
 
         cat("\n\n")
 

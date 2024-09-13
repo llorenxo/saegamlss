@@ -21,16 +21,17 @@
 #' p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Atkinson", epsilon=2)
 #' p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="all", epsilon=2)
 #'
-#' #Using Log-Normal distribution
+#' #Using Exponential distribution
 #'
-#' p_index(sigma=0.8, fdis="LOGNO", index="Gini", epsilon=2)
-#' p_index(sigma=0.8, fdis="LOGNO", index="Theil", epsilon=2)
-#' p_index(sigma=0.8, fdis="LOGNO", index="Atkinson", epsilon=2)
-#' p_index(sigma=0.8, fdis="LOGNO", index="all", epsilon=2)
+#' p_index(mu = 10, sigma=0.8, fdis="EXP", index="Gini", epsilon=2)
+#' p_index(mu = 10, sigma=0.8, fdis="EXP", index="Theil", epsilon=2)
+#' p_index(mu = 10, sigma=0.8, fdis="EXP", index="Atkinson", epsilon=2)
+#' p_index(mu = 10, sigma=0.8, fdis="EXP", index="all", epsilon=2)
 #'
 #' @author Lorenzo Mori and Maria Rosaria Ferrante
 
-p_index  <- function (mu, sigma, nu, tau, fdis, index="all", epsilon=1) {
+p_index  <- function (mu, sigma = NULL, nu = NULL,
+                      tau = NULL, fdis, index="all", epsilon=1) {
 
 
   if (index=="all"){
@@ -165,11 +166,19 @@ p_index  <- function (mu, sigma, nu, tau, fdis, index="all", epsilon=1) {
 
   if ("P_Atkinson" %in% names(index)) {
 
-  index = list(index = index, dist = fdis, Atkinson_parameter = epsilon)
+  index = list(index = index, dist = list(fdis = fdis,
+                                          mu = mu,
+                                          sigma = sigma,
+                                          nu = nu,
+                                          tau = tau), Atkinson_parameter = epsilon)
 
   } else {
 
-    index = list(index = index, dist = fdis)
+    index = list(index = index, dist = list(fdis = fdis,
+                                            mu = mu,
+                                            sigma = sigma,
+                                            nu = nu,
+                                            tau = tau))
 
   }
 

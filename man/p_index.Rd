@@ -4,7 +4,15 @@
 \alias{p_index}
 \title{Distribution based Gini, Theil and Atkinson index estimation}
 \usage{
-p_index(mu, sigma, nu, tau, fdis, index = "all", epsilon = 1)
+p_index(
+  mu,
+  sigma = NULL,
+  nu = NULL,
+  tau = NULL,
+  fdis,
+  index = "all",
+  epsilon = 1
+)
 }
 \arguments{
 \item{mu}{The estimated value of mu}
@@ -37,12 +45,12 @@ p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Theil", epsilon=2)
 p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="Atkinson", epsilon=2)
 p_index(mu=5, sigma=2, nu=1, tau=1, fdis="GB2", index="all", epsilon=2)
 
-#Using Log-Normal distribution
+#Using Exponential distribution
 
-p_index(sigma=0.8, fdis="LOGNO", index="Gini", epsilon=2)
-p_index(sigma=0.8, fdis="LOGNO", index="Theil", epsilon=2)
-p_index(sigma=0.8, fdis="LOGNO", index="Atkinson", epsilon=2)
-p_index(sigma=0.8, fdis="LOGNO", index="all", epsilon=2)
+p_index(mu = 10, sigma=0.8, fdis="EXP", index="Gini", epsilon=2)
+p_index(mu = 10, sigma=0.8, fdis="EXP", index="Theil", epsilon=2)
+p_index(mu = 10, sigma=0.8, fdis="EXP", index="Atkinson", epsilon=2)
+p_index(mu = 10, sigma=0.8, fdis="EXP", index="all", epsilon=2)
 
 }
 \author{

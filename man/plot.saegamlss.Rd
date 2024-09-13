@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_saegamlss.R
 \name{plot.saegamlss}
 \alias{plot.saegamlss}
-\title{Plot of object of class "saegamlss"}
+\title{Plot function}
 \usage{
 \method{plot}{saegamlss}(
   x,
@@ -12,6 +12,8 @@
   compare.Mean = NULL,
   compare.HCR = NULL,
   compare.param = NULL,
+  xlim = c(0, 100),
+  ylim = c(0, 1),
   ...
 )
 }
@@ -29,6 +31,10 @@
 \item{compare.HCR}{The MSE of a second estimator to be compared for the HCR}
 
 \item{compare.param}{The MSE of a second estimator to be compared for the self-defined parameter}
+
+\item{xlim}{A vector with the x-axis limits}
+
+\item{ylim}{A vector with the y-axis limits}
 
 \item{...}{Additional parameters}
 }
@@ -51,12 +57,13 @@ dep.y <- data_gen(
 )
 
 data <- dep.y[[1]]
-#
+
 # sample data with a sample fraction of 0.1
-#
+
 library(splitstackshape)
-# sample data
-#
+
+#sample data
+
 sample <- stratified(data, "sa", size = 0.1)
 
 # nonsample data

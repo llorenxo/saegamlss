@@ -197,7 +197,7 @@ for (t2 in 1:R){
   result <- data.frame("Gini.Est" = est$Gini,
                        "Gini.MSE" = colMeans(dif4[-1,]),
                        "Gini.SD" = sqrt(colMeans(dif4[-1,])),
-                       "Gini.CV" = sqrt(colMeans(dif4[-1,]))/abs(est$Gini),
+                       "Gini.CV" = sqrt(colMeans(dif4[-1,]))/abs(est$Gini)
                       )
 
 
@@ -206,7 +206,7 @@ for (t2 in 1:R){
   result <- data.frame("Theil.Est" = est$Theil,
                         "Theil.MSE" = colMeans(dif5[-1,]),
                         "Theil.SD" = sqrt(colMeans(dif5[-1,])),
-                        "Theil.CV" = sqrt(colMeans(dif5[-1,]))/abs(est$Theil),
+                        "Theil.CV" = sqrt(colMeans(dif5[-1,]))/abs(est$Theil)
                         )
 
 

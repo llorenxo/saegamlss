@@ -84,8 +84,8 @@ mse_saegamlss <- function(est, loop = 200, l, Iden = FALSE,
   data <- rbind( est$input_var$origindata  %>%
                  dplyr::select( dplyr::all_of(colnames(est$input_var$nonsample))),
                  est$input_var$nonsample
-
                  )
+
   data <- data %>% dplyr::mutate(id = row_number())
 
   sa <- est$input_var$sa
