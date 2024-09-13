@@ -14,7 +14,7 @@
 \item{...}{Other parameters}
 }
 \value{
-A dataset with the estimated random effects
+A dataset with the estimated random effects. The first column "sa" denotes the Samll Area
 }
 \description{
 Extract random effects for object of class "saegamlss"

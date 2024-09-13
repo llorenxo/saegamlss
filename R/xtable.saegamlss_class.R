@@ -3,8 +3,7 @@
 #' @description
 #' Create Export Tables for object of class "saegamlss"
 #'
-#'
-#'
+#' @importFrom xtable xtable
 #' @param x An R object of class "saegamlss"
 #' @param caption Character vector of length 1 or 2 containing the table's caption or title. If length is 2, the second item is the "short caption" used when LaTeX generates a "List of Tables". Set to NULL to suppress the caption. Default value is NULL
 #' @param label Character vector of length 1 containing the LaTeX label or HTML anchor. Set to NULL to suppress the label. Default value is NULL
@@ -24,10 +23,10 @@
 #'                    sa = "sa", fdis = "LOGNO",
 #'                    sigma.f = TRUE, index = "all")
 #'
-#' xtable(x = est)
+#' xtable_saegamlss(x = est)
 #'
 
-xtable.saegamlss <- function(x, caption = NULL, label = NULL, align = NULL, digits = NULL,
+xtable_saegamlss <- function(x, caption = NULL, label = NULL, align = NULL, digits = NULL,
                              display = NULL, auto = FALSE, ...){
 
   y <- as.data.frame.saegamlss(x)

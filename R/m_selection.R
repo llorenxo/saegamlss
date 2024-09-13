@@ -72,7 +72,7 @@ m_selection <- function(sample, y, f_cov, kp = 2,
 
   select_v <- list()
   step2 <- list()
-
+  dist_step2 <- list()
   for (j in 1:length(sel)) {
 
     sel2 <<- sel[[j]]
@@ -122,6 +122,7 @@ m_selection <- function(sample, y, f_cov, kp = 2,
 
 
     select_v[[j]] <-  list(mu_f, sigma_f, nu_f, tau_f)
+    dist_step2[[j]] <- a
 
     } else {
 
@@ -168,10 +169,12 @@ m_selection <- function(sample, y, f_cov, kp = 2,
 
 
       select_v[[j]] <-  list(mu_f, sigma_f, nu_f, tau_f)
-
+      dist_step2[[j]] <- a
     }
   }
 
+
+  names(dist_step2) <- sel
 #step 3
 
   a=matrix(ncol=length(sel), nrow=R)
@@ -236,8 +239,9 @@ m_selection <- function(sample, y, f_cov, kp = 2,
 
 
 
-  results=list("step1"=sel, "step2"=select_v, "step3"=step3, "GAIC values"=res_step1,
-               "sample"=s_data, "y"=y)
+  results=list("step1"=sel, "step2"=select_v,
+              "step3"=step3, "GAIC values"=res_step1,
+               "sample"=s_data, "y"=y, "add_res"= list("res_step1" = res_step1 ,"dist_step2" = dist_step2))
 
   attr(results, "class") <- "saegamlss"
 

@@ -16,6 +16,5 @@
 #' @importFrom stats rnorm
 #' @importFrom stats setNames
 #' @importFrom tidyr pivot_longer
-#' @importFrom xtable xtable
 ## usethis namespace: end
 NULL
